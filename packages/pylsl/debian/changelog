@@ -1,0 +1,11 @@
+pylsl (1.18.2-1) unstable; urgency=medium
+
+  * Initial Debian/NeuroDebian packaging.
+    Not in Debian, Ubuntu or NeuroDebian; upstream ships only PyPI wheels that
+    bundle a private copy of liblsl.
+  * Pure-Python ctypes binding; depends on the packaged system liblsl
+    (liblsl2) found at runtime via ctypes.util.find_library, instead of the
+    bundled library shipped in upstream wheels.
+  * Build with pybuild; version supplied via SETUPTOOLS_SCM_PRETEND_VERSION.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Sun, 21 Jun 2026 16:10:00 -0700

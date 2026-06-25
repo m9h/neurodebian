@@ -1,0 +1,12 @@
+diff --git a/Modules/Core/Common/include/itkFloatingPointExceptions.h b/Modules/Core/Common/include/itkFloatingPointExceptions.h
+index d407803204..9d756db524 100644
+--- a/Modules/Core/Common/include/itkFloatingPointExceptions.h
++++ b/Modules/Core/Common/include/itkFloatingPointExceptions.h
+@@ -20,6 +20,7 @@
+ 
+ #include "itkMacro.h" // for ITKCommon_EXPORT
+ #include "itkSingletonMacro.h"
++#include <cstdint>
+ 
+ namespace itk
+ {

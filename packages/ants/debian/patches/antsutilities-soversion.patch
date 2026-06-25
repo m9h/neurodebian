@@ -1,0 +1,18 @@
+Description: Give antsUtilities a versioned SONAME
+ Upstream builds libantsUtilities.so with no SOVERSION, so it installs with an
+ unversioned SONAME. Add SOVERSION 1 so the runtime library has a valid
+ versioned SONAME (libantsUtilities.so.1).
+Author: Morgan Hough <morgan.hough@gmail.com>
+Forwarded: not-needed
+Last-Update: 2026-06-24
+---
+--- a/Examples/CMakeLists.txt
++++ b/Examples/CMakeLists.txt
+@@ -13,6 +13,7 @@
+             ImageMathHelper2D.cxx ImageMathHelper3D.cxx ImageMathHelper4D.cxx
+             )
+ target_link_libraries(antsUtilities ${ITK_LIBRARIES} )
++set_target_properties(antsUtilities PROPERTIES SOVERSION 1)
+ install(TARGETS antsUtilities
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     COMPONENT RUNTIME_antsUtilities

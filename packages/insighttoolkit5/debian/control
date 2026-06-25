@@ -1,0 +1,103 @@
+Source: insighttoolkit5
+Maintainer: Debian Med Packaging Team <debian-med-packaging@lists.alioth.debian.org>
+Uploaders: Steve M. Robbins <smr@debian.org>,
+           Gert Wollny <gewo@debian.org>,
+           Étienne Mollier <emollier@debian.org>
+Section: science
+Priority: optional
+Build-Depends: debhelper-compat (= 13),
+               cmake,
+               libvtk9-dev, libvtk9-qt-dev,
+               zlib1g-dev,
+               libdouble-conversion-dev,
+               libexpat-dev,
+               libpng-dev,
+               libtiff-dev,
+               libfftw3-dev,
+               libdcmtk-dev,
+               libgdcm-dev,
+               libgtest-dev,
+               uuid-dev,
+               libminc-dev,
+               libnifti2-dev,
+               libhdf5-dev
+Standards-Version: 4.7.2
+Vcs-Browser: https://salsa.debian.org/med-team/insighttoolkit
+Vcs-Git: https://salsa.debian.org/med-team/insighttoolkit.git
+Homepage: http://www.itk.org/
+Rules-Requires-Root: no
+
+Package: libinsighttoolkit5.4
+Architecture: amd64
+Section: libs
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
+Description: Image processing toolkit for registration and segmentation - runtime
+ ITK is an open-source software toolkit for performing registration and
+ segmentation. Segmentation is the process of identifying and
+ classifying data found in a digitally sampled
+ representation. Typically the sampled representation is an image
+ acquired from such medical instrumentation as CT or MRI
+ scanners. Registration is the task of aligning or developing
+ correspondences between data. For example, in the medical
+ environment, a CT scan may be aligned with a MRI scan in order to
+ combine the information contained in both.
+ .
+ This package contains the libraries needed to run ITK applications.
+
+Package: libinsighttoolkit5-dev
+Architecture: amd64
+Section: libdevel
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+         libinsighttoolkit5.4 (= ${binary:Version}),
+         libvtk9-dev, libvtk9-qt-dev,
+         libgdcm-dev,
+         libdcmtk-dev,
+         libhdf5-dev,
+         libdouble-conversion-dev,
+         libexpat-dev,
+         libnifti-dev,
+         libminc-dev
+Recommends: libfftw3-dev,
+            uuid-dev
+Suggests: insighttoolkit5-examples
+Conflicts: libinsighttoolkit-dev,
+           libinsighttoolkit3-dev,
+           libinsighttoolkit4-dev
+Replaces: libinsighttoolkit-dev,
+          libinsighttoolkit3-dev,
+          libinsighttoolkit4-dev
+Description: Image processing toolkit for registration and segmentation - development
+ ITK is an open-source software toolkit for performing registration and
+ segmentation. Segmentation is the process of identifying and
+ classifying data found in a digitally sampled
+ representation. Typically the sampled representation is an image
+ acquired from such medical instrumentation as CT or MRI
+ scanners. Registration is the task of aligning or developing
+ correspondences between data. For example, in the medical
+ environment, a CT scan may be aligned with a MRI scan in order to
+ combine the information contained in both.
+ .
+ This package contains the development files needed to build your own
+ ITK applications.
+
+Package: insighttoolkit5-examples
+Architecture: all
+Section: devel
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Suggests: libinsighttoolkit5-dev
+Multi-Arch: foreign
+Description: Image processing toolkit for registration and segmentation - examples
+ ITK is an open-source software toolkit for performing registration and
+ segmentation. Segmentation is the process of identifying and
+ classifying data found in a digitally sampled
+ representation. Typically the sampled representation is an image
+ acquired from such medical instrumentation as CT or MRI
+ scanners. Registration is the task of aligning or developing
+ correspondences between data. For example, in the medical
+ environment, a CT scan may be aligned with a MRI scan in order to
+ combine the information contained in both.
+ .
+ This package contains the source for example programs.

@@ -1,0 +1,12 @@
+liblsl (1.17.7-1) unstable; urgency=medium
+
+  * Initial Debian/NeuroDebian packaging.
+    Fills a long-standing gap: liblsl is not in Debian, Ubuntu or NeuroDebian;
+    upstream ships only non-policy GitHub release .debs.
+  * Build the shared library (liblsl.so.2, ABI version 2) with CMake.
+  * Build offline against the system pugixml (-DLSL_FETCH_PUGIXML=OFF) instead
+    of the upstream FetchContent download; bundled header-only Boost and asio.
+  * Split into liblsl2 (runtime, Multi-Arch: same) and liblsl-dev (headers +
+    CMake LSL::lsl imported target).
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Sat, 20 Jun 2026 10:15:00 -0700

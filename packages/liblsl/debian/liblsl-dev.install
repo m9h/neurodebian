@@ -1,0 +1,3 @@
+usr/include/*
+usr/lib/*/liblsl.so
+usr/lib/*/cmake/lsl/*

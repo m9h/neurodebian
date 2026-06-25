@@ -1,0 +1,49 @@
+Source: liblsl
+Priority: optional
+Maintainer: Morgan Hough <morgan.hough@gmail.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake (>= 3.23),
+ g++,
+ libpugixml-dev,
+Standards-Version: 4.7.0
+Section: libs
+Homepage: https://github.com/sccn/liblsl
+Vcs-Browser: https://github.com/sccn/liblsl
+Vcs-Git: https://github.com/sccn/liblsl.git
+Rules-Requires-Root: no
+
+Package: liblsl2
+Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: Lab Streaming Layer core library (runtime)
+ The Lab Streaming Layer (LSL) is a system for unified collection of
+ measurement time series in research experiments. It handles networking,
+ time-synchronisation, (near-)real-time access and centralised collection
+ and recording of data over a local network. LSL is widely used to acquire
+ and synchronise data from EEG, eye tracking, motion capture, audio and
+ many other sources in neuroscience and psychophysiology experiments.
+ .
+ This package provides the shared library (liblsl.so.2) used at runtime by
+ applications and language bindings built against LSL.
+
+Package: liblsl-dev
+Architecture: any
+Multi-Arch: same
+Section: libdevel
+Depends:
+ liblsl2 (= ${binary:Version}),
+ ${misc:Depends},
+Description: Lab Streaming Layer core library (development files)
+ The Lab Streaming Layer (LSL) is a system for unified collection of
+ measurement time series in research experiments. It handles networking,
+ time-synchronisation, (near-)real-time access and centralised collection
+ and recording of data over a local network.
+ .
+ This package provides the C and C++ headers and the CMake package
+ configuration (the LSL::lsl imported target) needed to build applications
+ and language bindings against the LSL core library.

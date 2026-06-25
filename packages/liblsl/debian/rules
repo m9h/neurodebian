@@ -1,0 +1,20 @@
+#!/usr/bin/make -f
+# liblsl (Lab Streaming Layer) Debian packaging.
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+%:
+	dh $@ --buildsystem=cmake
+
+override_dh_auto_configure:
+	# Use the standard unix/GNUInstallDirs layout (debhelper supplies the
+	# multiarch CMAKE_INSTALL_LIBDIR). Build the shared library only, against
+	# the system pugixml (no network FetchContent), bundled header-only Boost.
+	dh_auto_configure -- \
+	  -DLSL_UNIXFOLDERS=ON \
+	  -DLSL_FETCH_PUGIXML=OFF \
+	  -DLSL_BUNDLED_BOOST=ON \
+	  -DLSL_BUILD_STATIC=OFF \
+	  -DLSL_OPTIMIZATIONS=ON \
+	  -DLSL_UNITTESTS=OFF \
+	  -DLSL_TOOLS=OFF

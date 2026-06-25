@@ -1,0 +1,19 @@
+Description: Relax the numpy requirement to >=1.21
+ Upstream pins numpy>=2.0.2, but pyxdf only uses basic ndarray operations and
+ works with the numpy provided by Debian/Ubuntu (1.26). Relaxing the bound
+ keeps the binary package installable without an unsatisfiable dependency.
+Author: Morgan Hough <morgan.hough@gmail.com>
+Forwarded: not-needed
+Last-Update: 2026-06-21
+---
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -40,7 +40,7 @@
+   "stream",
+ ]
+ dependencies = [
+-    "numpy>=2.0.2",
++    "numpy>=1.21",
+ ]
+ 
+ [project.optional-dependencies]

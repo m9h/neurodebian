@@ -1,0 +1,38 @@
+Source: ants
+Section: science
+Priority: optional
+Maintainer: Morgan Hough <morgan.hough@gmail.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake (>= 3.16),
+ g++,
+ libinsighttoolkit5-dev (>= 5.4.6),
+ libhdf5-dev,
+ libminc-dev,
+ libgdcm-dev,
+ libfftw3-dev,
+ libdouble-conversion-dev,
+ libvtk9-dev,
+ zlib1g-dev,
+Standards-Version: 4.7.0
+Homepage: https://github.com/ANTsX/ANTs
+Vcs-Browser: https://github.com/ANTsX/ANTs
+Vcs-Git: https://github.com/ANTsX/ANTs.git
+Rules-Requires-Root: no
+
+Package: ants
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Recommends:
+ r-base-core,
+Description: Advanced Normalization Tools for medical image registration
+ Advanced Normalization Tools (ANTs) computes high-dimensional mappings to
+ capture the statistics of brain structure and function. It is a widely used
+ toolkit for medical image registration, segmentation and template
+ construction, built on the Insight Toolkit (ITK).
+ .
+ This package provides the ANTs command-line programs (antsRegistration,
+ antsApplyTransforms, N4BiasFieldCorrection, Atropos, ...), the helper
+ scripts, and the internal shared libraries they require.

@@ -1,0 +1,4 @@
+version=4
+opts="filenamemangle=s%(?:.*?)?v?(\d[\d.]*)\.tar\.gz%pylsl-$1.tar.gz%" \
+  https://github.com/labstreaminglayer/pylsl/tags \
+  (?:.*?/)?v?(\d[\d.]+)\.tar\.gz

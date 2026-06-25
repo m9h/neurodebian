@@ -1,0 +1,3 @@
+relax-numpy-requirement.patch
+drop-py314-classifier.patch
+fix-license-metadata.patch

@@ -1,0 +1,467 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Source: http://www.itk.org/
+Upstream-Name: The Insight Toolkit
+License: Debian ITK is Licensed under the GPL
+ .
+ Debian distributes the InsightToolkit linked with the FFTW Discrete
+ Fourier Transform libraries.  Since FFTW is licensed under the GPL,
+ the resulting derived work (Debian ITK) is also licensed under
+ the GPL as follows.
+ .
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+ .
+  A copy of the GPL v2 can be found in /usr/share/common-licenses/GPL-2
+
+Files: *
+Copyright: Copyright 1999-2019 Insight Software Consortium
+ Copyright 2020-present NumFOCUS
+License: Apache-2.0
+
+Files: debian/*
+Copyright:  Copyright 2007-2025 Debian-med team
+License: Apache-2.0
+
+Files: Modules/IO/ImageBase/include/itkfdstream/fdstream.hxx
+Copyright: Nicolai M. Josuttis 2001
+License: Permission to copy, use, modify, sell and distribute this software
+ is granted provided this copyright notice appears in all copies.
+ This software is provided "as is" without express or implied
+ warranty, and with no claim as to its suitability for any purpose.
+
+Files: Modules/ThirdParty/DICOMParser/src/DICOMParser/*
+Copyright: Copyright (c) 2003 Matt Turek
+License: BSD-4-clause-DICOMParser
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ .
+ * Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+ .
+ * Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+ .
+ * The name of Matt Turek nor the names of any contributors may be used to
+   endorse or promote products derived from this software without specific
+   prior written permission.
+ .
+ * Modified source versions must be plainly marked as such, and must not be
+   misrepresented as being the original software.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR
+ ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Files: Modules/ThirdParty/DoubleConversion/*
+Copyright: Copyright 2006-2011, the V8 project authors
+License: BSD 3-Clause License
+
+Files: Modules/ThirdParty/Eigen3/*
+Copyright: Copyright (c) 2011, Intel Corporation
+License: MPL-2.0 and BSD-3-clause and Minpack
+
+Files: Modules/ThirdParty/Expat/*
+Copyright: Copyright (c) 1998, 1999, 2000 Thai Open Source Software Center Ltd and Clark Cooper
+ Copyright (c) 2001-2019 Expat maintainers
+License: MIT
+
+Files: Modules/ThirdParty/GDCM/*
+Copyright: Copyright (c) 2006-2016 Mathieu Malaterre
+ Copyright (c) 1993-2005 CREATIS
+ (CREATIS = Centre de Recherche et d'Applications en Traitement de l'Image)
+License: Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ .
+ * Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+ .
+ * Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+ .
+ * Neither name of Mathieu Malaterre, or CREATIS, nor the names of any
+   contributors (CNRS, INSERM, UCB, Universite Lyon I), may be used to
+   endorse or promote products derived from this software without specific
+   prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR
+ ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Files: Modules/ThirdParty/GIFTI/src/gifticlib/*
+Authors: Richard Reynolds, SSCC, DIRP, NIMH, National Institutes of Health
+License: Public-domain
+ The gifticlib code is released into the public domain.  Developers are
+ encouraged to incorporate the library into their application, and to
+ contribute changes or enhancements to gifticlib.
+
+Files: Modules/ThirdParty/GoogleTest/*
+Copyright: Copyright 2008, Google Inc.
+License: BSD 3-Clause License
+
+Files: Modules/ThirdParty/HDF5/*
+Copyright: Copyright 2006 by The HDF Group
+ Copyright 1998-2006 by The Board of Trustees of the University of Illinois.
+License: BSD-3-clause
+
+Files: Modules/ThirdParty/KWSys/src/KWSys/*
+Copyright: 2000-2016 Kitware, Inc. and Contributors
+License: BSD-3-clause-Kitware
+
+Files: Modules/ThirdParty/MetaIO/src/MetaIO/*
+Copyright: Copyright 2000-2014 Insight Software Consortium
+License: BSD-3-clause-MetaIO
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ .
+ * Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+ .
+ * Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+ .
+ * Neither the name of the Insight Software Consortium nor the names of
+   its contributors may be used to endorse or promote products derived
+   from this software without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Files: Modules/ThirdParty/Netlib/src/netlib/slatec/*
+License: netlib-slatec
+ The Library is in the public domain and distributed by the Energy Science
+ and Technology Software Center.
+ -
+ For details see http://www.netlib.org/slatec/guide, Section 4
+
+Files: Modules/ThirdParty/NrrdIO/src/NrrdIO*
+Copyright:   Copyright (C) 2013, 2012, 2011, 2010, 2009  University of Chicago
+  Copyright (C) 2008, 2007, 2006, 2005  Gordon Kindlmann
+  Copyright (C) 2004, 2003, 2002, 2001, 2000, 1999, 1998  University of Utah
+License: BSD-3-clause-alike-NrrdIO
+ This software is provided 'as-is', without any express or implied
+ warranty.  In no event will the authors be held liable for any
+ damages arising from the use of this software.
+ .
+ Permission is granted to anyone to use this software for any
+ purpose, including commercial applications, and to alter it and
+ redistribute it freely, subject to the following restrictions:
+ .
+ 1. The origin of this software must not be misrepresented; you must
+    not claim that you wrote the original software. If you use this
+    software in a product, an acknowledgment in the product
+    documentation would be appreciated but is not required.
+ .
+ 2. Altered source versions must be plainly marked as such, and must
+    not be misrepresented as being the original software.
+ .
+ 3. This notice may not be removed or altered from any source distribution.
+
+Files: Modules/ThirdParty/NrrdIO/src/NrrdIO/CMake/*
+Copyright: Copyright Insight Software Consortium
+License: Apache-2.0
+
+Files: Modules/ThirdParty/OpenJPEG/src/openjpeg/*
+Copyright: Copyright (c) 2002-2012, Communications and Remote Sensing Laboratory,
+ Universite catholique de Louvain (UCL), Belgium
+ Copyright (c) 2002-2012, Professor Benoit Macq
+ Copyright (c) 2003-2012, Antonin Descampe
+ Copyright (c) 2003-2009, Francois-Olivier Devaux
+ Copyright (c) 2005, Herve Drolon, FreeImage Team
+ Copyright (c) 2002-2003, Yannick Verschueren
+ Copyright (c) 2001-2003, David Janssens
+ Copyright (c) 2011-2012, Centre National d'Etudes Spatiales (CNES), France
+ Copyright (c) 2012, CS Systemes d'Information, France
+License: BSD-2-clause-OpenJPEG
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS `AS IS'
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ POSSIBILITY OF SUCH DAMAGE.
+
+Files: Modules/ThirdParty/VNL/src/vxl/*
+Copyright: Copyright 2000-2013 VXL Contributors
+License: BSD-3-clause-VXL
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ .
+ * Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+ .
+ * Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+ .
+ * Neither the names of the copyright holders nor the names of their
+   contributors may be used to endorse or promote products derived
+   from this software without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Files: Modules/ThirdParty/VNL/src/vxl/v3p/netlib/*
+License: netlib-blas
+ The reference BLAS is a freely-available software package. It is
+ available from netlib via anonymous ftp and the World Wide Web.
+ Thus, it can be included in commercial software packages (and has been).
+ We only ask that proper credit be given to the authors.
+ .
+ Like all software, it is copyrighted. It is not trademarked, but we do
+ ask the following:
+ .
+ * If you modify the source for these routines we ask that you change the
+   name of the routine and comment the changes made to the original.
+ .
+ * We will gladly answer any questions regarding the software. If a modification
+   is done, however, it is the responsibility of the person who modified the routine
+   to provide support. (http://www.netlib.org/blas/)
+
+Files: Modules/ThirdParty/VNL/src/vxl/vcl/internal/vcl_atomic_count_gcc.h
+Copyright:
+ Copyright (c) 2001, 2002 Peter Dimov and Multi Media Ltd.
+ Copyright (c) 2002 Lars Gullik Bjonnes <larsbj@lyx.org>
+ Copyright 2003-2005 Peter Dimov
+License: BSL-1.0
+
+Files:
+ Modules/ThirdParty/VNL/src/vxl/vcl/internal/vcl_atomic_count_pthreads.h
+ Modules/ThirdParty/VNL/src/vxl/vcl/internal/vcl_atomic_count_gcc_x86.h
+Copyright: Copyright 2007 Peter Dimov
+License: BSL-1.0
+
+Files: Modules/ThirdParty/VNL/src/vxl/vcl/internal/vcl_atomic_count_sync.h
+Copyright: Copyright (c) 2001, 2002 Peter Dimov and Multi Media Ltd.
+License: BSL-1.0
+
+Files: Modules/ThirdParty/VNL/src/vxl/vcl/internal/vcl_interlocked.h
+Copyright: Copyright 2005 Peter Dimov
+License: BSL-1.0
+
+Files: Modules/ThirdParty/VNL/src/vxl/vcl/internal/vcl_atomic_count_solaris.h
+Copyright:
+ Copyright (c) 2001-2005 Peter Dimov
+ Copyright (c) 2006 Michael van der Westhuizen
+License: BSL-1.0
+
+Files: Modules/ThirdParty/VNL/src/vxl/vcl/internal/vcl_atomic_count_win32.h
+Copyright: Copyright (c) 2001-2005 Peter Dimov
+License: BSL-1.0
+
+Files: CMake/TopologicalSort.cmake
+Copyright: 2010 Kitware, Inc.
+           2007 Douglas Gregor <doug.gregor@gmail.com>
+           2007 Troy Straszheim
+License: BSL-1.0
+
+Files: CMake/CppcheckTargets.cmake
+       CMake/Findcppcheck.cmake
+Copyright: Iowa State University 2009-2010.
+License: BSL-1.0
+
+Files: CMake/FindKWStyle.cmake
+       CMake/ITK_CheckCCompilerFlag.cmake
+       CMake/ITK_CheckCXXCompilerFlag.cmake
+Copyright: 2000-2018 Kitware, Inc. and Contributors
+License: BSD-3-clause-Kitware
+
+Files: Modules/ThirdParty/pygccxml/*
+Copyright:
+ Copyright 2014-2017 Insight Software Consortium.
+ Copyright 2004-2009 Roman Yakovenko.
+License: BSL-1.0
+
+Files:
+ Modules/Core/ImageFunction/include/itkGaussianInterpolateImageFunction.h
+ Modules/Core/ImageFunction/include/itkGaussianInterpolateImageFunction.hxx
+Copyright:
+ Copyright (c) Insight Software Consortium
+ Copyright (c) 1993-2015 Ken Martin, Will Schroeder, Bill Lorensen
+License: Apache-2.0+VTK-Copyright
+
+License: Apache-2.0
+ A copy of the Apache-2.0 license can be found in /usr/share/common-licenses/Apache-2.0
+
+License: BSD-3-clause-Kitware
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ .
+ * Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+ .
+ * Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+ .
+ * Neither the names of Kitware, Inc., the Insight Software Consortium,
+   nor the names of their contributors may be used to endorse or promote
+   products derived from this software without specific prior written
+   permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+License: BSL-1.0
+ Boost Software License - Version 1.0 - August 17th, 2003
+ .
+ Permission is hereby granted, free of charge, to any person or organization
+ obtaining a copy of the software and accompanying documentation covered by
+ this license (the "Software") to use, reproduce, display, distribute,
+ execute, and transmit the Software, and to prepare derivative works of the
+ Software, and to permit third-parties to whom the Software is furnished to
+ do so, all subject to the following:
+ .
+ The copyright notices in the Software and this entire statement, including
+ the above license grant, this restriction and the following disclaimer,
+ must be included in all copies of the Software, in whole or in part, and
+ all derivative works of the Software, unless such copies or derivative
+ works are solely in the form of machine-executable object code generated by
+ a source language processor.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
+ SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
+ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
+ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ DEALINGS IN THE SOFTWARE.
+
+License: Minpack
+ Redistribution and use in source and binary forms, with or
+ without modification, are permitted provided that the
+ following conditions are met:
+ .
+ 1. Redistributions of source code must retain the above
+ copyright notice, this list of conditions and the following
+ disclaimer.
+ .
+ 2. Redistributions in binary form must reproduce the above
+ copyright notice, this list of conditions and the following
+ disclaimer in the documentation and/or other materials
+ provided with the distribution.
+ .
+ 3. The end-user documentation included with the
+ redistribution, if any, must include the following
+ acknowledgment:
+ .
+   "This product includes software developed by the
+   University of Chicago, as Operator of Argonne National
+   Laboratory.
+ .
+ Alternately, this acknowledgment may appear in the software
+ itself, if and wherever such third-party acknowledgments
+ normally appear.
+ .
+ 4. WARRANTY DISCLAIMER. THE SOFTWARE IS SUPPLIED "AS IS"
+ WITHOUT WARRANTY OF ANY KIND. THE COPYRIGHT HOLDER, THE
+ UNITED STATES, THE UNITED STATES DEPARTMENT OF ENERGY, AND
+ THEIR EMPLOYEES: (1) DISCLAIM ANY WARRANTIES, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES
+ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE
+ OR NON-INFRINGEMENT, (2) DO NOT ASSUME ANY LEGAL LIABILITY
+ OR RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR
+ USEFULNESS OF THE SOFTWARE, (3) DO NOT REPRESENT THAT USE OF
+ THE SOFTWARE WOULD NOT INFRINGE PRIVATELY OWNED RIGHTS, (4)
+ DO NOT WARRANT THAT THE SOFTWARE WILL FUNCTION
+ UNINTERRUPTED, THAT IT IS ERROR-FREE OR THAT ANY ERRORS WILL
+ BE CORRECTED.
+ .
+ 5. LIMITATION OF LIABILITY. IN NO EVENT WILL THE COPYRIGHT
+ HOLDER, THE UNITED STATES, THE UNITED STATES DEPARTMENT OF
+ ENERGY, OR THEIR EMPLOYEES: BE LIABLE FOR ANY INDIRECT,
+ INCIDENTAL, CONSEQUENTIAL, SPECIAL OR PUNITIVE DAMAGES OF
+ ANY KIND OR NATURE, INCLUDING BUT NOT LIMITED TO LOSS OF
+ PROFITS OR LOSS OF DATA, FOR ANY REASON WHATSOEVER, WHETHER
+ SUCH LIABILITY IS ASSERTED ON THE BASIS OF CONTRACT, TORT
+ (INCLUDING NEGLIGENCE OR STRICT LIABILITY), OR OTHERWISE,
+ EVEN IF ANY OF SAID PARTIES HAS BEEN WARNED OF THE
+ POSSIBILITY OF SUCH LOSS OR DAMAGES.
+
+License: VTK-Copyright
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ .
+ * Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+ .
+ * Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+ .
+ * Neither name of Ken Martin, Will Schroeder, or Bill Lorensen nor the names
+   of any contributors may be used to endorse or promote products derived
+   from this software without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR
+ ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

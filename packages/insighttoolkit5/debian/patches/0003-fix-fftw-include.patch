@@ -1,0 +1,13 @@
+diff --git a/Modules/Filtering/FFT/include/itkFFTWGlobalConfiguration.h b/Modules/Filtering/FFT/include/itkFFTWGlobalConfiguration.h
+index 332e16d0f1..88ccb7a626 100644
+--- a/Modules/Filtering/FFT/include/itkFFTWGlobalConfiguration.h
++++ b/Modules/Filtering/FFT/include/itkFFTWGlobalConfiguration.h
+@@ -19,6 +19,8 @@
+ #define itkFFTWGlobalConfiguration_h
+ 
+ #include "itkObject.h"
++#include "itkConfigure.h"
++
+ // NOTE:  Need to have at least one itk include before
+ //       the next defines in order to have ITK_USE_FFTWF,ITK_USE_FFTWD defined
+ #if defined(ITK_USE_FFTWF) || defined(ITK_USE_FFTWD)

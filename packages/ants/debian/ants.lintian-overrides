@@ -1,0 +1,14 @@
+# The *.R tools (antsBOLDNetworkAnalysis.R, antsNetworkAnalysis.R,
+# antsLaplacianBoundaryCondition.R) are optional R analysis utilities shipped
+# by upstream into /usr/bin. R is only needed when they are used, so it is a
+# Recommends (r-base-core), not a hard Depends.
+ants: missing-dep-for-interpreter Rscript
+# ANTs ships ~120 command-line programs; upstream provides no man pages.
+ants: no-manual-page
+# The .sh/.pl suffixes are upstream's canonical, documented command names
+# (antsBrainExtraction.sh, antsRegistrationSyN.sh, ...) — users invoke them by
+# those names, so the extensions are kept deliberately.
+ants: script-with-language-extension
+# Reference/example scripts shipped under /usr/share/ants/scripts are not meant
+# to be executed in place (the .R ones are run via Rscript / sourced).
+ants: script-not-executable

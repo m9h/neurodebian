@@ -1,0 +1,31 @@
+Source: pyxdf
+Section: python
+Priority: optional
+Maintainer: Morgan Hough <morgan.hough@gmail.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ dh-python,
+ pybuild-plugin-pyproject,
+ python3-all,
+ python3-hatchling,
+ python3-hatch-vcs,
+Standards-Version: 4.7.0
+Homepage: https://github.com/xdf-modules/pyxdf
+Vcs-Browser: https://github.com/xdf-modules/pyxdf
+Vcs-Git: https://github.com/xdf-modules/pyxdf.git
+Rules-Requires-Root: no
+
+Package: python3-pyxdf
+Architecture: all
+Depends:
+ ${python3:Depends},
+ ${misc:Depends},
+ python3-numpy,
+Description: Python 3 importer for XDF (Extensible Data Format) files
+ XDF (Extensible Data Format) is the native on-disk container of the Lab
+ Streaming Layer (LSL): a general-purpose format for multi-stream, multi-rate
+ time series with rich per-stream metadata, used to store recordings of EEG,
+ eye tracking, motion capture, markers and other biosignals.
+ .
+ pyxdf loads XDF files into Python, dejittering irregular time stamps and
+ aligning streams onto a common clock. This package provides the pyxdf module.

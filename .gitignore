@@ -1,0 +1,23 @@
+# build outputs
+*.deb
+*.ddeb
+*.buildinfo
+*.changes
+*.orig.tar.*
+*.debian.tar.*
+*.dsc
+# build trees / staging
+**/obj-*/
+**/BUILD/
+**/debian/.debhelper/
+**/debian/tmp/
+**/debian/*/
+**/debian/*.substvars
+**/debian/*.log
+**/debian/files
+**/debian/debhelper-build-stamp
+# local data
+spec_meta.json
+!**/debian/source/
+!**/debian/patches/
+!**/debian/upstream/

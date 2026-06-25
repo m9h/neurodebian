@@ -1,0 +1,12 @@
+ants (2.6.5-1~noble1) noble; urgency=medium
+
+  * Initial Debian/NeuroDebian packaging (ported from the neurofedora
+    ANTs.spec). Not in Debian, Ubuntu or NeuroDebian.
+  * Build against the system InsightToolkit5 5.4.6 (ANTS_SUPERBUILD=OFF,
+    USE_SYSTEM_ITK=ON, ITK_DIR=.../cmake/ITK-5.4) — no superbuild downloads.
+  * C++17 + -fpermissive for older ANTs code on current GCC.
+  * Patch antsUtilities to carry SOVERSION 1; ship the internal
+    l_*/antsUtilities runtime libraries and the upstream Scripts/ under
+    /usr/share/ants/scripts.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Wed, 24 Jun 2026 12:00:00 -0700

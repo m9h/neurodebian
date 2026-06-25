@@ -1,0 +1,11 @@
+# Some entries are actually public domain, so there is no
+# Copyright entry available
+insighttoolkit5 source: missing-field-in-dep5-copyright *
+
+# Dual license given, i.e. two paragraphs needed
+insighttoolkit5 source: missing-license-paragraph-in-dep5-copyright *
+
+# one is "public domain", and the other is a comment about the
+# binary package falling under the GPL because it links against
+# fftw
+insighttoolkit5 source: space-in-std-shortname-in-dep5-copyright *

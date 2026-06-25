@@ -1,0 +1,46 @@
+#!/usr/bin/make -f
+# ANTs (Advanced Normalization Tools) — built against the system InsightToolkit5,
+# ported from the neurofedora ANTs.spec.
+
+include /usr/share/dpkg/architecture.mk
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+# ITK 5.x needs C++17; older ANTs code needs -fpermissive and a few relaxed
+# diagnostics to compile on current GCC.
+export DEB_CXXFLAGS_MAINT_APPEND = -std=c++17 -fpermissive -Wno-error=incompatible-pointer-types
+export DEB_CFLAGS_MAINT_APPEND = -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types
+
+ITK_DIR = /usr/lib/$(DEB_HOST_MULTIARCH)/cmake/ITK-5.4
+
+%:
+	dh $@ --buildsystem=cmake
+
+override_dh_auto_configure:
+	# Build ANTs directly against the system ITK — no superbuild network downloads.
+	# USE_SYSTEM_ITK=ON also avoids ANTS.cmake's staging/lib install rules that
+	# assume a superbuild-populated tree.
+	dh_auto_configure -- \
+	  -DANTS_SUPERBUILD:BOOL=OFF \
+	  -DUSE_SYSTEM_ITK:BOOL=ON \
+	  -DITK_DIR:PATH=$(ITK_DIR) \
+	  -DBUILD_TESTING:BOOL=OFF \
+	  -DCMAKE_CXX_STANDARD:STRING=17 \
+	  -DCMAKE_CXX_STANDARD_REQUIRED:BOOL=ON \
+	  -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
+
+override_dh_auto_install:
+	dh_auto_install --destdir=debian/ants
+	# ANTs' internal l_*/antsUtilities libraries are not a public API:
+	# drop static archives and the unversioned .so dev symlinks.
+	find debian/ants -name '*.a' -delete
+	find debian/ants/usr/lib -maxdepth 3 -name '*.so' -type l -delete
+	# ANTS.cmake installs only ~21 curated wrappers to /usr/bin; ship the
+	# remaining upstream Scripts/ under /usr/share/ants/scripts so they are usable.
+	install -d debian/ants/usr/share/ants/scripts
+	cp -p Scripts/* debian/ants/usr/share/ants/scripts/
+	for f in debian/ants/usr/bin/*; do \
+	  rm -f "debian/ants/usr/share/ants/scripts/$$(basename "$$f")"; \
+	done
+	chmod 0755 debian/ants/usr/share/ants/scripts/*.sh \
+	           debian/ants/usr/share/ants/scripts/*.pl 2>/dev/null || true
+	chmod 0644 debian/ants/usr/share/ants/scripts/*.R 2>/dev/null || true

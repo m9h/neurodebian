@@ -1,0 +1,19 @@
+Description: Drop the Python 3.14 trove classifier
+ hatchling validates classifiers against the system trove-classifiers list,
+ which in Debian/Ubuntu does not yet include "Programming Language :: Python
+ :: 3.14"; this causes the build to fail. The classifier is purely cosmetic
+ metadata, so it is removed for the build.
+Author: Morgan Hough <morgan.hough@gmail.com>
+Forwarded: not-needed
+Last-Update: 2026-06-22
+---
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -28,7 +28,6 @@
+   "Programming Language :: Python :: 3.11",
+   "Programming Language :: Python :: 3.12",
+   "Programming Language :: Python :: 3.13",
+-  "Programming Language :: Python :: 3.14",
+ ]
+ keywords = [
+   "XDF",

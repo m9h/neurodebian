@@ -1,0 +1,4 @@
+# lslver is a small build/version diagnostic printer. It is not shipped:
+# liblsl2 is a Multi-Arch: same library package and must not contain a
+# /usr/bin binary (it would conflict between architectures).
+usr/bin/lslver

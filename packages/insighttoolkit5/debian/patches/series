@@ -1,0 +1,4 @@
+0001-Fix-building-and-running-with-system-MINC.patch
+0002-fix-build-gcc15.patch
+0003-fix-fftw-include.patch
+0004-fix-itkOptImageToImageMetricsTest04.patch
