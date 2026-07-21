@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=ITK-SNAP
+GenericName=Medical Image Segmentation
+Comment=Interactive 3D medical image segmentation and navigation
+Exec=itksnap %F
+Icon=itksnap
+Terminal=false
+Categories=Science;MedicalSoftware;
+Keywords=segmentation;medical;imaging;MRI;CT;NIfTI;DICOM;neuroimaging;
+StartupNotify=true

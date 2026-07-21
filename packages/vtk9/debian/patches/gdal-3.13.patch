@@ -1,0 +1,35 @@
+Description: Fix FTBFS with GDAL 3.13.0.
+ error: invalid conversion from 'CSLConstList' {aka 'const char* const*'} to 'char**' [-fpermissive]
+ .
+ From GDAL 3.13.0 NEWS:
+ "
+  * GDALMajorObject: Use CSLConstList for GetMetadata, SetMetadata (API breakage)
+ "
+Author: Bas Couwenberg <sebastic@debian.org>
+
+--- a/IO/GDAL/vtkGDALRasterReader.cxx
++++ b/IO/GDAL/vtkGDALRasterReader.cxx
+@@ -182,7 +182,11 @@ void vtkGDALRasterReader::vtkGDALRasterR
+     this->Reader->DriverShortName = GDALGetDriverShortName(driver);
+     this->Reader->DriverLongName = GDALGetDriverLongName(driver);
+ 
++#if GDAL_VERSION_NUM >= GDAL_COMPUTE_VERSION(3, 13, 0)
++    CSLConstList papszMetaData = GDALGetMetadata(this->GDALData, nullptr);
++#else
+     char** papszMetaData = GDALGetMetadata(this->GDALData, nullptr);
++#endif
+     if (CSLCount(papszMetaData) > 0)
+     {
+       for (int i = 0; papszMetaData[i] != nullptr; ++i)
+@@ -878,7 +882,11 @@ std::vector<std::string> vtkGDALRasterRe
+ {
+   std::vector<std::string> domainMetaData;
+ 
++#if GDAL_VERSION_NUM >= GDAL_COMPUTE_VERSION(3, 13, 0)
++  CSLConstList papszMetadata = GDALGetMetadata(this->Impl->GDALData, domain.c_str());
++#else
+   char** papszMetadata = GDALGetMetadata(this->Impl->GDALData, domain.c_str());
++#endif
+ 
+   if (CSLCount(papszMetadata) > 0)
+   {

@@ -1,0 +1,74 @@
+Source: simpleitk
+Section: science
+Priority: optional
+Maintainer: Morgan Hough <morgan.hough@gmail.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake (>= 3.16),
+ ninja-build,
+ swig (>= 4.0),
+ lua5.4,
+ dh-python,
+ python3-all-dev,
+ python3-numpy,
+ libinsighttoolkit5-dev (>= 5.4.6),
+ libvtk9-dev,
+ libhdf5-dev,
+ libgdcm-dev,
+ libdcmtk-dev,
+ libminc-dev,
+ libfftw3-dev,
+ libdouble-conversion-dev,
+ libexpat-dev,
+ libtiff-dev,
+ libpng-dev,
+ libjpeg-dev,
+ libopenjp2-7-dev,
+ zlib1g-dev,
+Standards-Version: 4.7.0
+Homepage: https://simpleitk.org
+Vcs-Browser: https://github.com/SimpleITK/SimpleITK
+Vcs-Git: https://github.com/SimpleITK/SimpleITK.git
+Rules-Requires-Root: no
+
+Package: libsimpleitk2.5
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: simplified layer on top of the Insight Toolkit (runtime)
+ SimpleITK is a simplified, procedural programming interface to the Insight
+ Toolkit (ITK) for biomedical image analysis: registration, segmentation,
+ filtering and I/O, exposed through a consistent API.
+ .
+ This package provides the SimpleITK C++ runtime libraries.
+
+Package: libsimpleitk-dev
+Architecture: any
+Section: libdevel
+Depends:
+ libsimpleitk2.5 (= ${binary:Version}),
+ libinsighttoolkit5-dev (>= 5.4.6),
+ ${misc:Depends},
+Description: simplified layer on top of the Insight Toolkit (development files)
+ SimpleITK is a simplified, procedural programming interface to the Insight
+ Toolkit (ITK) for biomedical image analysis.
+ .
+ This package provides the headers and CMake configuration for developing
+ C++ applications against SimpleITK.
+
+Package: python3-simpleitk
+Architecture: any
+Section: python
+Depends:
+ ${python3:Depends},
+ ${shlibs:Depends},
+ ${misc:Depends},
+ python3-numpy,
+Description: simplified layer on top of the Insight Toolkit (Python 3)
+ SimpleITK is a simplified, procedural programming interface to the Insight
+ Toolkit (ITK) for biomedical image analysis: registration, segmentation,
+ filtering and I/O.
+ .
+ This package provides the SimpleITK Python 3 module (built with SWIG).

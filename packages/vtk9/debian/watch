@@ -1,0 +1,6 @@
+Version: 5
+
+Template: GitLab
+Dist: https://gitlab.kitware.com/vtk/vtk
+Repacksuffix: +dfsg1
+Dversion-Mangle: auto

@@ -1,0 +1,184 @@
+#!/usr/bin/make -f
+BUILDDIR = $(CURDIR)/debian/build
+
+include /usr/share/dpkg/architecture.mk
+
+UPSTREAM_VERSION = $(shell dpkg-parsechangelog | awk '/^Version:/ { sub("-[^-]*$$", "", $$2); print $$2}')
+UPSTREAM_VERSION_ABI = $(shell echo $(UPSTREAM_VERSION) | sed -e 's/[\.\+]dfsg.*$$//' | awk 'BEGIN { FS="."}; {print $$1"."$$2 }')
+
+
+nojava_archs=hppa
+nojava_os=hurd
+ifeq (,$(filter $(DEB_BUILD_ARCH), $(nojava_archs))$(filter $(DEB_BUILD_ARCH_OS), $(nojava_os)))
+  export JAVA_HOME=/usr/lib/jvm/default-java
+  extra_flags += -DVTK_WRAP_JAVA=ON
+  # increase java version from 8 to 11 to remove many warnings
+  extra_flags += -DVTK_JAVA_RELEASE_VERSION:STRING=11
+endif
+
+ifneq (,$(filter $(DEB_HOST_ARCH), armel m68k mips mipsel powerpc sh4))
+  export DEB_CXXFLAGS_MAINT_APPEND += -Wl,--no-as-needed -latomic -Wl,--as-needed
+  export DEB_LDFLAGS_MAINT_APPEND += -Wl,--no-as-needed -latomic -Wl,--as-needed
+endif
+
+notbb_archs=
+notbb_os=hurd
+ifeq (,$(filter $(DEB_BUILD_ARCH), $(notbb_archs))$(filter $(DEB_BUILD_ARCH_OS), $(notbb_os)))
+  extra_flags += -DVTK_SMP_IMPLEMENTATION_TYPE:STRING="TBB"
+else
+  extra_flags += -DVTK_SMP_IMPLEMENTATION_TYPE:STRING="OpenMP"
+endif
+
+# Work around FTBFS on Alpha (assembler error "No lda !gpdisp!")
+ifneq (,$(filter $(DEB_HOST_ARCH),alpha))
+  export DEB_CXXFLAGS_MAINT_APPEND += -O1
+endif
+
+%:
+	dh $@ --buildsystem=cmake --builddirectory=$(BUILDDIR)
+
+extra_flags +=  \
+	-DBUILD_SHARED_LIBS=ON \
+	-DHDF5_IS_PARALLEL=ON -DHDF5_PREFER_PARALLEL=YES \
+	-DVTK_BUILD_EXAMPLES=OFF \
+	-DVTK_BUILD_TESTING=OFF \
+	-DVTK_EXTRA_COMPILER_WARNINGS=ON \
+	-DVTK_GROUP_ENABLE_Imaging:STRING=YES \
+	-DVTK_GROUP_ENABLE_MPI:STRING=YES \
+	-DVTK_GROUP_ENABLE_Qt:STRING=YES \
+	-DVTK_GROUP_ENABLE_Rendering:STRING=YES \
+	-DVTK_GROUP_ENABLE_StandAlone:STRING=YES \
+	-DVTK_GROUP_ENABLE_Views:STRING=YES \
+	-DVTK_MODULE_ENABLE_VTK_GUISupportQtQuick:STRING=DONT_WANT \
+	-DVTK_MODULE_ENABLE_VTK_GUISupportQtSQL:STRING=NO \
+	-DVTK_MODULE_ENABLE_VTK_IOMySQL:STRING=NO \
+	-DVTK_MODULE_ENABLE_VTK_InteractionImage:STRING=YES \
+	-DVTK_MODULE_ENABLE_VTK_InteractionWidgets:STRING=YES \
+	-DVTK_MODULE_ENABLE_VTK_IOGeoJSON:STRING=YES \
+	-DVTK_MODULE_ENABLE_VTK_ParallelMPI:STRING=YES \
+	-DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES \
+	-DVTK_MODULE_ENABLE_VTK_RenderingExternal=YES \
+	-DVTK_MODULE_ENABLE_VTK_RenderingFreeTypeFontConfig:STRING=YES \
+	-DVTK_MODULE_ENABLE_VTK_RenderingQt:STRING=YES \
+	-DVTK_MODULE_ENABLE_VTK_utf8:STRING=YES \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_doubleconversion:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_eigen:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_expat:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_freetype:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_hdf5:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_jpeg:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_jsoncpp:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_libproj:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_libxml2:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_lz4:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_lzma:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_netcdf:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_nlohmannjson:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_ogg:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_png:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_sqlite:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_theora:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_tiff:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_utf8:BOOL=ON \
+	-DVTK_MODULE_USE_EXTERNAL_VTK_zlib:BOOL=ON \
+	-DVTK_WRAP_PYTHON=ON \
+	-DVTK_USE_MPI=ON \
+	-DVTK_QT_VERSION=6
+
+# modules required by default built of paraview 6
+extra_flags +=  \
+	-DVTK_MODULE_ENABLE_VTK_RenderingParallelLIC=WANT \
+	-DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=WANT \
+	-DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmFilters=WANT \
+	-DVTK_MODULE_ENABLE_VTK_IOGDAL=WANT \
+	-DVTK_MODULE_ENABLE_VTK_IOXdmf2=WANT \
+	-DVTK_MODULE_ENABLE_VTK_IOFFMPEG=WANT \
+	-DVTK_MODULE_ENABLE_VTK_FiltersParallelDIY2=WANT \
+	-DVTK_MODULE_ENABLE_VTK_IOVPIC=WANT \
+	-DVTK_MODULE_ENABLE_VTK_IOAvmesh=WANT \
+	-DVTK_MODULE_ENABLE_VTK_IOH5part=WANT \
+	-DVTK_MODULE_ENABLE_VTK_IOH5Rage=WANT \
+	-DVTK_MODULE_ENABLE_VTK_IOOMF=WANT \
+	-DVTK_MODULE_ENABLE_VTK_IOParallelExodus=WANT \
+	-DVTK_MODULE_ENABLE_VTK_IOParallelLSDyna=WANT \
+	-DVTK_MODULE_ENABLE_VTK_IOPIO=WANT \
+	-DVTK_MODULE_ENABLE_VTK_IOTRUCHAS=WANT \
+	-DVTK_MODULE_ENABLE_VTK_FiltersParallelFlowPaths=WANT \
+	-DVTK_MODULE_ENABLE_VTK_FiltersParallelStatistics=WANT \
+	-DVTK_MODULE_ENABLE_VTK_cli11=WANT \
+	-DVTK_MODULE_ENABLE_VTK_RenderingParallel=WANT \
+	-DVTK_MODULE_ENABLE_VTK_RenderingVolumeAMR=WANT
+
+# modules required by trame
+extra_flags +=  \
+	-DVTK_MODULE_ENABLE_VTK_WebCore:STRING=YES \
+	-DVTK_MODULE_ENABLE_VTK_WebGLExporter:STRING=YES \
+	-DVTK_MODULE_ENABLE_VTK_WebPython:STRING=YES \
+
+# 32-bit architectures don't support all features
+ifeq ($(DEB_HOST_ARCH_BITS),32)
+  # ParaView::RemotingViews optionally uses VTK::vtkviskores
+  # but (ThirdParty) viskores exhausts virtual memory on 32-bit architectures
+  extra_flags += -DVTK_MODULE_ENABLE_VTK_vtkviskores=NO
+else
+  # paraview wants IOXdmf3 (configured here as IOParallelXdmf3)
+  # and therefore it wants VTK:xdmf3,
+  # but vtk's copy of xdmf3 fails to build on 32-bit arches, see Bug#1126484
+  extra_flags += -DVTK_MODULE_ENABLE_VTK_IOParallelXdmf3=WANT
+
+  # Adios2 is only available on 64-bit systems
+  extra_flags += -DVTK_MODULE_ENABLE_VTK_IOADIOS2=WANT \
+      -DCMAKE_PREFIX_PATH="$(CMAKE_PREFIX_PATH);/usr/lib/$(DEB_HOST_MULTIARCH)/cmake/adios2/mpi"
+endif
+
+# alpha is 64-bit, but viskores still exceeds its available memory
+ifeq ($(DEB_HOST_ARCH),alpha)
+  extra_flags += -DVTK_MODULE_ENABLE_VTK_vtkviskores=NO
+endif
+
+override_dh_auto_configure-indep:
+	dh_auto_configure -- -DVTK_BUILD_DOCUMENTATION=ON $(extra_flags)
+
+override_dh_auto_configure-arch:
+	dh_auto_configure -- $(extra_flags)
+
+execute_after_dh_auto_clean:
+	rm -rf $(BUILDDIR)
+
+execute_after_dh_auto_build-indep:
+	cd $(BUILDDIR) && make DoxygenDoc
+	find $(BUILDDIR)/Utilities/Doxygen/doc/html/ -name "*.md5" -delete
+
+override_dh_auto_install:
+	dh_auto_install -X.pyc -X.pyo
+ifneq ($(JAVA_HOME),)
+	mv $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/java/vtk.jar $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/java/vtk9.jar
+endif
+	sed -i -e "s/FATAL_ERROR/STATUS/g" $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/cmake/vtk-*/VTK-targets.cmake
+
+execute_after_dh_install:
+	rm -rf $(CURDIR)/debian/tmp/usr/share/licenses
+	find $(CURDIR)/debian/libvtk9-dev/ -name "*Qt*" -delete || true
+	find $(CURDIR)/debian/libvtk9-dev/usr/include/ -name "Q*" -delete || true
+	find $(CURDIR)/debian/libvtk$(UPSTREAM_VERSION_ABI)/ -name "*Qt*" -delete || true
+	find $(CURDIR)/debian/tmp/usr/share/doc/vtk-*/doxygen -name "_formulas.log" -delete || true
+	find $(CURDIR)/debian/build/Utilities/Doxygen/doc/html -name "_formulas.log" -delete || true
+
+# Fix privacy breach
+execute_after_dh_installdocs-indep:
+	find $(CURDIR)/debian/vtk9-doc/ -type f -print0 | xargs -0 sed -i 's/https:\/\/raw\.githubusercontent\.com//g'
+	find $(CURDIR)/debian/vtk9-doc/ -type f -print0 | xargs -0 sed -i 's/https:\/\/cdn\.jsdelivr\.net\/npm\/mathjax@2/\/usr\/share\/javascript\/mathjax/g'
+
+# Track the versioned libboost*-dev at upstream version only, to avoid rebuilds
+# on boost-defaults/binNMU uploads.
+execute_before_dh_gencontrol:
+	boost_pkg=$$(dpkg-query -W -f='$${Package}\n' 'libboost*-dev' 2>/dev/null \
+		| sed -nE '/^libboost[0-9]+\.[0-9]+-dev$$/p' | sort -V | tail -n1) && \
+	boost_ver=$$(dpkg-query -W -f='$${Version}' "$$boost_pkg" | sed 's/-[^-]*$$//') && \
+	echo "boost:Depends=$$boost_pkg (>= $$boost_ver)" >> debian/libvtk9-dev.substvars
+
+ifeq ($(DEB_HOST_ARCH),sh4)
+override_dh_dwz:
+	dh_dwz -X libvtkCommonCore
+endif

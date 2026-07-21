@@ -1,0 +1,48 @@
+Source: itksnap
+Section: science
+Priority: optional
+Maintainer: Morgan Hough <morgan.hough@gmail.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake (>= 3.16),
+ pkg-config,
+ ninja-build,
+ g++,
+ libinsighttoolkit5-dev (>= 5.4.6),
+ libvtk9-dev,
+ qt6-base-dev,
+ qt6-declarative-dev,
+ qt6-tools-dev,
+ qt6-l10n-tools,
+ libgl-dev,
+ libx11-dev,
+ libssh-dev,
+ libcurl4-openssl-dev,
+ libfftw3-dev,
+ tao-pegtl-dev,
+ libutfcpp-dev,
+ nlohmann-json3-dev,
+ libjsoncpp-dev,
+ libfreetype-dev,
+ liblz4-dev,
+ libdouble-conversion-dev,
+Standards-Version: 4.7.0
+Homepage: http://www.itksnap.org
+Vcs-Browser: https://github.com/pyushkevich/itksnap
+Vcs-Git: https://github.com/pyushkevich/itksnap.git
+Rules-Requires-Root: no
+
+Package: itksnap
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Recommends:
+ hicolor-icon-theme,
+Description: interactive 3D medical image segmentation and navigation
+ ITK-SNAP is an application for segmenting structures in 3D biomedical images.
+ It provides semi-automatic active-contour (snake) segmentation, manual
+ delineation across three orthogonal planes, and image navigation. It is widely
+ used in neuroimaging and radiology for delineating anatomical structures.
+ .
+ Built on the Insight Toolkit (ITK), VTK and Qt 6.

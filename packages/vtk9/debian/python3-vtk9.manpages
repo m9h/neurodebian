@@ -1,0 +1,4 @@
+debian/manpages/vtkWrapPython-9.5.1
+debian/manpages/vtkWrapPythonInit-9.5.1
+debian/manpages/pvtkpython.1
+debian/manpages/vtkpython.1

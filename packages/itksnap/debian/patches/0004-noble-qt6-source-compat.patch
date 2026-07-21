@@ -1,0 +1,126 @@
+Index: itksnap-4.4.0~beta2/GUI/Qt/Components/SNAPQtCommon.cxx
+===================================================================
+--- itksnap-4.4.0~beta2.orig/GUI/Qt/Components/SNAPQtCommon.cxx
++++ itksnap-4.4.0~beta2/GUI/Qt/Components/SNAPQtCommon.cxx
+@@ -16,6 +16,7 @@
+ #include <QGraphicsScene>
+ #include <QGraphicsDropShadowEffect>
+ #include <QDateTime>
++#include <QTimeZone>
+ #include <QToolButton>
+ #include "SNAPQtCommonTranslations.h"
+ 
+Index: itksnap-4.4.0~beta2/GUI/Qt/Components/SSHTunnelWorkerThread.cxx
+===================================================================
+--- itksnap-4.4.0~beta2.orig/GUI/Qt/Components/SSHTunnelWorkerThread.cxx
++++ itksnap-4.4.0~beta2/GUI/Qt/Components/SSHTunnelWorkerThread.cxx
+@@ -64,14 +64,14 @@ SSHTunnelWorkerThread::callback(Callback
+     case SSHTunnel::CB_ERROR:
+     {
+       auto message = std::get<SSHTunnel::ErrorInfo>(info).error_message;
+-      qCritical() << "ERROR: " << message;
++      qCritical() << "ERROR: " << message.c_str();
+       emit tunnelError(QString::fromStdString(message));
+       break;
+     }
+     case SSHTunnel::CB_WARNING:
+     {
+       auto message = std::get<SSHTunnel::ErrorInfo>(info).error_message;
+-      qWarning() << "WARNING: " << message;
++      qWarning() << "WARNING: " << message.c_str();
+       emit tunnelError(QString::fromStdString(message));
+       break;
+     }
+@@ -79,7 +79,7 @@ SSHTunnelWorkerThread::callback(Callback
+     {
+       auto ready_info = std::get<SSHTunnel::ReadyInfo>(info);
+       emit tunnelReady(ready_info.local_port);
+-      qInfo() << "TUNNEL RUNNING ON HOST " << ready_info.hostname << " PORT " << ready_info.local_port;
++      qInfo() << "TUNNEL RUNNING ON HOST " << ready_info.hostname.c_str() << " PORT " << ready_info.local_port;
+       break;
+     }
+     case SSHTunnel::CB_PROMPT_PASSWORD:
+Index: itksnap-4.4.0~beta2/GUI/Qt/Windows/PreferencesDialog.cxx
+===================================================================
+--- itksnap-4.4.0~beta2.orig/GUI/Qt/Windows/PreferencesDialog.cxx
++++ itksnap-4.4.0~beta2/GUI/Qt/Windows/PreferencesDialog.cxx
+@@ -19,6 +19,7 @@
+ #include "ColorMapModel.h"
+ 
+ #include <QTreeView>
++#include <QDialogButtonBox>
+ #include <QPushButton>
+ #include <QtAbstractItemViewCoupling.h>
+ #include <QInputDialog>
+Index: itksnap-4.4.0~beta2/GUI/Qt/Windows/ResampleDialog.cxx
+===================================================================
+--- itksnap-4.4.0~beta2.orig/GUI/Qt/Windows/ResampleDialog.cxx
++++ itksnap-4.4.0~beta2/GUI/Qt/Windows/ResampleDialog.cxx
+@@ -7,6 +7,7 @@
+ #include "QtCheckBoxCoupling.h"
+ #include "QtComboBoxCoupling.h"
+ #include <QMenu>
++#include <QDialogButtonBox>
+ 
+ Q_DECLARE_METATYPE(InterpolationMethod)
+ 
+Index: itksnap-4.4.0~beta2/GUI/Qt/Windows/SaveModifiedLayersDialog.cxx
+===================================================================
+--- itksnap-4.4.0~beta2.orig/GUI/Qt/Windows/SaveModifiedLayersDialog.cxx
++++ itksnap-4.4.0~beta2/GUI/Qt/Windows/SaveModifiedLayersDialog.cxx
+@@ -2,6 +2,7 @@
+ #include "ui_SaveModifiedLayersDialog.h"
+ #include "LatentITKEventNotifier.h"
+ #include <QStandardItemModel>
++#include <QDialogButtonBox>
+ #include <QPushButton>
+ #include "SaveModifiedLayersModel.h"
+ #include "SNAPQtCommon.h"
+Index: itksnap-4.4.0~beta2/GUI/Qt/Windows/DeepLearningServerPanel.cxx
+===================================================================
+--- itksnap-4.4.0~beta2.orig/GUI/Qt/Windows/DeepLearningServerPanel.cxx
++++ itksnap-4.4.0~beta2/GUI/Qt/Windows/DeepLearningServerPanel.cxx
+@@ -17,6 +17,7 @@
+ #include <libssh/libssh.h>
+ #include "SSHTunnelWorkerThread.h"
+ #include <QMessageBox>
++#include <QDialogButtonBox>
+ #include <QInputDialog>
+ #include <QShowEvent>
+ #include <QFont>
+@@ -178,7 +179,7 @@ DeepLearningServerPanel::setupSSHTunnel(
+   m_Model->SetTunnelStatus(dls_model::TunnelStatus(dls_model::TUNNEL_ESTABLISHING));
+ 
+   // Start the thread - this means that the server will start connecting
+-  qDebug() << "Starting SSH tunnel thread for " << p->GetHostname() << " port " << p->GetPort();
++  qDebug() << "Starting SSH tunnel thread for " << p->GetHostname().c_str() << " port " << p->GetPort();
+   m_SSHTunnelWorkerThread->start();
+ }
+ 
+Index: itksnap-4.4.0~beta2/Testing/GUI/Qt/SSHTunnelTest/main.cxx
+===================================================================
+--- itksnap-4.4.0~beta2.orig/Testing/GUI/Qt/SSHTunnelTest/main.cxx
++++ itksnap-4.4.0~beta2/Testing/GUI/Qt/SSHTunnelTest/main.cxx
+@@ -11,19 +11,19 @@ SSHTunnel::CallbackResponse tunnel_callb
+     case SSHTunnel::CB_ERROR:
+     {
+       auto message = std::get<SSHTunnel::ErrorInfo>(info).error_message;
+-      qCritical() << "ERROR: " << message;
++      qCritical() << "ERROR: " << message.c_str();
+       break;
+     }
+     case SSHTunnel::CB_WARNING:
+     {
+       auto message = std::get<SSHTunnel::ErrorInfo>(info).error_message;
+-      qWarning() << "WARNING: " << message;
++      qWarning() << "WARNING: " << message.c_str();
+       break;
+     }
+     case SSHTunnel::CB_READY:
+     {
+       auto ready_info = std::get<SSHTunnel::ReadyInfo>(info);
+-      qInfo() << "TUNNEL RUNNING ON HOST " << ready_info.hostname << " PORT " << ready_info.local_port;
++      qInfo() << "TUNNEL RUNNING ON HOST " << ready_info.hostname.c_str() << " PORT " << ready_info.local_port;
+       break;
+     }
+     case SSHTunnel::CB_PROMPT_PASSWORD:

@@ -1,0 +1,17 @@
+Index: vtk9/Rendering/Matplotlib/vtkMatplotlibMathTextUtilities.cxx
+===================================================================
+--- vtk9.orig/Rendering/Matplotlib/vtkMatplotlibMathTextUtilities.cxx	2026-01-25 23:22:22.741023671 +0100
++++ vtk9/Rendering/Matplotlib/vtkMatplotlibMathTextUtilities.cxx	2026-02-05 12:10:11.414134274 +0100
+@@ -1029,6 +1029,12 @@
+     {
+       unsigned char* ptr = static_cast<unsigned char*>(image->GetScalarPointer(col, row, 0));
+ 
++      if (ptr == nullptr)
++      {
++	vtkErrorMacro("image returned null ScalarPointer.");
++	return false;
++      }
++
+       // Background, do not load python data
+       if (row > pythonRowStart || col < pythonColStart || row <= pythonRowEnd ||
+         col >= pythonColEnd)

@@ -8,6 +8,7 @@
 *.dsc
 # build trees / staging
 **/obj-*/
+**/build/
 **/BUILD/
 **/debian/.debhelper/
 **/debian/tmp/
@@ -18,6 +19,9 @@
 **/debian/debhelper-build-stamp
 # local data
 spec_meta.json
+# re-include real packaging source dirs that the broad debian/*/ rule above drops
 !**/debian/source/
 !**/debian/patches/
 !**/debian/upstream/
+!**/debian/manpages/
+!**/debian/tests/

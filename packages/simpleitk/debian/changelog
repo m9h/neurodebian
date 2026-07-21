@@ -1,0 +1,8 @@
+simpleitk (2.5.5-1~noble1) noble; urgency=medium
+
+  * Initial Debian/NeuroDebian packaging (ported from the neurofedora
+    python-simpleitk.spec). Built against the system InsightToolkit5 5.4.6
+    (which provides the SimpleITKFilters + LabelErodeDilate remote modules).
+  * Python 3 wrapping via SWIG; other language wrappings disabled.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Wed, 24 Jun 2026 20:00:00 -0700

@@ -1,0 +1,30 @@
+Description: Fix path for the installation of python modules
+Author: Anton Gladky <gladk@debian.org>
+Last-Update: 2020-11-06
+
+Index: vtk9/CMake/vtkModuleWrapPython.cmake
+===================================================================
+--- vtk9.orig/CMake/vtkModuleWrapPython.cmake	2026-01-30 11:52:31.237391653 +0100
++++ vtk9/CMake/vtkModuleWrapPython.cmake	2026-01-30 11:52:31.229391608 +0100
+@@ -82,7 +82,7 @@
+         "for Python modules.")
+       set(_vtk_python_version_suffix)
+     endif ()
+-    set(destination "${CMAKE_INSTALL_LIBDIR}/python${_vtk_python_version_suffix}/site-packages")
++    set(destination "lib/python3/dist-packages")
+   endif ()
+ 
+   set("${var}" "${destination}" PARENT_SCOPE)
+Index: vtk9/Utilities/Python/CMakeLists.txt
+===================================================================
+--- vtk9.orig/Utilities/Python/CMakeLists.txt	2026-01-30 11:52:31.237391653 +0100
++++ vtk9/Utilities/Python/CMakeLists.txt	2026-01-30 11:52:31.231129038 +0100
+@@ -54,7 +54,7 @@
+     set(VTK_PYTHON_SITE_PACKAGES_SUFFIX "Lib/site-packages")
+   else ()
+     set(VTK_PYTHON_SITE_PACKAGES_SUFFIX
+-      "python${vtk_python_version_pair}/site-packages")
++      "python3/dist-packages")
+   endif ()
+ endif ()
+ 

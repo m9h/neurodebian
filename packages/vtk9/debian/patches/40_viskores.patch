@@ -1,0 +1,17 @@
+Description: Fix viskores warning
+ /vtk9/ThirdParty/viskores/vtkviskores/viskores/viskores/cont/tbb/internal/RuntimeDeviceConfigurationTBB.h:49:66: warning: template-id not allowed for constructor in C++20 [-Wtemplate-id-cdtor]
+   49 |   RuntimeDeviceConfiguration<viskores::cont::DeviceAdapterTagTBB>()
+Author: Dominique Belhachemi <domibel@debian.org>
+Last-Update: 2025-09-25
+
+--- vtk9-9.5.2+dfsg2.orig/ThirdParty/viskores/vtkviskores/viskores/viskores/cont/tbb/internal/RuntimeDeviceConfigurationTBB.h
++++ vtk9-9.5.2+dfsg2/ThirdParty/viskores/vtkviskores/viskores/viskores/cont/tbb/internal/RuntimeDeviceConfigurationTBB.h
+@@ -46,7 +46,7 @@ class RuntimeDeviceConfiguration<viskore
+ {
+ public:
+   VISKORES_CONT
+-  RuntimeDeviceConfiguration<viskores::cont::DeviceAdapterTagTBB>()
++  RuntimeDeviceConfiguration()
+     :
+ #if TBB_VERSION_MAJOR >= 2020
+     HardwareMaxThreads(::tbb::task_arena{}.max_concurrency())

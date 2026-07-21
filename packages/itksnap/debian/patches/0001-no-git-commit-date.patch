@@ -1,0 +1,18 @@
+Description: Do not call get_git_commit_date when building from a tarball
+ SNAP_VERSION_GIT_BRANCH is empty in a tarball build, so get_git_commit_date()
+ is called with one argument instead of two and fails. Set the timestamp empty.
+Author: Morgan Hough <morgan.hough@gmail.com>
+Forwarded: not-needed
+Last-Update: 2026-06-26
+---
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -120,7 +120,7 @@
+ # Get the current git branch
+ include(GitBranch)
+ get_git_branch(SNAP_VERSION_GIT_BRANCH)
+-get_git_commit_date(${SNAP_VERSION_GIT_BRANCH} SNAP_VERSION_GIT_TIMESTAMP)
++set(SNAP_VERSION_GIT_TIMESTAMP "")
+ 
+ # Print the Git information
+ MESSAGE(STATUS "ITK-SNAP Git Info:")

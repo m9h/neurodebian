@@ -1,0 +1,42 @@
+Index: itksnap-4.4.0~beta2/CMakeLists.txt
+===================================================================
+--- itksnap-4.4.0~beta2.orig/CMakeLists.txt
++++ itksnap-4.4.0~beta2/CMakeLists.txt
+@@ -1270,12 +1270,17 @@ set_target_properties(${SNAP_BUNDLE_NAME
+ 
+ set(QT_I18N_TRANSLATED_LANGUAGES de es zh_CN)
+ string(JOIN " " QT_I18N_TRANSLATED_LANGUAGES_STRING ${QT_I18N_TRANSLATED_LANGUAGES})
++# NeuroDebian: qt_add_translations (Qt >= 6.5) is unavailable on noble (Qt 6.4.2);
++# its qt6_add_lrelease helper calls add_dependencies on a non-target and aborts the
++# configure. Translations (.qm) are non-essential for the package, so skip them there.
++if(COMMAND qt_add_translations AND Qt6_VERSION VERSION_GREATER_EQUAL 6.5)
+ qt_add_translations(
+   TARGETS ${SNAP_BUNDLE_NAME}
+   SOURCE_TARGETS itksnapui_qt ${SNAP_BUNDLE_NAME}
+   TS_FILE_DIR GUI/Qt/Translations
+   TS_FILE_BASE itksnap
+ )
++endif()
+ 
+ #--------------------------------------------------------------------------------
+ # Testing-related executables
+@@ -1717,6 +1722,11 @@ ELSE()
+   SET(CPACK_PACKAGE_EXECUTABLES "itksnap" "ITK-SNAP")
+   INSTALL(TARGETS ${SNAP_BUNDLE_NAME} RUNTIME DESTINATION ${SNAP_MAIN_INSTALL_DIR})
+ 
++  # NeuroDebian: qt_generate_deploy_script (Qt >= 6.5) does not exist on noble
++  # (Qt 6.4.2) and is only needed to bundle Qt plugins into a standalone install.
++  # In a Debian package the Qt runtime/plugins come from their own packages via
++  # dependencies, so skip the deploy-script generation entirely.
++  if(COMMAND qt_generate_deploy_script)
+   # Use Qt deployment script to take care of plugins
+   set(executable_path "${SNAP_MAIN_INSTALL_DIR}/${SNAP_BUNDLE_NAME}")
+ 
+@@ -1736,6 +1746,7 @@ ELSE()
+       LOCALES ${QT_I18N_TRANSLATED_LANGUAGES_STRING}
+   )")
+   install(SCRIPT ${deploy_script})
++  endif()
+ 
+ ENDIF()
+ 

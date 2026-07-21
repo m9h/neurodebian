@@ -1,0 +1,599 @@
+vtk9 (9.5.2+dfsg4-5ubuntu2) stonking; urgency=medium
+
+  * Rebuild against new old ffmpeg 7:8.1-3ubuntu3.
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Wed, 24 Jun 2026 12:35:32 +0200
+
+vtk9 (9.5.2+dfsg4-5ubuntu1) stonking; urgency=medium
+
+  * Switch to mariadb (Closes: #1137152)
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Fri, 19 Jun 2026 15:59:40 +0200
+
+vtk9 (9.5.2+dfsg4-5) unstable; urgency=medium
+
+  * Team upload.
+  * debian patch numpy_drop_in1d_MR12693.patch applies upstream
+    MR#12693 to remove numpy.in1d, no longer provided by numpy 1.24
+    (use numpy.isin instead). Closes: #1137015
+  * Standards-Version: 4.7.4
+
+ -- Drew Parsons <dparsons@debian.org>  Mon, 25 May 2026 21:11:13 +0200
+
+vtk9 (9.5.2+dfsg4-4) unstable; urgency=medium
+
+  * Team upload.
+  * mark libvtk9-dev as Multi-Arch: no, not Multi-Arch: same
+    since some header files contain arch-dependent definitions
+    (vtkOptions.h, vtkEndian.h, cgnstypes.h, XdmfConfig.h setting
+    endianness, int size, etc). Closes: #1133759
+    Consequently drop Multi-Arch: same from libvtk9-qt-dev
+    to avoid including inconsistent header definitions
+  * debian patch gdal-3.13.patch enables build with gdal 3.13.
+    Thanks Bas Couwenberg. Closes: #1134162
+
+ -- Drew Parsons <dparsons@debian.org>  Fri, 08 May 2026 14:41:38 +0200
+
+vtk9 (9.5.2+dfsg4-3) unstable; urgency=medium
+
+  * [07276b5] Relax upstream boost version in substvars. (Closes: #1130578)
+
+ -- Anton Gladky <gladk@debian.org>  Mon, 16 Mar 2026 06:12:29 +0100
+
+vtk9 (9.5.2+dfsg4-2) unstable; urgency=medium
+
+  * [7f37aac] Add versioned libboost-dev dependency.
+              (Closes: #1129768, #1129770, #1129773)
+  * [1f682b2] Remove Priority and RRR fields
+
+ -- Anton Gladky <gladk@debian.org>  Tue, 10 Mar 2026 06:07:36 +0100
+
+vtk9 (9.5.2+dfsg4-1) unstable; urgency=medium
+
+  * Team upload.
+  * Add back WebCore, WebGLExporter and WebPython modules for future use
+    within trame and pyvista.
+    - This required a repack 9.5.2+dfsg4, because the Web directory was
+      previously ignored in d/copyright.
+
+ -- Francesco Ballarin <ballarin@debian.org>  Tue, 03 Mar 2026 18:23:44 +0000
+
+vtk9 (9.5.2+dfsg3-8) unstable; urgency=medium
+
+  * Team upload.
+  * sh4: override dh_dwz to not process libvtkCommonCore
+    which fails with "Cannot allocate memory"
+
+ -- Drew Parsons <dparsons@debian.org>  Sat, 21 Feb 2026 11:59:19 +0100
+
+vtk9 (9.5.2+dfsg3-7) unstable; urgency=medium
+
+  * Team upload.
+  * add hurd-amd64 to list of architectures supporting adios2
+    in Build-Depends: libadios2-mpi-c++-dev
+    (adios2 now builds on all 64-bit architectures)
+  * update debian/watch to v5 format. Use GitLab template rather than
+    GitHub since upstream development happens at
+    https://gitlab.kitware.com/vtk/vtk
+    https://github.com/Kitware/VTK is just a mirror of the gitlab repo.
+
+ -- Drew Parsons <dparsons@debian.org>  Sun, 15 Feb 2026 19:34:42 +0100
+
+vtk9 (9.5.2+dfsg3-6) unstable; urgency=medium
+
+  * Team upload.
+  * debian patch matplotlib_nullptr_s390x.patch handles case of null
+    ScalarPointer in image in vtkMatplotlibMathTextUtilities::RenderOneCell
+    A null pointer was generated on s390x causing pyvista
+    test_add_text_latex to segfault. Closes: #1126861
+  * add alpha to list of ADIOS2-supporting arches in
+    Build-Depends: libadios2-mpi-c++-dev
+
+ -- Drew Parsons <dparsons@debian.org>  Thu, 05 Feb 2026 20:55:34 +0100
+
+vtk9 (9.5.2+dfsg3-5) unstable; urgency=medium
+
+  * Team upload.
+  * debian patch findEXPAT_version_fix_MR12826.patch applies upstream
+    MR#12826 to fix expat version handling. Closes: #1050506
+  * 9.5.2+dfsg3-3 disabled viskores on 32-bit arches, since
+    ParaView::RemotingViews optionally uses VTK::vtkviskores
+    but (ThirdParty) viskores exhausts virtual memory on 32-bit arches
+  * disable viskores on alpha, which is 64-bit but also exceeds
+    available memory
+
+ -- Drew Parsons <dparsons@debian.org>  Thu, 05 Feb 2026 11:39:23 +0100
+
+vtk9 (9.5.2+dfsg3-4) unstable; urgency=medium
+
+  * Team upload.
+  * debian/rules: use UPSTREAM_VERSION_ABI (currently 9.5) to refer to
+    version specific library (i.e. libvtk9.5) to fix handling of Qt modules
+
+ -- Drew Parsons <dparsons@debian.org>  Wed, 28 Jan 2026 12:53:25 +0100
+
+vtk9 (9.5.2+dfsg3-3) unstable; urgency=medium
+
+  * Team upload.
+  * build docs in arch-indepedent build only
+  * remove version-specific references from debian/rules
+
+ -- Drew Parsons <dparsons@debian.org>  Wed, 28 Jan 2026 10:04:53 +0100
+
+vtk9 (9.5.2+dfsg3-2) unstable; urgency=medium
+
+  * Team upload.
+  * extra VTK modules support paraview. Closes: #1100766
+  * don't configure xdmf3 (i.e. IOParallelXdmf3) on 32-bit arches,
+    where vtk's copy of xdmf3 fails to build. See Bug#1126484
+    (upstream paraview Issue #22630)
+  * enable RenderingFreeTypeFontConfig. Closes: #1101916
+  * build docs in arch-independent build only. Closes: #1125140
+    Move doc generating packages doxygen-latex, ghostscript,
+    gnuplot-nox, graphviz to Build-Depends-Indep <!nodoc>.
+  * escape sequences in vtkMethodParser.py are fixed. Closes: #1079541
+  * Standards-Version: 4.7.3
+
+ -- Drew Parsons <dparsons@debian.org>  Wed, 28 Jan 2026 04:41:09 +0100
+
+vtk9 (9.5.2+dfsg3-1) unstable; urgency=medium
+
+  * Team upload.
+  * enable modules required by paraview 6
+    (use IOParallelXdmf3 for IOXdmf3)
+    - enable VTK::xmdf3 (ThirdParty/xdmf3). Drop from Files-Excluded in
+      debian/copyright. Bump repacked version to dfsg3 to add xdmf3
+  * add support for IOADIOS2 (used by paraview). 64-bit arches only.
+    Build-Depends: libadios2-mpi-c++-dev [amd64 arm64 mips64el ppc64el
+    riscv64 s390x loong64 ppc64 sparc64]
+  * set HDF5_PREFER_PARALLEL=YES (with HDF5_IS_PARALLEL=ON) to
+    activate parallel HDF5 (via libhdf5-mpi-dev)
+  * Build-Depends: libxcursor-dev (enables custom cursors)
+
+ -- Drew Parsons <dparsons@debian.org>  Tue, 27 Jan 2026 00:24:26 +0100
+
+vtk9 (9.5.2+dfsg2-4) unstable; urgency=medium
+
+  * Team upload
+  * Enable VTK external rendering with SDL, GLFW, etc.
+
+ -- Dominique Belhachemi <domibel@debian.org>  Mon, 27 Oct 2025 14:54:02 -0400
+
+vtk9 (9.5.2+dfsg2-3) unstable; urgency=medium
+
+  * Team upload
+  * Fix vtk9-doc FTBFS
+
+ -- Dominique Belhachemi <domibel@debian.org>  Thu, 23 Oct 2025 20:23:59 -0400
+
+vtk9 (9.5.2+dfsg2-2) unstable; urgency=medium
+
+  * Team upload
+  * Fix manpages suffix
+
+ -- Dominique Belhachemi <domibel@debian.org>  Thu, 23 Oct 2025 14:27:19 -0400
+
+vtk9 (9.5.2+dfsg2-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream release 9.5.2+dfsg2
+  * Keep embedded viskores and scn sources
+  * Exclude embedded nlohmannjson/vtknlohmannjson sources
+  * d/copyright: Update files and licenses
+  * Raise minimum Java version from 8 to 11 (javac --release 11)
+  * Add nlohmann-json3-dev dependency
+  * Add PPC64 patch
+  * Lower optimization to -O1 on alpha to fix FTBFS
+  * Bump Standards-Version to 4.7.2
+  * Drop outdated patches
+  * Remove hardcoded compiler flags
+  * Update man pages
+  * Switch to Qt6
+
+ -- Dominique Belhachemi <domibel@debian.org>  Mon, 13 Oct 2025 12:11:48 -0400
+
+vtk9 (9.3.0+dfsg1-7) unstable; urgency=medium
+
+  * Non-maintainer upload
+  * Remove obsolete libosmesa6-dev dependency. (Closes: #1113920)
+  * Remove obsolete tcl-dev and tk-dev dependency.
+  * Remove r-base dependency
+  * Apply upstream patch to fix gcc-15 FTBFS issue (Closes: #1111572)
+  * Remove obsolete libftgl-dev dependency
+
+ -- Dominique Belhachemi <domibel@debian.org>  Thu, 04 Sep 2025 14:06:08 -0400
+
+vtk9 (9.3.0+dfsg1-6) unstable; urgency=medium
+
+  * Team upload.
+  * Remove obsolete libmrmpi-dev dependency.
+
+ -- Bastian Germann <bage@debian.org>  Mon, 01 Sep 2025 17:22:13 +0200
+
+vtk9 (9.3.0+dfsg1-5) unstable; urgency=medium
+
+  * Team upload.
+  [ Adrian Bunk ]
+  * Apply patch from Samuel Thibault to disable Java and TBB on Hurd.
+    Closes: #1094994.
+  * Make TBB architecture settings consistent.
+  * Remove handling of removed kfreebsd.
+
+ -- Santiago Vila <sanvila@debian.org>  Fri, 22 Aug 2025 13:20:00 +0200
+
+vtk9 (9.3.0+dfsg1-4) unstable; urgency=medium
+
+  * Team upload.
+  * Replace _FillValue by NC_FillValue for NetCDF 4.9.3. (Closes: #1095478)
+
+ -- Bastian Germann <bage@debian.org>  Sat, 15 Feb 2025 13:13:19 +0000
+
+vtk9 (9.3.0+dfsg1-3) unstable; urgency=medium
+
+  * [a52f6c5] Fix segfault on python 3.13. (Closes: #1092354)
+
+ -- Anton Gladky <gladk@debian.org>  Tue, 28 Jan 2025 21:40:49 +0100
+
+vtk9 (9.3.0+dfsg1-2) unstable; urgency=medium
+
+  * Team upload.
+  * Drop Depends: libqt5webkit5-dev.
+
+ -- Bastian Germann <bage@debian.org>  Thu, 23 Jan 2025 08:49:29 +0100
+
+vtk9 (9.3.0+dfsg1-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Build against libhdf5-mpi-dev, since libhdf5-openmpi-dev is no longer
+    available on 32-bit architectures. Closes: #1078743.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Fri, 22 Nov 2024 11:49:45 +0100
+
+vtk9 (9.3.0+dfsg1-1) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Michael R. Crusoe ]
+  * Build the IO/GeoJSON module. Closes: #1029285
+    To the binary package libvtk9.1t64, this adds
+      /usr/lib/${DEB_HOST_MULTIARCH}/libvtkIOGeoJSON-9.1.so.9.1.0
+      /usr/lib/${DEB_HOST_MULTIARCH}/vtk/hierarchy/VTK/vtkIOGeoJSON-hierarchy.txt
+      /usr/lib/${DEB_HOST_MULTIARCH}/libvtkIOGeoJSON-9.1.so.1
+    To the binary package libvtk9-dev, this adds
+      /usr/include/vtk-9.1/vtkGeoJSONFeature.h
+      /usr/include/vtk-9.1/vtkGeoJSONReader.h
+      /usr/include/vtk-9.1/vtkGeoJSONWriter.h
+      /usr/include/vtk-9.1/vtkIOGeoJSONModule.h
+      /usr/lib/${DEB_HOST_MULTIARCH}/libvtkIOGeoJSON-9.1.so
+    To the binary package libvtk9-java, this adds
+      /usr/lib/${DEB_HOST_MULITARCH}/java/vtk-Linux-${DEB_HOST_GNU_CPU}
+        /libvtkIOGeoJSONJava.so
+    To the binary package python3-vtk9, this adds
+      /usr/lib/python3/dist-packages/vtkmodules
+        /vtkIOGeoJSON.cpython-311-${DEB_HOST_GNU_CPU}.so
+
+  [ Anton Gladky ]
+  * Upload of new version 9.3 into unstable.
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 06 Jun 2024 21:34:35 +0200
+
+vtk9 (9.1.0+really9.1.0+dfsg2-8) unstable; urgency=medium
+
+  [ Bo YU ]
+  * Team upload.
+  * Add support for loongarch64. Thanks to Dandan Zhang
+    <zhangdandan@loongson.cn>. (Closes: #1054471)
+
+  [ Michael R. Crusoe ]
+  * Cherry-pick patch from upstream to fix issue with newer expat and
+    appended data. Closes: #1064762
+  * d/control: build-dep on libhdf5-mpi-dev instead of libhdf5-openmpi-
+    dev. Closes: #1068321
+  * Cherry-pick patch from upstream to fix CVE-2021-42521. Closes:
+    #1031877.
+  * Fix Maintainer name of Debian Science team (routine-update)
+  * Remove trailing whitespace in debian/copyright (routine-update)
+  * d/control: Updated some dependencies on obsolete or supercede packages
+    names.
+
+ -- Michael R. Crusoe <crusoe@debian.org>  Mon, 29 Apr 2024 16:16:28 +0200
+
+vtk9 (9.1.0+really9.1.0+dfsg2-7.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Rename libraries for 64-bit time_t transition.  Closes: #1063267
+
+ -- Steve Langasek <vorlon@debian.org>  Wed, 28 Feb 2024 23:38:25 +0000
+
+vtk9 (9.3.0+dfsg1-1~exp4) experimental; urgency=medium
+
+  * [43fb8c1] Add libgl2ps-dev as depends.
+
+ -- Anton Gladky <gladk@debian.org>  Sat, 20 Jan 2024 19:57:32 +0100
+
+vtk9 (9.3.0+dfsg1-1~exp3) experimental; urgency=medium
+
+  * [2767f12] Add missing GL-header.
+
+ -- Anton Gladky <gladk@debian.org>  Wed, 10 Jan 2024 22:17:01 +0100
+
+vtk9 (9.3.0+dfsg1-1~exp2) experimental; urgency=medium
+
+  * [ad5a07d] Update build-depends.
+
+ -- Anton Gladky <gladk@debian.org>  Tue, 09 Jan 2024 19:54:16 +0100
+
+vtk9 (9.3.0+dfsg1-1~exp1) experimental; urgency=medium
+
+  [ Bas Couwenberg ]
+  * Team upload.
+  * Merge GCC 13 changes from 9.1.0+really9.1.0+dfsg2-7.
+    (closes: #1037887)
+
+  [ Anton Gladky ]
+  * [69b4a61] Update copyright
+  * [d5dfcaf] New upstream version 9.3.0+dfsg1
+  * [5e949d9] Update binariries to vtk9.3
+  * [7c9a9bf] Update patches
+
+ -- Anton Gladky <gladk@debian.org>  Fri, 05 Jan 2024 06:57:20 +0100
+
+vtk9 (9.2.6+dfsg1-1+exp2) experimental; urgency=medium
+
+  * Team upload.
+  * Merge changes from 9.1.0+really9.1.0+dfsg2-6.
+  * Add license paragraph for public-domain license.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Thu, 22 Jun 2023 13:22:18 +0200
+
+vtk9 (9.2.6+dfsg1-1+exp1) experimental; urgency=medium
+
+  * [965a45d] New upstream version 9.2.6+dfsg1
+
+ -- Anton Gladky <gladk@debian.org>  Sat, 25 Mar 2023 15:34:05 +0100
+
+vtk9 (9.1.0+really9.1.0+dfsg2-7) unstable; urgency=medium
+
+  * Team upload.
+  * Cherry-pick patch from upstream to fix FTBFS with gcc-13.
+    (Closes: #1037887)
+
+ -- Michael R. Crusoe <crusoe@debian.org>  Tue, 22 Aug 2023 00:27:20 +0200
+
+vtk9 (9.1.0+really9.1.0+dfsg2-6) unstable; urgency=medium
+
+  * Team upload.
+  * Don't use netcdf-cxx-legacy.
+    (closes: #1038614)
+
+ -- Bas Couwenberg <sebastic@debian.org>  Thu, 22 Jun 2023 07:14:50 +0200
+
+vtk9 (9.1.0+really9.1.0+dfsg2-5) unstable; urgency=medium
+
+  [ Elvis Stansvik ]
+  * [a408ad0] Add upstream fix for shader crash with multivolume
+
+  [ Adrian Bunk ]
+  * [ab960ac] Build without libtbb also on alpha and ia64
+
+  [ Anton Gladky ]
+  * [be1ea19] Set upstream metadata fields: Bug-Database, Bug-Submit.
+  * [f5599c7] Update standards version to 4.6.2, no changes needed.
+
+ -- Anton Gladky <gladk@debian.org>  Sat, 25 Feb 2023 09:59:35 +0100
+
+vtk9 (9.1.0+really9.1.0+dfsg2-4) unstable; urgency=medium
+
+  * [b05b21f] Fix FTBFS against NETCDF>4.9.0. (Closes: #1012703)
+
+ -- Anton Gladky <gladk@debian.org>  Sun, 19 Jun 2022 16:25:33 +0200
+
+vtk9 (9.1.0+really9.1.0+dfsg2-3) unstable; urgency=medium
+
+  * Upload into unstable.
+
+ -- Anton Gladky <gladk@debian.org>  Fri, 21 Jan 2022 21:24:01 +0100
+
+vtk9 (9.1.0+really9.1.0+dfsg2-3~exp2) experimental; urgency=medium
+
+  [ Adrian Bunk ]
+  * [33b75d5] Restore the 83_allow_gles_platforms.patch hack for Qt with OpenGL ES
+  * [b243b24] HACK: vtkQWidgetTexture.cxx: Don't use vtkOpenGLCheckErrorMacro
+
+  [ Anton Gladky ]
+  * [4449d7a] Add missing Breaks+Replaces to libvtk9. (Closes: #1002063)
+
+ -- Anton Gladky <gladk@debian.org>  Wed, 19 Jan 2022 22:40:05 +0100
+
+vtk9 (9.1.0+really9.1.0+dfsg2-3~exp1) experimental; urgency=medium
+
+  * [948c358] Update package names due to so-version changes
+
+ -- Anton Gladky <gladk@debian.org>  Mon, 29 Nov 2021 22:26:25 +0100
+
+vtk9 (9.1.0+really9.0.3+dfsg1-4) unstable; urgency=medium
+
+  * [90cbc11] vtkFreeTypeTools: avoid using an internal macro.
+              (Closes: #1000746)
+  * [9e418ba] Use python3-dev in BD
+
+ -- Anton Gladky <gladk@debian.org>  Sun, 28 Nov 2021 23:34:47 +0100
+
+vtk9 (9.1.0+really9.0.3+dfsg1-3) unstable; urgency=medium
+
+  * Upload previous version to fix unstable. (Closes: #1000611)
+
+ -- Anton Gladky <gladk@debian.org>  Sat, 27 Nov 2021 21:27:37 +0100
+
+vtk9 (9.1.0+dfsg2-2) unstable; urgency=medium
+
+  * [dda0c55] Fix FTBFS on build-any
+
+ -- Anton Gladky <gladk@debian.org>  Wed, 24 Nov 2021 21:43:24 +0100
+
+vtk9 (9.1.0+dfsg2-1) unstable; urgency=medium
+
+  [ Anton Gladky ]
+  * [d2a3591] Drop Thirdparty/fides from the source
+  * [2f0d373] Fix lintian warnings
+  * [7169c10] Remove unused patches
+  * [a51ec5a] Fix manpages
+  * [e941542] Fix dependencies. (Closes: #998470, #1000501)
+  * [5c49e03] New upstream version 9.1.0+dfsg2
+
+  [ Samuel Thibault ]
+  * [82b2737] Disable libtbb-dev build-dep on !linux. (Closes: #996257)
+
+ -- Anton Gladky <gladk@debian.org>  Wed, 24 Nov 2021 18:07:18 +0100
+
+vtk9 (9.1.0+dfsg1-1) unstable; urgency=medium
+
+  * [5442030] New upstream version 9.1.0+dfsg1
+  * [1ee83fe] Fix compilation
+
+ -- Anton Gladky <gladk@debian.org>  Tue, 23 Nov 2021 20:17:56 +0100
+
+vtk9 (9.0.3+dfsg1-3) unstable; urgency=medium
+
+  * Team upload.
+  * Add upstream patch to include <limits> (Closes: #984399)
+  * Bump Java source/target versions (Closes: #981974)
+  * Add upstream patch for proj>=5 api (Closes: #983299)
+  * Use dh-sequencers
+  * Use execute_after_ of dh
+  * Add Multi-Arch hints from the MA hinter
+  * Bump policy versions (no changes)
+
+ -- Jochen Sprickerhof <jspricke@debian.org>  Tue, 12 Oct 2021 10:21:32 +0200
+
+vtk9 (9.0.3+dfsg1-2) unstable; urgency=medium
+
+  * [ccb2b2e] Remove gitlab-ci
+  * [7e35e50] Add libtbb-dev as depends
+
+ -- Anton Gladky <gladk@debian.org>  Sat, 18 Sep 2021 08:10:15 +0200
+
+vtk9 (9.0.3+dfsg1-1) unstable; urgency=medium
+
+  [ Adrian Bunk ]
+  * [f635946] Bump the libgl2ps-dev build dependency to >= 1.4.1
+
+  [ Francois Mazen ]
+  * [91a8c79] Set TBB as SMP backend.
+
+  [ Anton Gladky ]
+  * [3116116] New upstream version 9.0.3+dfsg1
+  * [6bce9b2] Compile with MPI
+  * [991e8b0] Apply cme fix dpkg
+  * [b64d990] Add .gitlab-ci.yml
+
+ -- Anton Gladky <gladk@debian.org>  Fri, 17 Sep 2021 22:14:11 +0200
+
+vtk9 (9.0.1+dfsg1-8) unstable; urgency=medium
+
+  [ Samuel Thibault ]
+  * [e2a0f2b]  Fix java dep on non-java ports. (Closes: #980125)
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 14 Jan 2021 21:36:46 +0100
+
+vtk9 (9.0.1+dfsg1-7) unstable; urgency=medium
+
+  * [cab8734] Enable some more modules
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 07 Jan 2021 19:43:49 +0100
+
+vtk9 (9.0.1+dfsg1-6) unstable; urgency=medium
+
+  [ Samuel Thibault ]
+  * [7027348] Fix FTBFS on hurd-i386 and non-java ports. (Closes: #978659)
+
+  [ Vagrant Cascadian ]
+  * [7a3a0e0] Make vtk9 build-reproducible. (Closes: #977522, #977521)
+
+  [ Anton Gladky ]
+  * [a341c32] Enable RenderingContextOpenGL2. (Closes: #979073)
+
+ -- Anton Gladky <gladk@debian.org>  Mon, 04 Jan 2021 22:12:05 +0100
+
+vtk9 (9.0.1+dfsg1-5) unstable; urgency=medium
+
+  [ Adrian Bunk ]
+  * [06163ff] Fixes and workaround for platforms where Qt uses OpenGL ES
+
+  [ Anton Gladky ]
+  * [3e6d9ec] Ignore quilt dir
+  * [294ca1e] Revert "Do not build qt on some (GLES) archs"
+
+ -- Anton Gladky <gladk@debian.org>  Sun, 13 Dec 2020 12:55:42 +0100
+
+vtk9 (9.0.1+dfsg1-4) unstable; urgency=medium
+
+  * [b80e4ab] Do not build qt on some (GLES) archs
+
+ -- Anton Gladky <gladk@debian.org>  Sun, 13 Dec 2020 12:14:22 +0100
+
+vtk9 (9.0.1+dfsg1-3) unstable; urgency=medium
+
+  [ Adrian Bunk ]
+  * [52af841] Revert "Link against latomic"
+  * [381ea98] Link with libatomic on archtectures that need it
+
+  [ Anton Gladky ]
+  * [a983346] 80_allow_gles_platforms.patch.
+  * [e79137e] Fix FTBFS against freetype 2.10.4. (Closes: #976975)
+  * [d7ecb86] Add python3-vtk9 as Breaks+Replaces: python3-paraview.
+              (Closes: #976127)
+  * [19fe54e] Update changelog.
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 10 Dec 2020 17:33:59 +0100
+
+vtk9 (9.0.1+dfsg1-2) unstable; urgency=medium
+
+  * [3afb408] Fix autopkgtests
+  * [8c41fa9] Minor fix in d/copyright
+
+ -- Anton Gladky <gladk@debian.org>  Wed, 25 Nov 2020 21:50:59 +0100
+
+vtk9 (9.0.1+dfsg1-1) unstable; urgency=medium
+
+  * [6b297c8] Link against latomic
+  * Upload into unstable
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 19 Nov 2020 19:59:45 +0100
+
+vtk9 (9.0.1+dfsg1-1~exp6) experimental; urgency=medium
+
+  * [751a92f] Remove Qt-files from non-qt binaries. (Closes: #974923)
+
+ -- Anton Gladky <gladk@debian.org>  Mon, 16 Nov 2020 21:39:46 +0100
+
+vtk9 (9.0.1+dfsg1-1~exp5) experimental; urgency=medium
+
+  * [21adbaf] Fix FTBFS
+  * [4326c39] Sort build-dependencies
+
+ -- Anton Gladky <gladk@debian.org>  Sun, 15 Nov 2020 08:47:31 +0100
+
+vtk9 (9.0.1+dfsg1-1~exp4) experimental; urgency=medium
+
+  * [0be2017] Drop Build-Depends-Arch:
+
+ -- Anton Gladky <gladk@debian.org>  Fri, 13 Nov 2020 23:29:02 +0100
+
+vtk9 (9.0.1+dfsg1-1~exp3) experimental; urgency=medium
+
+  * [e5cfe7f] Move javahelper to BD
+
+ -- Anton Gladky <gladk@debian.org>  Fri, 13 Nov 2020 22:53:27 +0100
+
+vtk9 (9.0.1+dfsg1-1~exp2) experimental; urgency=medium
+
+  * [cedb51e] Fix FTBFS on -any arch
+
+ -- Anton Gladky <gladk@debian.org>  Fri, 13 Nov 2020 16:07:58 +0100
+
+vtk9 (9.0.1+dfsg1-1~exp1) experimental; urgency=medium
+
+  * Initial release. (Closes: #974165)
+
+ -- Anton Gladky <gladk@debian.org>  Tue, 10 Nov 2020 22:12:50 +0100

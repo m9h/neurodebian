@@ -1,0 +1,3 @@
+usr/lib/libSimpleITK*.so
+usr/include/SimpleITK-2.5
+usr/lib/cmake/SimpleITK-2.5

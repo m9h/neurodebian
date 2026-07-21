@@ -1,0 +1,52 @@
+#!/usr/bin/make -f
+# SimpleITK — built against the system InsightToolkit5, ported from the
+# neurofedora python-simpleitk.spec. Python 3 wrapping only.
+
+include /usr/share/dpkg/architecture.mk
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+ITK_DIR = /usr/lib/$(DEB_HOST_MULTIARCH)/cmake/ITK-5.4
+
+%:
+	dh $@ --buildsystem=cmake+ninja --with python3
+
+# SimpleITK exposes no 'test' ninja target (BUILD_TESTING=OFF); skip dh_auto_test.
+override_dh_auto_test:
+
+override_dh_auto_install:
+	dh_auto_install
+	# SimpleITK's cmake does not install the SWIG Python module; place it by hand.
+	install -d debian/tmp/usr/lib/python3/dist-packages/SimpleITK
+	install -m0644 obj-*/Wrapping/Python/SimpleITK/__init__.py \
+	               obj-*/Wrapping/Python/SimpleITK/SimpleITK.py \
+	               obj-*/Wrapping/Python/SimpleITK/_version.py \
+	               obj-*/Wrapping/Python/SimpleITK/extra.py \
+	               obj-*/Wrapping/Python/SimpleITK/py.typed \
+	    debian/tmp/usr/lib/python3/dist-packages/SimpleITK/
+	install -m0755 obj-*/Wrapping/Python/SimpleITK/_SimpleITK*.so \
+	    debian/tmp/usr/lib/python3/dist-packages/SimpleITK/
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DBUILD_SHARED_LIBS:BOOL=ON \
+	  -DBUILD_TESTING:BOOL=OFF \
+	  -DBUILD_EXAMPLES:BOOL=OFF \
+	  -DBUILD_DOXYGEN:BOOL=OFF \
+	  -DSimpleITK_BUILD_DISTRIBUTE:BOOL=ON \
+	  -DSimpleITK_FORBID_DOWNLOADS:BOOL=ON \
+	  -DSimpleITK_INT64_PIXELIDS:BOOL=ON \
+	  -DSimpleITK_EXPLICIT_INSTANTIATION:BOOL=OFF \
+	  -DSimpleITK_USE_ELASTIX:BOOL=OFF \
+	  -DSimpleITK_PYTHON_USE_LIMITED_API:BOOL=OFF \
+	  -DITK_DIR:PATH=$(ITK_DIR) \
+	  -DLUA_EXECUTABLE:FILEPATH=/usr/bin/lua5.4 \
+	  -DWRAP_DEFAULT:BOOL=OFF \
+	  -DWRAP_PYTHON:BOOL=ON \
+	  -DWRAP_LUA:BOOL=OFF \
+	  -DWRAP_R:BOOL=OFF \
+	  -DWRAP_JAVA:BOOL=OFF \
+	  -DWRAP_CSHARP:BOOL=OFF \
+	  -DWRAP_TCL:BOOL=OFF \
+	  -DWRAP_RUBY:BOOL=OFF \
+	  -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON

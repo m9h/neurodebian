@@ -1,0 +1,2 @@
+# Upstream bundled SHA-1 helper carries a non-UTF-8 byte in a comment.
+libsimpleitk-dev: national-encoding *

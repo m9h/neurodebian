@@ -1,0 +1,17 @@
+10_matplotlib.patch
+20_do_not_link_against_socket.patch
+30_drop_medical_example.patch
+40_viskores.patch
+50_fix_python-modules_path.patch
+60_fix_path_perl.patch
+80_fix_ppc64_ftbfs.patch
+84_vtkQWidgetTexture_no_vtkOpenGLCheckErrorMacro.patch
+97_reproducible_builds.patch
+98_fix_mpi4py.py
+99_fix_ftbfs.patch
+100_add_missing_gl_header.patch
+121_add_support_for_loong64.patch
+findEXPAT_version_fix_MR12826.patch
+matplotlib_nullptr_s390x.patch
+gdal-3.13.patch
+numpy_drop_in1d_MR12693.patch

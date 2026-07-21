@@ -1,0 +1,34 @@
+#!/usr/bin/make -f
+# ITK-SNAP — built against the system InsightToolkit5 + VTK + Qt6,
+# ported from the neurofedora itksnap.spec.
+
+include /usr/share/dpkg/architecture.mk
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+ITK_DIR = /usr/lib/$(DEB_HOST_MULTIARCH)/cmake/ITK-5.4
+
+%:
+	dh $@ --buildsystem=cmake+ninja
+
+# The upstream ctest suite needs test data and a running X display / SSH server
+# that are not available during a package build; skip it (the binaries are built
+# and installed regardless).
+override_dh_auto_test:
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DITK_DIR:PATH=$(ITK_DIR) \
+	  -DBUILD_SHARED_LIBS:BOOL=OFF \
+	  -DSNAP_USE_GPU:BOOL=OFF \
+	  -DSNAP_USE_OSMESA:BOOL=OFF \
+	  -DSNAP_USE_IWYU:BOOL=OFF \
+	  -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
+
+# Upstream installs only binaries; add a desktop entry + icon for menu
+# integration (the .desktop lives in debian/, the icon comes from the source).
+execute_after_dh_auto_install:
+	install -Dm644 debian/itksnap.desktop \
+	  debian/itksnap/usr/share/applications/itksnap.desktop
+	install -Dm644 GUI/Qt/Resources/logo_square.png \
+	  debian/itksnap/usr/share/pixmaps/itksnap.png

@@ -1,0 +1,24 @@
+.TH VTKWRAPPYTHONINIT 1 "October 2025" "VTK 9.5" "User Commands"
+.SH NAME
+vtkWrapPythonInit \- A VTK utility to generate Python module initialization code
+.SH SYNOPSIS
+\fBvtkWrapPythonInit\fR \fIinput_file\fR \fIinit_file\fR
+.SH DESCRIPTION
+\fBvtkWrapPythonInit\fR is a tool from the Visualization Toolkit (VTK) used to generate the C++ source code for a Python extension module's initialization function. This `PyInit` entry point is responsible for registering all the types defined in a given module.
+.PP
+This tool is used by the VTK build system during the compilation of Python wrappers for C++ classes.
+.SH ARGUMENTS
+.TP
+\fIinput_file\fR
+A file listing the wrapped classes that need to be initialized.
+.TP
+\fIinit_file\fR
+The output C++ source file that contains the Python module initialization function.
+.SH SEE ALSO
+\fBvtk\fR(1)
+.br
+\fBvtkWrapPython\fR(1)
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+This manual page was written for VTK 9.5.

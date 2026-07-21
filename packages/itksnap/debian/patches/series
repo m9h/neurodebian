@@ -1,0 +1,5 @@
+0001-no-git-commit-date.patch
+0002-gcc15-std-cout.patch
+0003-drop-qt-deploy-and-translations.patch
+0004-noble-qt6-source-compat.patch
+0005-use-system-jsoncpp.patch

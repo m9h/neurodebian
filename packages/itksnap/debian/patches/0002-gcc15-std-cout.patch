@@ -1,0 +1,16 @@
+Description: Add explicit std::cout for GCC 15
+ GCC 15 no longer re-exports std::cout into the global namespace via the
+ transitive cstdlib chain; SynchronizationModel.cxx uses bare `cout <<`.
+ Back-port the upstream master fix (add <iostream> + using std::cout).
+Author: Morgan Hough <morgan.hough@gmail.com>
+Forwarded: https://github.com/pyushkevich/itksnap (fixed in master)
+Last-Update: 2026-06-26
+---
+--- a/GUI/Model/SynchronizationModel.cxx
++++ b/GUI/Model/SynchronizationModel.cxx
+@@ -1,3 +1,5 @@
++#include <iostream>
++using std::cout;
+ #include "SynchronizationModel.h"
+ #include "GlobalUIModel.h"
+ #include "IRISApplication.h"

@@ -1,0 +1,7 @@
+# ITK-SNAP vendors jsoncpp in its source tree (Submodules/); upstream's build
+# system links it statically and does not support an unbundled system copy
+# without invasive changes. Accepted for this NeuroDebian gap-fill build.
+itksnap: embedded-library libjsoncpp*
+# Upstream ships no manual pages for its GUI or bundled CLI tools
+# (itksnap, itksnap-wt, c2d/c3d/c4d, greedy and friends).
+itksnap: no-manual-page *

@@ -1,0 +1,22 @@
+itksnap (4.4.0~beta2-1~noble2) noble; urgency=medium
+
+  * Build against system jsoncpp (0005-use-system-jsoncpp.patch): the
+    bundled 0.10.6 copy plus VTK's system libjsoncpp.so.25 put two
+    jsoncpp ABIs in one process, causing a duplicate-symbol segfault at
+    startup. Add pkg-config Build-Dep.
+  * Install a .desktop entry + icon for menu integration; add lintian
+    overrides for the vendored libs and missing man pages.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Sat, 11 Jul 2026 09:28:02 -0700
+
+itksnap (4.4.0~beta2-1~noble1) noble; urgency=medium
+
+  * Initial Debian/NeuroDebian packaging (ported from the neurofedora
+    itksnap.spec). Built against the system InsightToolkit5 5.4.6 (which
+    provides the MorphologicalContourInterpolation remote module ITK-SNAP needs)
+    and system VTK + Qt 6.
+  * Vendor the c3d, greedy and digestible submodules (pinned commits) into
+    Submodules/; back-port the GCC 15 std::cout fix; skip the git-commit-date
+    call for tarball builds.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Fri, 26 Jun 2026 12:00:00 -0700

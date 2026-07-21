@@ -1,0 +1,73 @@
+From b4d87554cf82db109b21e905fb57df05df8adbdc Mon Sep 17 00:00:00 2001
+From: Julien Schueller <schueller@phimeca.com>
+Date: Mon, 19 Jan 2026 14:49:34 +0100
+Subject: [PATCH] CMake: Fix EXPAT version warning
+
+Closes #19679
+---
+ CMake/FindEXPAT.cmake           | 11 ++++++-----
+ ThirdParty/expat/CMakeLists.txt |  7 ++++---
+ 2 files changed, 10 insertions(+), 8 deletions(-)
+
+Index: vtk9/CMake/FindEXPAT.cmake
+===================================================================
+--- vtk9.orig/CMake/FindEXPAT.cmake	2026-01-30 11:52:41.673450703 +0100
++++ vtk9/CMake/FindEXPAT.cmake	2026-01-30 11:52:41.664769177 +0100
+@@ -43,25 +43,26 @@
+     file(STRINGS "${EXPAT_INCLUDE_DIR}/expat.h" expat_version_str
+          REGEX "^#[\t ]*define[\t ]+XML_(MAJOR|MINOR|MICRO)_VERSION[\t ]+[0-9]+$")
+ 
+-    unset(EXPAT_VERSION_STRING)
++    unset(EXPAT_VERSION)
+     foreach(VPART MAJOR MINOR MICRO)
+         foreach(VLINE ${expat_version_str})
+             if(VLINE MATCHES "^#[\t ]*define[\t ]+XML_${VPART}_VERSION[\t ]+([0-9]+)$")
+                 set(EXPAT_VERSION_PART "${CMAKE_MATCH_1}")
+-                if(EXPAT_VERSION_STRING)
+-                    string(APPEND EXPAT_VERSION_STRING ".${EXPAT_VERSION_PART}")
++                if(EXPAT_VERSION)
++                    string(APPEND EXPAT_VERSION ".${EXPAT_VERSION_PART}")
+                 else()
+-                    set(EXPAT_VERSION_STRING "${EXPAT_VERSION_PART}")
++                    set(EXPAT_VERSION "${EXPAT_VERSION_PART}")
+                 endif()
+             endif()
+         endforeach()
+     endforeach()
++    set(EXPAT_VERSION_STRING ${EXPAT_VERSION})
+ endif ()
+ 
+ include(FindPackageHandleStandardArgs)
+ FIND_PACKAGE_HANDLE_STANDARD_ARGS(EXPAT
+                                   REQUIRED_VARS EXPAT_LIBRARY EXPAT_INCLUDE_DIR
+-                                  VERSION_VAR EXPAT_VERSION_STRING)
++                                  VERSION_VAR EXPAT_VERSION)
+ 
+ # Copy the results to the output variables and target.
+ if(EXPAT_FOUND)
+Index: vtk9/ThirdParty/expat/CMakeLists.txt
+===================================================================
+--- vtk9.orig/ThirdParty/expat/CMakeLists.txt	2026-01-30 11:52:41.673450703 +0100
++++ vtk9/ThirdParty/expat/CMakeLists.txt	2026-01-30 11:52:41.665061302 +0100
+@@ -16,7 +16,8 @@
+     PACKAGE EXPAT
+     VERSION 2.5.0
+     TARGETS EXPAT::EXPAT
+-    STANDARD_INCLUDE_DIRS)
++    STANDARD_INCLUDE_DIRS
++    USE_VARIABLES EXPAT_VERSION)
+ 
+ include(vtkDetectLibraryType)
+ vtk_detect_library_shared(vtkexpat EXPAT::EXPAT)
+@@ -42,9 +43,9 @@
+ if(NOT DEFINED ENV{DASHBOARD_TEST_FROM_CTEST})
+   # Check for deprecated versions of expat
+   set(expat_deprecated_version "2.6.3")
+-  if(VTK_MODULE_USE_EXTERNAL_vtkexpat AND EXPAT_VERSION_STRING VERSION_LESS expat_deprecated_version)
++  if(VTK_MODULE_USE_EXTERNAL_vtkexpat AND EXPAT_VERSION VERSION_LESS expat_deprecated_version)
+     message(DEPRECATION
+-      "External expat ${EXPAT_VERSION_STRING} is less than ${expat_deprecated_version} "
++      "External expat ${EXPAT_VERSION} is less than ${expat_deprecated_version} "
+       "and (may) have known vulnerabilities. Consider upgrading.")
+   endif()
+ endif()

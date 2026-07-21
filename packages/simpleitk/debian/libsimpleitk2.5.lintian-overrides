@@ -1,0 +1,3 @@
+# SimpleITK ships ~49 component shared libraries (one per ITK module group)
+# under a single runtime package, like the InsightToolkit packages do.
+libsimpleitk2.5: package-name-doesnt-match-sonames *

@@ -1,0 +1,16 @@
+Description: Drop medical examples
+Last-Update: 2020-10-21
+
+Index: vtk9/Examples/CMakeLists.txt
+===================================================================
+--- vtk9.orig/Examples/CMakeLists.txt	2026-01-30 11:52:25.929361624 +0100
++++ vtk9/Examples/CMakeLists.txt	2026-01-30 11:52:25.923037072 +0100
+@@ -63,7 +63,7 @@
+   add_example(IO/Cxx)
+   add_example(ImageProcessing/Cxx)
+   add_example(Infovis/Cxx)
+-  add_example(Medical/Cxx)
++  #add_example(Medical/Cxx)
+   add_example(Modelling/Cxx)
+   add_example(MultiBlock/Cxx)
+   add_example(ParallelProcessing/Generic/Cxx)

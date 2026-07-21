@@ -1,0 +1,37 @@
+Index: itksnap-4.4.0~beta2/CMakeLists.txt
+===================================================================
+--- itksnap-4.4.0~beta2.orig/CMakeLists.txt
++++ itksnap-4.4.0~beta2/CMakeLists.txt
+@@ -21,6 +21,16 @@ cmake_policy(SET CMP0080 OLD)
+ PROJECT(SNAP)
+ SET(CMAKE_MODULE_PATH ${SNAP_SOURCE_DIR}/CMake)
+ 
++# NeuroDebian: build against the system jsoncpp instead of the bundled 0.10.6
++# amalgamation. VTK links the system libjsoncpp.so.25 (1.9.5); also compiling
++# the bundled copy into the executable produced two jsoncpp implementations in
++# one process -> duplicate-symbol/ODR crash in ld.so before main(). Using the
++# system copy everywhere removes the conflict (and the embedded-library issue).
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(JSONCPP REQUIRED jsoncpp)
++include_directories(${JSONCPP_INCLUDE_DIRS})
++link_libraries(${JSONCPP_LIBRARIES})
++
+ OPTION(BUILD_SHARED_LIBS "Build shared (dynamic) libraries" OFF)
+ MARK_AS_ADVANCED(BUILD_SHARED_LIBS)
+ 
+@@ -239,7 +249,6 @@ SET(LOGIC_CXX
+   Common/TagList.cxx
+   Common/ITKExtras/itkVoxBoCUBImageIO.cxx
+   Common/ITKExtras/itkVoxBoCUBImageIOFactory.cxx
+-  Common/JSon/jsoncpp.cpp
+   Logic/Common/ColorLabelTable.cxx
+   Logic/Common/ColorMap.cxx
+   Logic/Common/ColorMapPresetManager.cxx
+@@ -1030,7 +1039,6 @@ ELSE( CMAKE_GENERATOR MATCHES "Visual St
+     ${SNAP_SOURCE_DIR}/Common
+     ${SNAP_SOURCE_DIR}/Common/tdigest_apache/
+     ${SNAP_SOURCE_DIR}/Common/ITKExtras
+-    ${SNAP_SOURCE_DIR}/Common/JSon
+     ${SNAP_SOURCE_DIR}/Common/ITKBinaryWeightedAverage
+     ${SNAP_SOURCE_DIR}/Logic
+     ${SNAP_SOURCE_DIR}/Logic/Common
