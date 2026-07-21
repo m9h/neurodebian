@@ -1,0 +1,4 @@
+libinsighttoolkit5.4: embedded-library
+libinsighttoolkit5.4: package-name-doesnt-match-sonames
+libinsighttoolkit5.4: shared-library-lacks-prerequisites
+libinsighttoolkit5.4: library-not-linked-against-libc [usr/lib/*/libITK*]

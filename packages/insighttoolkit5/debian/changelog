@@ -1,3 +1,12 @@
+insighttoolkit5 (5.4.6-1~noble3) noble; urgency=medium
+
+  * Rebuild against our local VTK 9.5.2 (was stock VTK 9.1): the runtime
+    shlibs dependency now resolves to libvtk9.5 instead of the removed
+    libvtk9.1t64, keeping the ITK/VTK ABI coherent for ITK-SNAP and the rest
+    of the downstream stack.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Thu, 02 Jul 2026 12:00:00 -0700
+
 insighttoolkit5 (5.4.6-1~noble2) noble; urgency=medium
 
   * Bundle the ITK remote modules required by downstream neuro tools, enabling

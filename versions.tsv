@@ -1,6 +1,6 @@
 package	upstream	copr	debian	ours	status	debian_pkg	url
 ANTs	2.6.5	2.6.5	-	2.6.5-1~noble1	OURS	-	https://github.com/ANTsX/ANTs
-InsightToolkit5	5.4.6	5.4.6	5.3.0	5.4.6-1~noble2	OURS	libinsighttoolkit5-dev	https://itk.org/
+InsightToolkit5	5.4.6	5.4.6	5.3.0	5.4.6-1~noble3	OURS	libinsighttoolkit5-dev	https://itk.org/
 liblsl	-	1.17.7	-	1.17.7-1	OURS	-	https://github.com/sccn/liblsl
 python-pylsl	-	1.18.2	-	1.18.2-1	OURS	-	https://github.com/labstreaminglayer/pylsl
 python-pyxdf	-	1.17.4	-	1.17.5-1	OURS	-	https://github.com/xdf-modules/pyxdf
@@ -13,7 +13,7 @@ libxdf	-	0.99.10	0.99.8	-	OUTDATED	libxdf0	https://github.com/xdf-modules/libxdf
 openigtlink	-	3.1.0	1.11.0	-	OUTDATED	libopenigtlink-dev	https://github.com/openigtlink/OpenIGTLink
 urdfdom	-	4.0.2	4.0.0	-	OUTDATED	liburdfdom-dev	http://ros.org/wiki/urdf
 urdfdom-headers	-	1.1.2	1.0.5	-	OUTDATED	liburdfdom-headers-dev	http://ros.org/wiki/urdf
-vtk	9.6.2	9.6.2	9.1.0	-	OUTDATED	libvtk9-dev	https://vtk.org/
+vtk	9.6.2	9.6.2	9.1.0	9.5.2+dfsg4-5ubuntu2	OURS	libvtk9-dev	https://vtk.org/
 vtk-mpi	-	9.6.2	9.1.0	-	OUTDATED	libvtk9-dev	https://vtk.org/
 afni	-	26.1.04	(data)	-	PARTIAL	afni-atlases	https://afni.nimh.nih.gov/
 freesurfer7-synth-tools	-	%{fs_ver}	8.2.0	-	PARTIAL	freesurfer	https://surfer.nmr.mgh.harvard.edu/
@@ -95,7 +95,7 @@ greedy	-	1.3.0~alpha	-	-	MISSING	-	https://github.com/pyushkevich/greedy
 igsio	-	1.0	-	-	MISSING	-	https://github.com/IGSIO/IGSIO
 iit-human-brain-atlas	-	NO_SPEC	-	-	MISSING	-	
 InsightToolkit6	6.0.0b2	6.0.0~b02	-	-	MISSING	-	https://itk.org/
-itksnap	-	4.4.0~beta2	-	-	MISSING	-	http://www.itksnap.org
+itksnap	-	4.4.0~beta2	-	4.4.0~beta2-1~noble2	OURS	-	http://www.itksnap.org
 jemris	-	2.9.2	-	-	MISSING	-	https://github.com/JEMRIS/jemris
 labrecorder	-	1.17.1	-	-	MISSING	-	https://github.com/labstreaminglayer/App-LabRecorder
 laynii	-	2.10.0	-	-	MISSING	-	https://github.com/layerfMRI/LAYNII
@@ -117,7 +117,7 @@ palm	-	0	-	-	MISSING	-	https://github.com/andersonwinkler/PALM
 python-babelviscofdtd	-	1.2.6	-	-	MISSING	-	https://github.com/ProteusMRIgHIFU/BabelViscoFDTD
 python-brainflow	-	5.22.2	-	-	MISSING	-	https://brainflow.org/
 python-bsmschema	-	0.1.1	-	-	MISSING	-	https://github.com/bids-standard/stats-models
-python-charm-gems	-	1.3.3	-	-	MISSING	-	https://github.com/simnibs/charm-gems
+python-charm-gems	1.3.3	1.3.3	-	1.3.3-1 (arm64)	OURS	-	https://github.com/simnibs/charm-gems
 python-ephyviewer	-	1.8.0	-	-	MISSING	-	https://ephyviewer.readthedocs.io/
 python-file-tree	-	1.6.1	-	-	MISSING	-	https://git.fmrib.ox.ac.uk/fsl/file-tree
 python-fmm3dpy	-	2.1.0	-	-	MISSING	-	https://fmm3d.readthedocs.io/
@@ -133,8 +133,8 @@ python-py-undo-stack	-	1.1.0	-	-	MISSING	-	https://pypi.org/project/py-undo-stac
 python-pyfix	-	0.10.0	-	-	MISSING	-	https://git.fmrib.ox.ac.uk/fsl/pyfix
 python-pygpc	-	0.4.4	-	-	MISSING	-	https://github.com/pygpc-polynomial-chaos/pygpc
 python-pythonqt	-	4.0.1	-	-	MISSING	-	https://github.com/commontk/PythonQt
-python-samseg	-	0.5a0	-	-	MISSING	-	https://github.com/freesurfer/samseg
-python-simpleitk	-	2.5.5	-	-	MISSING	-	https://simpleitk.org/
+python-samseg	1.0.0	0.5a0	-	1.0.0-1 (arm64)	OURS	-	https://github.com/freesurfer/samseg
+python-simpleitk	-	2.5.5	-	2.5.5-1~noble1	OURS	-	https://simpleitk.org/
 python-simservice	-	0.1.1	-	-	MISSING	-	https://github.com/tjsego/simservice
 python-spectrum	-	0.10.0	-	-	MISSING	-	https://github.com/cokelaer/spectrum
 python-stanio	-	0.5.1	-	-	MISSING	-	https://github.com/stan-dev/stanio
