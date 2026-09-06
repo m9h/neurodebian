@@ -1,0 +1,38 @@
+#!/usr/bin/make -f
+# dtk-qt6 — Qt6 fork of the Inria dtk platform, ported from the neurofedora
+# dtk-qt6.spec. Library-only build (no apps/tests/wrappers).
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+# dtk's headers need <cstdint> explicitly under GCC 13+, and it trips over
+# Qt deprecation warnings treated as errors upstream.
+export DEB_CXXFLAGS_MAINT_APPEND = -std=c++17 -include cstdint -Wno-error=deprecated-declarations -Wno-deprecated-declarations
+
+%:
+	dh $@ --buildsystem=cmake+ninja
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DCMAKE_CXX_STANDARD=17 \
+	  -DCMAKE_CXX_STANDARD_REQUIRED=ON \
+	  -DCMAKE_SKIP_INSTALL_RPATH=ON \
+	  -DBUILD_SHARED_LIBS:BOOL=ON \
+	  -DDTK_BUILD_TESTS:BOOL=OFF \
+	  -DDTK_BUILD_APPS:BOOL=OFF \
+	  -DDTK_BUILD_DOC:BOOL=OFF \
+	  -DDTK_BUILD_COMPOSER:BOOL=OFF \
+	  -DDTK_BUILD_DISTRIBUTED:BOOL=OFF \
+	  -DDTK_BUILD_SCRIPT:BOOL=OFF \
+	  -DDTK_BUILD_WRAPPERS:BOOL=OFF \
+	  -DDTK_BUILD_WIDGETS:BOOL=ON \
+	  -DDTK_BUILD_SUPPORT_CORE:BOOL=ON \
+	  -DDTK_BUILD_SUPPORT_CONTAINER:BOOL=OFF \
+	  -DDTK_BUILD_SUPPORT_COMPOSER:BOOL=OFF \
+	  -DDTK_BUILD_SUPPORT_DISTRIBUTED:BOOL=OFF \
+	  -DDTK_BUILD_SUPPORT_GUI:BOOL=ON \
+	  -DDTK_BUILD_SUPPORT_MATH:BOOL=ON \
+	  -DDTK_BUILD_SUPPORT_PLOT:BOOL=OFF \
+	  -DDTK_BUILD_SUPPORT_VR:BOOL=ON
+
+# Upstream ships no test target under this configuration.
+override_dh_auto_test:

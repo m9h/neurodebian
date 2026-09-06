@@ -1,0 +1,49 @@
+Source: dtk-qt6
+Section: science
+Priority: optional
+Maintainer: Morgan Hough <morgan.hough@gmail.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake (>= 3.16),
+ ninja-build,
+ qt6-base-dev,
+ qt6-declarative-dev,
+ qt6-svg-dev,
+ qt6-tools-dev,
+ zlib1g-dev,
+Standards-Version: 4.7.0
+Homepage: https://gitlab.com/morgan.hough/dtk-qt6
+Rules-Requires-Root: no
+
+Package: libdtk-qt6-1.7
+Section: libs
+Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: Inria dtk scientific platform (Qt6 fork) - runtime libraries
+ dtk is a metaplatform of scientific development from Inria, providing a
+ modular architecture of core, math, GUI and VR support layers used by
+ applications such as medInria.
+ .
+ This Qt6 fork tracks upstream dtk 1.7.1 ported to the Qt6 / VTK 9.5 stack.
+ .
+ This package provides the shared runtime libraries.
+
+Package: libdtk-qt6-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends:
+ libdtk-qt6-1.7 (= ${binary:Version}),
+ ${misc:Depends},
+ qt6-base-dev,
+Description: Inria dtk scientific platform (Qt6 fork) - development files
+ dtk is a metaplatform of scientific development from Inria, providing a
+ modular architecture of core, math, GUI and VR support layers used by
+ applications such as medInria.
+ .
+ This package provides the headers and CMake configuration (the dtk CMake
+ package, found via dtk_DIR) needed to build against dtk-qt6.

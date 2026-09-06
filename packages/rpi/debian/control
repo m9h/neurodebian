@@ -1,0 +1,33 @@
+Source: rpi
+Section: science
+Priority: optional
+Maintainer: Morgan Hough <morgan.hough@gmail.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake (>= 3.24),
+ ninja-build,
+ libinsighttoolkit5-dev (>= 5.4.6),
+ libhdf5-dev,
+ libvtk9-dev,
+ libtclap-dev,
+ python3-dev,
+ default-jdk,
+Standards-Version: 4.7.0
+Homepage: https://github.com/medInria/RPI
+Rules-Requires-Root: no
+
+Package: librpi-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends:
+ libinsighttoolkit5-dev (>= 5.4.6),
+ libtclap-dev,
+ ${misc:Depends},
+Description: Registration Programming Interface (Inria) - development files
+ RPI (Registration Programming Interface) is an Inria header-only C++ API
+ providing a common interface to image registration methods built on the
+ Insight Toolkit (ITK). It is a build dependency of medInria.
+ .
+ This package provides the headers and CMake configuration (found via
+ RPI_DIR); RPI ships no shared libraries.

@@ -1,0 +1,44 @@
+Source: ttk
+Section: science
+Priority: optional
+Maintainer: Morgan Hough <morgan.hough@gmail.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake (>= 3.24),
+ ninja-build,
+ libinsighttoolkit5-dev (>= 5.4.6),
+ libvtk9-dev,
+ default-jdk,
+Standards-Version: 4.7.0
+Homepage: https://github.com/medInria/TTK
+Rules-Requires-Root: no
+
+Package: libttk4
+Section: libs
+Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: Tensor ToolKit for diffusion MRI (Inria) - runtime libraries
+ TTK (Tensor ToolKit) is an Inria library for processing diffusion tensor
+ images: tensor estimation, regularization, tractography and scalar map
+ computation, built on the Insight Toolkit (ITK).
+ .
+ This package provides the shared runtime libraries.
+
+Package: libttk-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends:
+ libttk4 (= ${binary:Version}),
+ libinsighttoolkit5-dev (>= 5.4.6),
+ ${misc:Depends},
+Description: Tensor ToolKit for diffusion MRI (Inria) - development files
+ TTK (Tensor ToolKit) is an Inria library for processing diffusion tensor
+ images built on the Insight Toolkit (ITK).
+ .
+ This package provides the headers and CMake configuration for building
+ against TTK (found via TTK_DIR and the per-component CMake packages).

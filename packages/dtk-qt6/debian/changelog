@@ -1,0 +1,9 @@
+dtk-qt6 (1.7.1-2~noble1) noble; urgency=medium
+
+  * Initial NeuroDebian packaging, ported from the neurofedora dtk-qt6.spec.
+    Qt6 fork of the Inria dtk platform, built library-only (no apps, tests,
+    wrappers, composer, distributed, script). Enables the CORE, GUI, MATH and
+    VR support layers plus widgets — the set medInria links against.
+  * Build against system Qt6 + zlib; -include cstdint for GCC 13+.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Thu, 30 Jul 2026 09:00:00 -0700

@@ -1,0 +1,71 @@
+Index: RPI-4.0/CMakeLists.txt
+===================================================================
+--- RPI-4.0.orig/CMakeLists.txt
++++ RPI-4.0/CMakeLists.txt
+@@ -58,10 +58,10 @@ add_subdirectory(src)
+ set(PACKAGE_INIT "@PACKAGE_INIT@")
+ if(EXISTS ${CMAKE_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in)
+ 	
+-    configure_package_config_file(${CMAKE_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in "${CMAKE_BINARY_DIR}/lib/cmake/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake" INSTALL_DESTINATION lib/cmake/${PROJECT_NAME})
++    configure_package_config_file(${CMAKE_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in "${CMAKE_BINARY_DIR}/lib/cmake/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake" INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/RPIModuleLocation.cmake ${CMAKE_BINARY_DIR}/lib/cmake/${PROJECT_NAME} COPYONLY)
+-    INSTALL(FILES "${CMAKE_BINARY_DIR}/lib/cmake/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake" DESTINATION lib/cmake/${PROJECT_NAME})
+-    INSTALL(FILES ${CMAKE_SOURCE_DIR}/cmake/RPIModuleLocation.cmake DESTINATION  lib/cmake/${PROJECT_NAME})
++    INSTALL(FILES "${CMAKE_BINARY_DIR}/lib/cmake/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake" DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
++    INSTALL(FILES ${CMAKE_SOURCE_DIR}/cmake/RPIModuleLocation.cmake DESTINATION  ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+ 
+ endif()
+ 
+Index: RPI-4.0/cmake/export_and_install_libs.cmake
+===================================================================
+--- RPI-4.0.orig/cmake/export_and_install_libs.cmake
++++ RPI-4.0/cmake/export_and_install_libs.cmake
+@@ -80,8 +80,8 @@ INSTALL(
+     EXPORT  ${TARGET_NAME}Targets
+ 
+     RUNTIME   DESTINATION bin
+-    LIBRARY   DESTINATION lib
+-    ARCHIVE   DESTINATION lib
++    LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     FRAMEWORK DESTINATION lib
+     INCLUDES  DESTINATION include
+     RESOURCE  DESTINATION resources/${TARGET_NAME}
+@@ -106,13 +106,13 @@ SET(PACKAGE_INIT "@PACKAGE_INIT@")
+ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/Config.cmake.in ${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in @ONLY)
+ configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+   "${CMAKE_BINARY_DIR}/lib/cmake/${TARGET_NAME}/${TARGET_NAME}Config.cmake"
+-  INSTALL_DESTINATION lib/cmake/${TARGET_NAME}
++  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET_NAME}
+   NO_SET_AND_CHECK_MACRO
+   NO_CHECK_REQUIRED_COMPONENTS_MACRO
+ )
+ 
+ 
+-SET(ConfigPackageLocation lib/cmake/${TARGET_NAME})
++SET(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET_NAME})
+ INSTALL(
+   EXPORT ${TARGET_NAME}Targets
+   FILE ${TARGET_NAME}Targets.cmake
+@@ -124,7 +124,7 @@ INSTALL(
+ INSTALL(FILES
+   ${CMAKE_BINARY_DIR}/lib/cmake/${TARGET_NAME}/${TARGET_NAME}Config.cmake
+   ${CMAKE_BINARY_DIR}/lib/cmake/${TARGET_NAME}/${TARGET_NAME}ConfigVersion.cmake
+-  DESTINATION lib/cmake/${TARGET_NAME}
++  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET_NAME}
+   )
+ 
+ endmacro()
+Index: RPI-4.0/src/RegistrationAddOn/itkStationaryVelocityFieldTransform.h
+===================================================================
+--- RPI-4.0.orig/src/RegistrationAddOn/itkStationaryVelocityFieldTransform.h
++++ RPI-4.0/src/RegistrationAddOn/itkStationaryVelocityFieldTransform.h
+@@ -145,7 +145,7 @@ public:
+      * Generic constructors.
+      */
+     itkNewMacro( Self )
+-    itkTypeMacro( StationaryVelocityField, Transform )
++    itkTypeMacro( StationaryVelocityFieldTransform, Transform )
+ 
+     /**
+      * Method not implemented for stationary velocity fields.

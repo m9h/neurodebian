@@ -1,0 +1,30 @@
+#!/usr/bin/make -f
+# RPI (Registration Programming Interface, Inria) — header-only library,
+# built against system ITK 5.4.6 with system TCLAP. Ported from RPI.spec.
+
+include /usr/share/dpkg/architecture.mk
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export DEB_CXXFLAGS_MAINT_APPEND = -std=c++17 -include cstdint -fpermissive
+ITK_DIR = /usr/lib/$(DEB_HOST_MULTIARCH)/cmake/ITK-5.4
+
+%:
+	dh $@ --buildsystem=cmake+ninja
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DCMAKE_SKIP_INSTALL_RPATH=ON \
+	  -DITK_DIR:PATH=$(ITK_DIR) \
+	  -DBUILD_SHARED_LIBS=ON \
+	  -DRPI_BUILD_EXAMPLES=OFF \
+	  -DBUILD_ConvertLinearToDF=OFF \
+	  -DBUILD_ConvertLinearToSVF=OFF \
+	  -DBUILD_FuseTransformations=OFF \
+	  -DBUILD_ResampleImage=OFF \
+	  -DBUILD_RegistrationAddOn=OFF \
+	  -DBUILD_examples=OFF \
+	  -DBUILD_DOCUMENTATION=OFF \
+	  -DTCLAP_FETCH=OFF \
+	  -DFETCHCONTENT_FULLY_DISCONNECTED=ON
+
+override_dh_auto_test:

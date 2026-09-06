@@ -1,0 +1,3 @@
+# SIP/Python wrapper definition sources — DTK_BUILD_WRAPPERS is OFF, medInria
+# does not consume these; drop them so dh_missing is satisfied.
+usr/wrp

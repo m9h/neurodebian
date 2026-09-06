@@ -1,0 +1,323 @@
+Index: TTK-4.0.1/Algorithms/CMakeLists.txt
+===================================================================
+--- TTK-4.0.1.orig/Algorithms/CMakeLists.txt
++++ TTK-4.0.1/Algorithms/CMakeLists.txt
+@@ -34,3 +34,5 @@ SET (FILESET_INSTALL_DIR_publicHeadersAl
+                               
+ export_and_install_libs(${TARGET_NAME})
+ 
++
++set_target_properties(${TARGET_NAME} PROPERTIES VERSION 4.0.1 SOVERSION 1)
+Index: TTK-4.0.1/Algorithms/itkAddGaussianNoiseImageFilter.h
+===================================================================
+--- TTK-4.0.1.orig/Algorithms/itkAddGaussianNoiseImageFilter.h
++++ TTK-4.0.1/Algorithms/itkAddGaussianNoiseImageFilter.h
+@@ -37,7 +37,7 @@ namespace itk
+     typedef SmartPointer <const Self> ConstPointer;
+ 
+     itkNewMacro(Self);
+-    itkTypeMacro (AddGaussianNoiseTensorImageFilter, ImageToImageFilter);
++    itkTypeMacro (AddGaussianNoiseImageFilter, ImageToImageFilter);
+ 
+     typedef TInputImage                           InputImageType;
+     typedef typename InputImageType::PixelType    InputPixelType;
+Index: TTK-4.0.1/Algorithms/itkAddRicianNoiseImageFilter.h
+===================================================================
+--- TTK-4.0.1.orig/Algorithms/itkAddRicianNoiseImageFilter.h
++++ TTK-4.0.1/Algorithms/itkAddRicianNoiseImageFilter.h
+@@ -37,7 +37,7 @@ namespace itk
+     typedef SmartPointer <const Self> ConstPointer;
+ 
+     itkNewMacro(Self);
+-    itkTypeMacro (AddRicianNoiseTensorImageFilter, AddGaussianNoiseImageFilter);
++    itkTypeMacro (AddRicianNoiseImageFilter, AddGaussianNoiseImageFilter);
+ 
+     typedef TInputImage                            InputImageType;
+     typedef typename Superclass::InputPixelType    InputPixelType;
+Index: TTK-4.0.1/Algorithms/itkFiberBundleStatisticsCalculator.cxx
+===================================================================
+--- TTK-4.0.1.orig/Algorithms/itkFiberBundleStatisticsCalculator.cxx
++++ TTK-4.0.1/Algorithms/itkFiberBundleStatisticsCalculator.cxx
+@@ -49,7 +49,7 @@ namespace itk
+         lines->InitTraversal();
+   
+         vtkIdType  npts  = 0;
+-        vtkIdType* ptids = nullptr;
++        const vtkIdType* ptids = nullptr;
+         vtkIdType test = lines->GetNextCell (npts, ptids);
+ 
+         while ( test )
+Index: TTK-4.0.1/Algorithms/itkResampleTensorImageFilter.txx
+===================================================================
+--- TTK-4.0.1.orig/Algorithms/itkResampleTensorImageFilter.txx
++++ TTK-4.0.1/Algorithms/itkResampleTensorImageFilter.txx
+@@ -284,7 +284,7 @@ namespace itk
+ 	
+         value = m_TensorTransform->TransformTensorReverse (value);
+ 
+-	value.SetVnlMatrix(value.ApplyMatrix (this->GetOutput()->GetDirection().GetTranspose()));
++	value.SetVnlMatrix(value.ApplyMatrix (vnl_matrix<double>(this->GetOutput()->GetDirection().GetTranspose())));
+ 	
+         pixval = static_cast<PixelType>( value );
+     
+@@ -464,7 +464,7 @@ namespace itk
+ 	  
+ 	  value = m_TensorTransform->TransformTensor (value);
+ 	  
+-	  value.SetVnlMatrix(value.ApplyMatrix (this->GetOutput()->GetDirection().GetTranspose()));
++	  value.SetVnlMatrix(value.ApplyMatrix (vnl_matrix<double>(this->GetOutput()->GetDirection().GetTranspose())));
+ 	  
+           pixval = static_cast<PixelType>( value );
+           outIt.Set( pixval );      
+Index: TTK-4.0.1/Algorithms/itkVTKFibersToITKFibers.txx
+===================================================================
+--- TTK-4.0.1.orig/Algorithms/itkVTKFibersToITKFibers.txx
++++ TTK-4.0.1/Algorithms/itkVTKFibersToITKFibers.txx
+@@ -68,7 +68,7 @@ namespace itk
+       dtiTube->SetId (1);
+       
+       vtkIdType npts = 0;
+-      vtkIdType *pts = 0;
++      const vtkIdType *pts = 0;
+       vtkLines->GetNextCell(npts, pts);
+       
+       std::vector<DTIPointType> pointsToAdd;
+Index: TTK-4.0.1/CMake/export_and_install_libs.cmake
+===================================================================
+--- TTK-4.0.1.orig/CMake/export_and_install_libs.cmake
++++ TTK-4.0.1/CMake/export_and_install_libs.cmake
+@@ -90,8 +90,8 @@ INSTALL(
+     EXPORT  ${TARGET_NAME}Targets
+ 
+     RUNTIME   DESTINATION bin
+-    LIBRARY   DESTINATION lib
+-    ARCHIVE   DESTINATION lib
++    LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     FRAMEWORK DESTINATION lib
+     INCLUDES  DESTINATION include
+     RESOURCE  DESTINATION resources/${TARGET_NAME}
+@@ -116,13 +116,13 @@ SET(PACKAGE_INIT "@PACKAGE_INIT@")
+ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/CMake/Config.cmake.in ${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in @ONLY)
+ configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+   "${CMAKE_BINARY_DIR}/lib/cmake/${TARGET_NAME}/${TARGET_NAME}Config.cmake"
+-  INSTALL_DESTINATION lib/cmake/${TARGET_NAME}
++  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET_NAME}
+   NO_SET_AND_CHECK_MACRO
+   NO_CHECK_REQUIRED_COMPONENTS_MACRO
+ )
+ 
+ 
+-SET(ConfigPackageLocation lib/cmake/${TARGET_NAME})
++SET(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET_NAME})
+ INSTALL(
+   EXPORT ${TARGET_NAME}Targets
+   FILE ${TARGET_NAME}Targets.cmake
+@@ -134,7 +134,7 @@ INSTALL(
+ INSTALL(FILES
+   ${CMAKE_BINARY_DIR}/lib/cmake/${TARGET_NAME}/${TARGET_NAME}Config.cmake
+   ${CMAKE_BINARY_DIR}/lib/cmake/${TARGET_NAME}/${TARGET_NAME}ConfigVersion.cmake
+-  DESTINATION lib/cmake/${TARGET_NAME}
++  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET_NAME}
+   )
+ 
+ endmacro()
+Index: TTK-4.0.1/CMakeLists.txt
+===================================================================
+--- TTK-4.0.1.orig/CMakeLists.txt
++++ TTK-4.0.1/CMakeLists.txt
+@@ -94,9 +94,9 @@ add_subdirectory(Commands)
+ set(PACKAGE_INIT "@PACKAGE_INIT@")
+ if(EXISTS ${CMAKE_SOURCE_DIR}/CMake/${PROJECT_NAME}Config.cmake.in)
+ 	
+-	configure_package_config_file(${CMAKE_SOURCE_DIR}/CMake/${PROJECT_NAME}Config.cmake.in "${CMAKE_BINARY_DIR}/lib/cmake/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake" INSTALL_DESTINATION lib/cmake/${PROJECT_NAME})
++	configure_package_config_file(${CMAKE_SOURCE_DIR}/CMake/${PROJECT_NAME}Config.cmake.in "${CMAKE_BINARY_DIR}/lib/cmake/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake" INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+ 	CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/CMake/${PROJECT_NAME}ModuleLocation.cmake ${CMAKE_BINARY_DIR}/lib/cmake/${PROJECT_NAME} COPYONLY)
+-    INSTALL(FILES "${CMAKE_BINARY_DIR}/lib/cmake/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake" DESTINATION lib/cmake/${PROJECT_NAME})
+-    INSTALL(FILES ${CMAKE_SOURCE_DIR}/CMake/${PROJECT_NAME}ModuleLocation.cmake DESTINATION  lib/cmake/${PROJECT_NAME})
++    INSTALL(FILES "${CMAKE_BINARY_DIR}/lib/cmake/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake" DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
++    INSTALL(FILES ${CMAKE_SOURCE_DIR}/CMake/${PROJECT_NAME}ModuleLocation.cmake DESTINATION  ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+ 
+ endif()
+Index: TTK-4.0.1/Commands/itkConsolidateFiberBundleCommand.cxx
+===================================================================
+--- TTK-4.0.1.orig/Commands/itkConsolidateFiberBundleCommand.cxx
++++ TTK-4.0.1/Commands/itkConsolidateFiberBundleCommand.cxx
+@@ -97,7 +97,7 @@ namespace itk
+     vtkUnsignedCharArray* colors = vtkUnsignedCharArray::New();
+     colors->SetNumberOfComponents(3);
+ 
+-    vtkIdType npt, *pto;
++    vtkIdType npt; const vtkIdType *pto;
+     vtkIdType cellId = lines->GetNextCell (npt, pto);
+ 
+     while (cellId!=0)
+Index: TTK-4.0.1/Commands/ttkCommands/CMakeLists.txt
+===================================================================
+--- TTK-4.0.1.orig/Commands/ttkCommands/CMakeLists.txt
++++ TTK-4.0.1/Commands/ttkCommands/CMakeLists.txt
+@@ -195,4 +195,5 @@ install(FILES ${PROJECT_BINARY_DIR}/Comm
+ 
+ SET (FILESET_INSTALL_DIR_publicHeadersTTKCommands Commands)
+                               
+-export_and_install_libs(${TARGET_NAME})
+\ No newline at end of file
++export_and_install_libs(${TARGET_NAME})
++set_target_properties(${TARGET_NAME} PROPERTIES VERSION 4.0.1 SOVERSION 1)
+Index: TTK-4.0.1/Commands/ttkConvertCommands/CMakeLists.txt
+===================================================================
+--- TTK-4.0.1.orig/Commands/ttkConvertCommands/CMakeLists.txt
++++ TTK-4.0.1/Commands/ttkConvertCommands/CMakeLists.txt
+@@ -95,4 +95,5 @@ export_and_install_libs(${TARGET_NAME})
+ #           set_source_files_properties(${bigobjFile} PROPERTIES COMPILE_FLAGS "${bigobjFile_COMPILE_FLAGS} /bigobj")
+ #         endif (${bigobjFile_COMPILE_FLAGS} STREQUAL NOTFOUND)
+ #     endforeach(bigobjFile)
+-#  endif(WIN32)
+\ No newline at end of file
++#  endif(WIN32)
++set_target_properties(${TARGET_NAME} PROPERTIES VERSION 4.0.1 SOVERSION 1)
+Index: TTK-4.0.1/Commands/ttkUtilCommands/CMakeLists.txt
+===================================================================
+--- TTK-4.0.1.orig/Commands/ttkUtilCommands/CMakeLists.txt
++++ TTK-4.0.1/Commands/ttkUtilCommands/CMakeLists.txt
+@@ -92,3 +92,5 @@ SET (FILESET_INSTALL_DIR_publicHeadersTT
+                               
+ export_and_install_libs(${TARGET_NAME})
+ 
++
++set_target_properties(${TARGET_NAME} PROPERTIES VERSION 4.0.1 SOVERSION 1)
+Index: TTK-4.0.1/Common/CMakeLists.txt
+===================================================================
+--- TTK-4.0.1.orig/Common/CMakeLists.txt
++++ TTK-4.0.1/Common/CMakeLists.txt
+@@ -34,3 +34,5 @@ SET (FILESET_INSTALL_DIR_publicHeadersIT
+                               
+ export_and_install_libs(${TARGET_NAME})
+ 
++
++set_target_properties(${TARGET_NAME} PROPERTIES VERSION 4.0.1 SOVERSION 1)
+Index: TTK-4.0.1/Common/itkDenseFiniteDifferenceImageFilter2.h
+===================================================================
+--- TTK-4.0.1.orig/Common/itkDenseFiniteDifferenceImageFilter2.h
++++ TTK-4.0.1/Common/itkDenseFiniteDifferenceImageFilter2.h
+@@ -146,7 +146,7 @@ private:
+         DenseFiniteDifferenceImageFilter2 *Filter;
+         TimeStepType TimeStep;
+         std::vector <TimeStepType> TimeStepList;
+-        std::vector <bool> ValidTimeStepList;
++        BooleanStdVectorType ValidTimeStepList;
+     };
+ 
+     /** The type of region used for multithreading */
+Index: TTK-4.0.1/Common/itkMatrixOffsetTensorTransformBase.txx
+===================================================================
+--- TTK-4.0.1.orig/Common/itkMatrixOffsetTensorTransformBase.txx
++++ TTK-4.0.1/Common/itkMatrixOffsetTensorTransformBase.txx
+@@ -294,7 +294,7 @@ namespace itk
+   {
+     // rotate w.r.t the rigid part of the transform
+     OutputTensorType TENS;
+-    TENS.SetVnlMatrix ( tensor.ApplyMatrix ( m_Rigid.GetTranspose() ) );
++    TENS.SetVnlMatrix ( tensor.ApplyMatrix ( vnl_matrix<TScalarType>(m_Rigid.GetTranspose()) ) );
+     return TENS;    
+   }
+   
+@@ -309,7 +309,7 @@ namespace itk
+   {
+     // rotate w.r.t the rigid part of the transform
+     OutputTensorType TENS;
+-    TENS.SetVnlMatrix ( tensor.ApplyMatrix ( m_Rigid.GetVnlMatrix() ) );
++    TENS.SetVnlMatrix ( tensor.ApplyMatrix ( vnl_matrix<TScalarType>(m_Rigid.GetVnlMatrix()) ) );
+     return TENS;    
+   }
+ 
+@@ -323,7 +323,7 @@ namespace itk
+   {
+     // rotate w.r.t the rigid part of the transform
+     OutputTensorType TENS;
+-    TENS.SetVnlMatrix ( tensor.ApplyMatrix ( m_Rigid.GetTranspose() ) );
++    TENS.SetVnlMatrix ( tensor.ApplyMatrix ( vnl_matrix<TScalarType>(m_Rigid.GetTranspose()) ) );
+     return TENS;
+   }
+ 
+Index: TTK-4.0.1/Common/itkNumericTraitsTensorPixel2.cxx
+===================================================================
+--- TTK-4.0.1.orig/Common/itkNumericTraitsTensorPixel2.cxx
++++ TTK-4.0.1/Common/itkNumericTraitsTensorPixel2.cxx
+@@ -27,7 +27,7 @@ namespace itk
+     Tensor< float,3 > NumericTraits<Tensor<float, 3> >::ZeroValue() { return Zero; }
+     Tensor< double,3 > NumericTraits<Tensor<float, 3> >::min() { return std::numeric_limits<double>::min(); }
+     Tensor< double,3 > NumericTraits<Tensor<float, 3> >::max() { return std::numeric_limits<double>::max(); }
+-    unsigned int NumericTraits<Tensor<float, 3> >::GetLength(Tensor<float, 3> &t) { return 6; }
++    unsigned int NumericTraits<Tensor<float, 3> >::GetLength(const Tensor<float, 3> &t) { return 6; }
+     Tensor< float,3 > NumericTraits<Tensor<float, 3> >::NonpositiveMin() { return Tensor< float,3 >(-NumericTraits<float>::NonpositiveMin()); }
+     bool NumericTraits<Tensor<float, 3> >::IsPositive(Tensor< float,3 > val) { return val.IsPositive(); }
+     bool NumericTraits<Tensor<float, 3> >::IsNonpositive(Tensor< float,3 > val) { return !val.IsPositive(); }
+@@ -37,11 +37,11 @@ namespace itk
+     Tensor< long double,3 > NumericTraits<Tensor<long double, 3> >::ZeroValue() { return Zero; }
+     Tensor< double,3 > NumericTraits<Tensor<double, 3> >::min() { return std::numeric_limits<double>::min(); }
+     Tensor< double,3 > NumericTraits<Tensor<double, 3> >::max() { return std::numeric_limits<double>::max(); }
+-    unsigned int NumericTraits<Tensor<double, 3> >::GetLength(Tensor<double, 3> &t) { return 6; }
++    unsigned int NumericTraits<Tensor<double, 3> >::GetLength(const Tensor<double, 3> &t) { return 6; }
+     Tensor< double,3 > NumericTraits<Tensor<double, 3> >::NonpositiveMin() { return Tensor< double,3 >(-NumericTraits<double>::NonpositiveMin()); }
+     bool NumericTraits<Tensor<double, 3> >::IsPositive(Tensor< double,3 > val) { return val.IsPositive(); }
+     bool NumericTraits<Tensor<double, 3> >::IsNonpositive(Tensor< double,3 > val) { return !val.IsPositive(); }
+     bool NumericTraits<Tensor<double, 3> >::IsNegative(Tensor< double,3 > val) { return val.IsNegative(); }
+     bool NumericTraits<Tensor<double, 3> >::IsNonnegative(Tensor< double,3 > val) {return !val.IsNegative(); }
+-    unsigned int NumericTraits<Tensor<double, 6> >::GetLength(Tensor<double, 6> &t) { return 21; }
++    unsigned int NumericTraits<Tensor<double, 6> >::GetLength(const Tensor<double, 6> &t) { return 21; }
+ }
+Index: TTK-4.0.1/Common/itkNumericTraitsTensorPixel2.h
+===================================================================
+--- TTK-4.0.1.orig/Common/itkNumericTraitsTensorPixel2.h
++++ TTK-4.0.1/Common/itkNumericTraitsTensorPixel2.h
+@@ -375,7 +375,7 @@ public:
+   static bool IsNonpositive(Tensor< float,3 > val);
+   static bool IsNegative(Tensor< float,3 > val);
+   static bool IsNonnegative(Tensor< float,3 > val);
+-  static unsigned int GetLength(Tensor<float, 3> &t);
++  static unsigned int GetLength(const Tensor<float, 3> &t);
+   
+   using ScalarRealType = double ;
+   const static bool is_integer=false;
+@@ -399,7 +399,7 @@ public:
+   static bool IsNonpositive(Tensor< double,3 > val);
+   static bool IsNegative(Tensor< double,3 > val);
+   static bool IsNonnegative(Tensor< double,3 > val);
+-  static unsigned int GetLength(Tensor<double, 3> &t);
++  static unsigned int GetLength(const Tensor<double, 3> &t);
+   using ScalarRealType = double;
+   const static bool is_integer=false;
+   const static bool is_signed=true;
+@@ -764,7 +764,7 @@ public:
+   using AccumulateType = Tensor<long double, 6>;
+   using RealType       = Tensor<double, 6>;
+   using ScalarRealType = double;
+-  static unsigned int GetLength(Tensor<double, 6> &t);
++  static unsigned int GetLength(const Tensor<double, 6> &t);
+   const static bool is_integer=false;
+ };
+ template <> class ITKTENSOR_EXPORT NumericTraits<Tensor<long double, 6> > {
+Index: TTK-4.0.1/Common/itkTensor.txx
+===================================================================
+--- TTK-4.0.1.orig/Common/itkTensor.txx
++++ TTK-4.0.1/Common/itkTensor.txx
+@@ -1102,7 +1102,7 @@ namespace itk
+   ::ApplyMatrix (const MatrixType& R) const
+   {
+     Self res;
+-    res.SetVnlMatrix ( this->ApplyMatrix (R.GetVnlMatrix() ) );
++    res.SetVnlMatrix ( this->ApplyMatrix (vnl_matrix<T>(R.GetVnlMatrix()) ) );
+     return res;
+   }
+ 
+Index: TTK-4.0.1/IPF/CMakeLists.txt
+===================================================================
+--- TTK-4.0.1.orig/IPF/CMakeLists.txt
++++ TTK-4.0.1/IPF/CMakeLists.txt
+@@ -62,3 +62,5 @@ if(BUILD_EXECUTABLES)
+       ${TARGET_NAME}
+       )
+ endif()
++
++set_target_properties(${TARGET_NAME} PROPERTIES VERSION 4.0.1 SOVERSION 1)

@@ -1,0 +1,140 @@
+Index: dtk-qt6-1.7.1/src/dtkCore/dtkCorePluginManager.tpp
+===================================================================
+--- dtk-qt6-1.7.1.orig/src/dtkCore/dtkCorePluginManager.tpp
++++ dtk-qt6-1.7.1/src/dtkCore/dtkCorePluginManager.tpp
+@@ -47,11 +47,11 @@ template <typename T> inline bool dtkCor
+     QString conceptName = QMetaType::typeName(qMetaTypeId<T *>());
+     conceptName.remove("Plugin*");
+ 
+-    QString pluginConcept = dtkCorePluginManagerHandler::instance()->concept(path);
++    QString pluginConcept = dtkCorePluginManagerHandler::instance()->pluginConcept(path);
+ 
+     if (conceptName != pluginConcept) {
+         if (this->verboseLoading) {
+-            dtkDebug() << "skip plugin: not an implementation of the current concept" << conceptName << ", this plugin is for " << pluginConcept;
++            dtkDebug() << "skip plugin: not an implementation of the current pluginConcept" << conceptName << ", this plugin is for " << pluginConcept;
+         }
+ 
+         return false;
+Index: dtk-qt6-1.7.1/src/dtkCore/dtkCorePluginManagerHandler.cpp
+===================================================================
+--- dtk-qt6-1.7.1.orig/src/dtkCore/dtkCorePluginManagerHandler.cpp
++++ dtk-qt6-1.7.1/src/dtkCore/dtkCorePluginManagerHandler.cpp
+@@ -65,7 +65,7 @@ void dtkCorePluginManagerHandler::scan(c
+ 
+     d->names.insert(path, loader->metaData().value("MetaData").toObject().value("name").toString());
+     d->versions.insert(path, loader->metaData().value("MetaData").toObject().value("version").toString());
+-    d->concepts.insert(path, loader->metaData().value("MetaData").toObject().value("concept").toString());
++    d->concepts.insert(path, loader->metaData().value("MetaData").toObject().value("pluginConcept").toString());
+ 
+     d->dependencies.insert(path, loader->metaData().value("MetaData").toObject().value("dependencies").toArray().toVariantList());
+     d->pluginsLayerVersion.insert(path, loader->metaData().value("MetaData").toObject().value("layerVersion").toString());
+@@ -88,7 +88,7 @@ QString dtkCorePluginManagerHandler::ver
+     return d->versions.value(path);
+ }
+ 
+-QString dtkCorePluginManagerHandler::concept(const QString& path) const
++QString dtkCorePluginManagerHandler::pluginConcept(const QString& path) const
+ {
+     return d->concepts.value(path);
+ }
+@@ -125,10 +125,10 @@ bool dtkCorePluginManagerHandler::hasVer
+     return false;
+ }
+ 
+-bool dtkCorePluginManagerHandler::hasConcept(const QString& concept) const
++bool dtkCorePluginManagerHandler::hasConcept(const QString& pluginConcept) const
+ {
+     for (const QString& c : d->concepts) {
+-        if (c == concept) {
++        if (c == pluginConcept) {
+             return true;
+         }
+     }
+Index: dtk-qt6-1.7.1/src/dtkCore/dtkCorePluginManagerHandler.h
+===================================================================
+--- dtk-qt6-1.7.1.orig/src/dtkCore/dtkCorePluginManagerHandler.h
++++ dtk-qt6-1.7.1/src/dtkCore/dtkCorePluginManagerHandler.h
+@@ -35,7 +35,7 @@ public:
+ 
+     QString    name(const QString& path) const;
+     QString version(const QString& path) const;
+-    QString concept(const QString& path) const;
++    QString pluginConcept(const QString& path) const;
+ 
+ public:
+     QString pluginsLayerVersion(const QString& path) const;
+@@ -44,7 +44,7 @@ public:
+ public:
+     bool    hasName(const QString& name) const;
+     bool hasVersion(const QString& version) const;
+-    bool hasConcept(const QString& concept) const;
++    bool hasConcept(const QString& pluginConcept) const;
+ 
+ public:
+     void scan(const QString& path, bool verboseLoading = false);
+Index: dtk-qt6-1.7.1/src/dtkCoreSupport/CMakeLists.txt
+===================================================================
+--- dtk-qt6-1.7.1.orig/src/dtkCoreSupport/CMakeLists.txt
++++ dtk-qt6-1.7.1/src/dtkCoreSupport/CMakeLists.txt
+@@ -250,3 +250,4 @@ install(TARGETS ${PROJECT_NAME}
+ 
+ ######################################################################
+ ### CMakeLists.txt ends here
++set_target_properties(dtkCoreSupport PROPERTIES VERSION 1.7.1 SOVERSION 1)
+Index: dtk-qt6-1.7.1/src/dtkCoreSupport/dtkCpuid.cpp
+===================================================================
+--- dtk-qt6-1.7.1.orig/src/dtkCoreSupport/dtkCpuid.cpp
++++ dtk-qt6-1.7.1/src/dtkCoreSupport/dtkCpuid.cpp
+@@ -54,7 +54,7 @@ void dtkCpuid::load(unsigned i)
+ {
+ #if defined(Q_OS_WIN) && defined(Q_CC_MSVC)
+     __cpuid((int *)d->regs, (int)i);
+-#elif defined(DTK_BUILD_64)
++#elif defined(DTK_BUILD_64) && (defined(__x86_64__) || defined(__i386__))
+     asm volatile
+     ("cpuid" : "=a" (d->regs[0]), "=b" (d->regs[1]), "=c" (d->regs[2]), "=d" (d->regs[3])
+      : "a" (i), "c" (0));
+Index: dtk-qt6-1.7.1/src/dtkGuiSupport/CMakeLists.txt
+===================================================================
+--- dtk-qt6-1.7.1.orig/src/dtkGuiSupport/CMakeLists.txt
++++ dtk-qt6-1.7.1/src/dtkGuiSupport/CMakeLists.txt
+@@ -41,7 +41,6 @@ set(${PROJECT_NAME}_HEADERS
+   dtkSpacer.h
+   dtkSplitter.h
+   dtkSwitch.h
+-  dtkTagCloud.h
+   dtkViewManager.h
+   dtkViewLayout.h
+   dtkViewLayoutItem.h
+@@ -66,7 +65,6 @@ set(${PROJECT_NAME}_SOURCES
+   dtkSpacer.cpp
+   dtkSplitter.cpp
+   dtkSwitch.cpp
+-  dtkTagCloud.cpp
+   dtkViewManager.cpp
+   dtkViewLayout.cpp
+   dtkViewLayoutItem.cpp
+@@ -159,3 +157,4 @@ install(TARGETS ${PROJECT_NAME}
+ 
+ ######################################################################
+ ### CMakeLists.txt ends here
++set_target_properties(dtkGuiSupport PROPERTIES VERSION 1.7.1 SOVERSION 1)
+Index: dtk-qt6-1.7.1/src/dtkMathSupport/CMakeLists.txt
+===================================================================
+--- dtk-qt6-1.7.1.orig/src/dtkMathSupport/CMakeLists.txt
++++ dtk-qt6-1.7.1/src/dtkMathSupport/CMakeLists.txt
+@@ -79,3 +79,4 @@ install(TARGETS ${PROJECT_NAME}
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       COMPONENT mathsupport
+          EXPORT dtkDepends)
++set_target_properties(dtkMathSupport PROPERTIES VERSION 1.7.1 SOVERSION 1)
+Index: dtk-qt6-1.7.1/src/dtkVrSupport/CMakeLists.txt
+===================================================================
+--- dtk-qt6-1.7.1.orig/src/dtkVrSupport/CMakeLists.txt
++++ dtk-qt6-1.7.1/src/dtkVrSupport/CMakeLists.txt
+@@ -141,3 +141,4 @@ install(TARGETS ${PROJECT_NAME}
+   COMPONENT vrsupport
+   EXPORT dtkDepends
+   )
++set_target_properties(dtkVrSupport PROPERTIES VERSION 1.7.1 SOVERSION 1)

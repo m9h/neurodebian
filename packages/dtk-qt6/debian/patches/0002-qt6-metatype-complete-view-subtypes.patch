@@ -1,0 +1,25 @@
+Index: dtk-qt6-1.7.1/src/dtkCoreSupport/dtkAbstractView.h
+===================================================================
+--- dtk-qt6-1.7.1.orig/src/dtkCoreSupport/dtkAbstractView.h
++++ dtk-qt6-1.7.1/src/dtkCoreSupport/dtkAbstractView.h
+@@ -25,11 +25,17 @@
+ #include <QtWidgets/QWidget>
+ 
+ class dtkAbstractViewPrivate;
+-class dtkAbstractViewAnimator;
+-class dtkAbstractViewNavigator;
+-class dtkAbstractViewInteractor;
+ class dtkAbstractData;
+ 
++// Qt6's moc forces metatypes referenced by signals/slots (here the
++// QList<dtkAbstractView{Animator,Navigator,Interactor} *> slot return types)
++// to be complete; Qt5 accepted forward declarations. Pull in the full
++// definitions. These subclasses only forward-declare dtkAbstractView, so
++// there is no include cycle.
++#include "dtkAbstractViewAnimator.h"
++#include "dtkAbstractViewNavigator.h"
++#include "dtkAbstractViewInteractor.h"
++
+ #include <dtkMathSupport/dtkVector3D.h>
+ #include <dtkMathSupport/dtkQuaternion.h>
+ 

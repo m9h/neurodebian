@@ -1,0 +1,7 @@
+ttk (4.0.1-4~noble1) noble; urgency=medium
+
+  * Initial NeuroDebian packaging, ported from the neurofedora TTK.spec.
+    Tensor ToolKit for diffusion MRI, built library-only against the system
+    InsightToolkit5 5.4.6 and VTK 9.5. Dependency of medInria.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Thu, 30 Jul 2026 09:10:00 -0700

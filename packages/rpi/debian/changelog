@@ -1,0 +1,7 @@
+rpi (4.0-3~noble1) noble; urgency=medium
+
+  * Initial NeuroDebian packaging, ported from the neurofedora RPI.spec.
+    Header-only registration API built against the system InsightToolkit5
+    5.4.6 with system TCLAP. Dependency of medInria.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Thu, 30 Jul 2026 09:15:00 -0700
