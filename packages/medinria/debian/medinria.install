@@ -1,0 +1,4 @@
+usr/bin/medInria
+usr/lib/*/libmed*.so
+usr/lib/*/medInria
+usr/share/cmake/medInria

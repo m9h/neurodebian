@@ -1,0 +1,32 @@
+medinria (5.0.1~beta-1~noble1) noble; urgency=medium
+
+  * Initial Debian/noble packaging, ported from the neurofedora medInria.spec
+    (5.0.1~beta-0.7).
+  * Build the self-contained src/ cmake project directly (bypass the
+    superbuild) against the Qt6 / VTK 9.5.2 / dtk-qt6 stack: Qt6, our
+    libdtk-qt6-dev, libinsighttoolkit5-dev 5.4.6 (with ITKVtkGlue),
+    libvtk9(-qt)-dev 9.5.2, libttk-dev 4.0.1, librpi-dev 4.0, DCMTK and GDCM.
+  * debian/patches/0001-qt6-port.patch: complete upstream's unfinished Qt6
+    port (69 files) - QRegExp->QRegularExpression, QHashIterator(QMultiHash)
+    ->STL, QApplication::desktop()/QDesktopWidget/QGLWidget/QGLFormat->
+    QScreen/QSurfaceFormat, QTime timer->QElapsedTimer, qSort->std::sort,
+    QColor::getRgbF float*, QWheelEvent delta/orientation->angleDelta,
+    QDirModel->QFileSystemModel, vtkIdFilter->vtkGenerateIds,
+    QString::SplitBehavior->Qt::, the vtkLegacyReaderVersion.h shim, and the
+    medVirtualRepresentationItemDelegate default-ctor definition needed for
+    the final link.
+  * debian/patches/0002-optional-itk-philipsrec.patch: ITKIOPhilipsREC is
+    EXCLUDE_FROM_DEFAULT upstream and our ITK build omits it, so request the
+    module (and build the PAR/REC reader) only when ITK ships it.
+  * debian/patches/0003-qt64-moc-complete-types-qchar.patch: noble's Qt 6.4.2
+    is stricter than the Qt this was ported against - use Q_MOC_INCLUDE so
+    moc sees complete types for the QList<...*> slot metatypes, and wrap the
+    QXmlStreamReader name/value comparison literals in QLatin1String.
+  * debian/rules reproduces the spec %prep source fixes (CRLF strip,
+    QT_VERSION pin, libdir/plugin/cmake install-path fixes, absolute multiarch
+    plugin search paths, medDataImporter null-check) and caps the build at -j3
+    to keep the ITK-heavy plugins from exhausting memory.
+  * Build-depend on libnsl-dev: DCMTK's CMake config adds a bare -lnsl to the
+    link line.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Wed, 16 Sep 2026 22:10:39 -0700

@@ -1,0 +1,14 @@
+# medInria's libmed*.so are application-private libraries, not public ones:
+# upstream builds them without a SONAME version and only the medInria binary
+# and its plugins link against them. They are shipped in the multiarch libdir
+# (matching the upstream/Fedora layout) rather than a private subdirectory, so
+# lintian mistakes them for public shared libraries.
+medinria: shared-library-lacks-version
+medinria: lacks-unversioned-link-to-shared-library
+medinria: package-name-doesnt-match-sonames
+# Unversioned private libraries get no dh_makeshlibs ldconfig trigger; they
+# live in a directory already on the default loader search path, so no ldconfig
+# activation is required for the application to find them.
+medinria: lacks-ldconfig-trigger
+# Upstream ships no manual page for the GUI application.
+medinria: no-manual-page [usr/bin/medInria]

@@ -1,0 +1,59 @@
+Source: medinria
+Section: science
+Priority: optional
+Maintainer: Morgan Hough <morgan.hough@gmail.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake (>= 3.19),
+ ninja-build,
+ dos2unix,
+ qt6-base-dev,
+ qt6-declarative-dev,
+ qt6-svg-dev,
+ qt6-tools-dev,
+ qt6-tools-dev-tools,
+ libdtk-qt6-dev (>= 1.7.1-2~),
+ libinsighttoolkit5-dev (>= 5.4.6),
+ libvtk9-dev (>= 9.5.2),
+ libvtk9-qt-dev (>= 9.5.2),
+ libttk-dev (>= 4.0.1),
+ librpi-dev (>= 4.0),
+ libdcmtk-dev,
+ libnsl-dev,
+ libgdcm-dev,
+ libgl1-mesa-dev,
+ libhdf5-dev,
+ libssl-dev,
+ libsqlite3-dev,
+ default-jdk,
+Standards-Version: 4.7.0
+Homepage: https://github.com/medInria/medInria-public
+Rules-Requires-Root: no
+
+Package: medinria
+Architecture: any
+Depends:
+ libdtk-qt6-1.7 (>= 1.7.1-2~),
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: medical image navigation and research tool
+ medInria is a free medical image viewer and processing tool developed at
+ Inria. It provides visualization of 3D/4D medical images, diffusion MRI
+ processing (tensor estimation, tractography), image registration, and
+ segmentation tools through a plugin-based architecture.
+ .
+ This package ships the medInria application, its private libraries and the
+ full set of image-processing plugins.
+
+Package: medinria-dev
+Architecture: any
+Section: libdevel
+Depends:
+ medinria (= ${binary:Version}),
+ ${misc:Depends},
+Description: medical image navigation and research tool - development files
+ medInria is a free medical image viewer and processing tool developed at
+ Inria (see the medinria package).
+ .
+ This package provides the headers and CMake configuration files needed to
+ build software against medInria's libraries.

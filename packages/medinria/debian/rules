@@ -1,0 +1,107 @@
+#!/usr/bin/make -f
+# medInria 5.0.1~beta — Qt6 / VTK 9.5 / dtk-qt6 port, built from the src/
+# subdirectory (the self-contained cmake project, not the superbuild).
+# Ported from the neurofedora medInria.spec: the big Qt5->Qt6 source port is
+# debian/patches/0001-qt6-port.patch; the spec's %prep seds (CRLF strip, the
+# QT_VERSION pin, libdir/plugin/cmake install-path fixes, plugin search paths,
+# and the null-check) are reproduced in override_dh_auto_configure below.
+
+include /usr/share/dpkg/architecture.mk
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+# dtk's cmake config omits the dtkMathSupport/dtkVrSupport include dirs; the
+# ITK/VTK-heavy plugins also need <cstdint> explicitly and -fpermissive under
+# GCC 13+ (matching the upstream Fedora build).
+export DEB_CXXFLAGS_MAINT_APPEND = -std=c++17 -include cstdint -fpermissive \
+  -I/usr/include/dtkMathSupport -I/usr/include/dtkVrSupport
+
+CMAKEDIR = /usr/lib/$(DEB_HOST_MULTIARCH)/cmake
+PLUGINDIR = /usr/lib/$(DEB_HOST_MULTIARCH)/medInria
+
+%:
+	dh $@ --buildsystem=cmake+ninja --sourcedirectory=src
+
+# Reproduce the spec %prep source transformations, then configure.
+override_dh_auto_configure:
+	# CRLF -> LF: source ships some CRLF .cmake files that break sed $ anchors
+	# and cmake parsing.
+	find src/ \( -name '*.cmake' -o -name '*.cmake.in' \) -print0 | xargs -0 dos2unix -q
+	dos2unix -q src/CMakeLists.txt CMakeLists.txt
+	# Force Qt6 (upstream pins QT_VERSION_MAJOR 5 in both CMakeLists).
+	sed -i 's|set(QT_VERSION_MAJOR 5)|set(QT_VERSION_MAJOR 6)|' \
+	  CMakeLists.txt src/CMakeLists.txt
+	# Hardcoded lib/ install destinations -> CMAKE_INSTALL_LIBDIR (multiarch).
+	sed -i 's|LIBRARY   DESTINATION lib$$|LIBRARY   DESTINATION $${CMAKE_INSTALL_LIBDIR}|' \
+	  src/cmake/module/set_lib_install_rules.cmake
+	sed -i 's|ARCHIVE   DESTINATION lib$$|ARCHIVE   DESTINATION $${CMAKE_INSTALL_LIBDIR}|' \
+	  src/cmake/module/set_lib_install_rules.cmake
+	sed -i 's|FRAMEWORK DESTINATION lib$$|FRAMEWORK DESTINATION $${CMAKE_INSTALL_LIBDIR}|' \
+	  src/cmake/module/set_lib_install_rules.cmake
+	# Plugins -> <libdir>/medInria/plugins{,_legacy}.
+	sed -i 's|LIBRARY DESTINATION bin/plugins\(.*\)|LIBRARY DESTINATION $${CMAKE_INSTALL_LIBDIR}/medInria/plugins\1|' \
+	  src/cmake/module/set_plugin_install_rules.cmake
+	sed -i 's|RUNTIME DESTINATION bin/plugins\(.*\)|RUNTIME DESTINATION $${CMAKE_INSTALL_LIBDIR}/medInria/plugins\1|' \
+	  src/cmake/module/set_plugin_install_rules.cmake
+	sed -i 's|ARCHIVE DESTINATION lib/plugins\(.*\)|ARCHIVE DESTINATION $${CMAKE_INSTALL_LIBDIR}/medInria/plugins\1|' \
+	  src/cmake/module/set_plugin_install_rules.cmake
+	# cmake config install paths in set_lib_install_rules.cmake.
+	sed -i 's|INSTALL_DESTINATION lib/cmake/|INSTALL_DESTINATION $${CMAKE_INSTALL_LIBDIR}/cmake/|g' \
+	  src/cmake/module/set_lib_install_rules.cmake
+	sed -i '/ConfigPackageLocation/s|lib/cmake/|$${CMAKE_INSTALL_LIBDIR}/cmake/|' \
+	  src/cmake/module/set_lib_install_rules.cmake
+	sed -i '/DESTINATION.*lib\/cmake/s|DESTINATION lib/cmake/|DESTINATION $${CMAKE_INSTALL_LIBDIR}/cmake/|' \
+	  src/cmake/module/set_lib_install_rules.cmake
+	# cmake config install paths in top-level src/CMakeLists.txt.
+	sed -i 's|INSTALL_DESTINATION lib/cmake/|INSTALL_DESTINATION $${CMAKE_INSTALL_LIBDIR}/cmake/|' \
+	  src/CMakeLists.txt
+	sed -i 's|DESTINATION          lib/cmake/|DESTINATION          $${CMAKE_INSTALL_LIBDIR}/cmake/|g' \
+	  src/CMakeLists.txt
+	# cmake module dir -> share/cmake/medInria/ (arch-independent helpers).
+	sed -i 's|DESTINATION          cmake/)|DESTINATION          share/cmake/medInria/)|' \
+	  src/CMakeLists.txt
+	# Drop -Wformat=0 (conflicts with -Werror=format-security).
+	sed -i '/Wformat=0/d' src/CMakeLists.txt
+	# Plugin search paths: bin-relative -> absolute FHS multiarch paths.
+	sed -i 's|plugins_dir = qApp->applicationDirPath() + "/plugins";|plugins_dir = QString("$(PLUGINDIR)/plugins");|' \
+	  src/app/medInria/medApplication.cpp
+	sed -i 's|plugins_dir = qApp->applicationDirPath() + "/plugins_legacy";|plugins_dir = QString("$(PLUGINDIR)/plugins_legacy");|' \
+	  src/layers/medCore/legacy/medPluginManager.cpp
+	# Defensive null-check in medDataImporter (upstream segfault when no readers).
+	sed -i 's|if (!mainReader->canRead|if (!mainReader \|\| !mainReader->canRead|' \
+	  src/layers/medCore/source/medDataImporter.cpp
+	dh_auto_configure -- \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DCMAKE_CXX_STANDARD=17 \
+	  -DCMAKE_CXX_STANDARD_REQUIRED=ON \
+	  -DCMAKE_SKIP_INSTALL_RPATH=ON \
+	  -Ddtk_DIR=$(CMAKEDIR)/dtk \
+	  -DITK_DIR=$(CMAKEDIR)/ITK-5.4 \
+	  -DDCMTK_DIR=$(CMAKEDIR)/dcmtk \
+	  -DTTK_DIR=$(CMAKEDIR)/TTK \
+	  -DRPI_DIR=$(CMAKEDIR)/RPI \
+	  -DUSE_Python=OFF \
+	  -DUSE_DTKIMAGING=OFF \
+	  -DUSE_OSPRay=OFF \
+	  -DUSE_FFmpeg=OFF \
+	  -DBUILD_ALL_PLUGINS=ON \
+	  -DBUILD_EXAMPLE_PLUGINS=OFF \
+	  -DBUILD_COMPOSITEDATASET_PLUGIN=OFF \
+	  -DmedInria_BUILD_TESTS=OFF \
+	  -DmedInria_BUILD_DOCUMENTATION=OFF
+
+# ITK-heavy plugins peak ~2-3GB each; -j6 exhausted a 15GB laptop, so cap at 3.
+override_dh_auto_build:
+	dh_auto_build -- -j3
+
+# Upstream ships no runnable test target under this configuration.
+override_dh_auto_test:
+
+override_dh_auto_install:
+	dh_auto_install
+	# Drop any qt.conf deploy artifact (not needed for system Qt).
+	rm -f debian/tmp/usr/bin/qt.conf
+	# Safety net: relocate any *.so* that missed CMAKE_INSTALL_LIBDIR into the
+	# multiarch libdir (should be a no-op given the seds above).
+	if [ -d debian/tmp/usr/lib ] && [ -n "$$(find debian/tmp/usr/lib -maxdepth 1 -name '*.so*' 2>/dev/null)" ]; then \
+	  mkdir -p debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH); \
+	  find debian/tmp/usr/lib -maxdepth 1 -name '*.so*' -exec mv -t debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/ {} + ; \
+	fi

@@ -1,0 +1,81 @@
+Index: medInria-public-5.0.1beta/src/layers/medCore/legacy/gui/lookUpTables/medXMLToLUTReader.cpp
+===================================================================
+--- medInria-public-5.0.1beta.orig/src/layers/medCore/legacy/gui/lookUpTables/medXMLToLUTReader.cpp
++++ medInria-public-5.0.1beta/src/layers/medCore/legacy/gui/lookUpTables/medXMLToLUTReader.cpp
+@@ -48,7 +48,7 @@ bool medXMLToLUTReader::read(QIODevice *
+ 
+     if (d->xml.readNextStartElement())
+     {
+-        if (d->xml.name() == "medLUTs" && d->xml.attributes().value("version") == "1.1")
++        if (d->xml.name() == QLatin1String("medLUTs") && d->xml.attributes().value("version") == QLatin1String("1.1"))
+         {
+             d->readLUT();
+         }
+@@ -71,11 +71,11 @@ QString medXMLToLUTReader::errorString()
+ 
+ void medXMLToLUTReaderPrivate::readLUT()
+ {
+-    Q_ASSERT(xml.isStartElement() && xml.name() == "medLUTs");
++    Q_ASSERT(xml.isStartElement() && xml.name() == QLatin1String("medLUTs"));
+ 
+     while (xml.readNextStartElement())
+     {
+-        if (xml.name() == "table")
++        if (xml.name() == QLatin1String("table"))
+         {
+             readTable();
+         }
+@@ -88,13 +88,13 @@ void medXMLToLUTReaderPrivate::readLUT()
+ 
+ void medXMLToLUTReaderPrivate::readTable()
+ {
+-    Q_ASSERT(xml.isStartElement() && xml.name() == "table");
++    Q_ASSERT(xml.isStartElement() && xml.name() == QLatin1String("table"));
+     medClutEditorTable * table = new medClutEditorTable(
+                 xml.attributes().value("title").toString());
+ 
+     while (xml.readNextStartElement())
+     {
+-        if (xml.name() == "node")
++        if (xml.name() == QLatin1String("node"))
+         {
+             readNode(*table);
+         }
+@@ -108,7 +108,7 @@ void medXMLToLUTReaderPrivate::readTable
+ 
+ void medXMLToLUTReaderPrivate::readNode(medClutEditorTable & table)
+ {
+-    Q_ASSERT(xml.isStartElement() && xml.name() == "node");
++    Q_ASSERT(xml.isStartElement() && xml.name() == QLatin1String("node"));
+     QString node = xml.readElementText();
+     QStringList sl = node.split(';');
+ 
+Index: medInria-public-5.0.1beta/src/layers/medCore/legacy/gui/medAbstractWorkspaceLegacy.h
+===================================================================
+--- medInria-public-5.0.1beta.orig/src/layers/medCore/legacy/gui/medAbstractWorkspaceLegacy.h
++++ medInria-public-5.0.1beta/src/layers/medCore/legacy/gui/medAbstractWorkspaceLegacy.h
+@@ -48,6 +48,10 @@ class medAbstractWorkspaceLegacyPrivate;
+ class MEDCORE_EXPORT medAbstractWorkspaceLegacy : public QObject
+ {
+     Q_OBJECT
++    // Qt 6.4's moc needs these complete for the QList<...*> slot metatypes;
++    // include them only in the generated moc file to avoid header cycles.
++    Q_MOC_INCLUDE("medViewParameterGroupL.h")
++    Q_MOC_INCLUDE("medLayerParameterGroupL.h")
+ 
+ public:
+ 
+Index: medInria-public-5.0.1beta/src/plugins/legacy/itkDataTensorImage/interactors/itkDataTensorImageVtkViewInteractor.h
+===================================================================
+--- medInria-public-5.0.1beta.orig/src/plugins/legacy/itkDataTensorImage/interactors/itkDataTensorImageVtkViewInteractor.h
++++ medInria-public-5.0.1beta/src/plugins/legacy/itkDataTensorImage/interactors/itkDataTensorImageVtkViewInteractor.h
+@@ -34,6 +34,9 @@ class ITKDATATENSORIMAGEPLUGIN_EXPORT it
+ {
+ 
+     Q_OBJECT
++    // Qt 6.4's moc needs these complete for the QList<...*> slot metatypes.
++    Q_MOC_INCLUDE("medAbstractParameterL.h")
++    Q_MOC_INCLUDE("medBoolParameterL.h")
+ 
+ public:
+     itkDataTensorImageVtkViewInteractor(medAbstractView* parent);

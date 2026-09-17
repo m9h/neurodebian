@@ -1,0 +1,62 @@
+Index: medInria-public-5.0.1beta/src/plugins/legacy/itkDataImage/CMakeLists.txt
+===================================================================
+--- medInria-public-5.0.1beta.orig/src/plugins/legacy/itkDataImage/CMakeLists.txt
++++ medInria-public-5.0.1beta/src/plugins/legacy/itkDataImage/CMakeLists.txt
+@@ -47,9 +47,17 @@ set(ITK_IMAGES_DEPENDENCIES
+     ITKIOGIPL
+     ITKIONIFTI
+     ITKIONRRD
+-    ITKIOPhilipsREC
+ )
+ 
++# ITKIOPhilipsREC is EXCLUDE_FROM_DEFAULT in ITK and distro ITK builds may omit
++# it; only request it (and build the PAR/REC reader) when ITK ships the module.
++set(MED_ITK_HAS_PHILIPSREC OFF)
++if(EXISTS "${ITK_DIR}/Modules/ITKIOPhilipsREC.cmake")
++  set(MED_ITK_HAS_PHILIPSREC ON)
++  list(APPEND ITK_IMAGES_DEPENDENCIES ITKIOPhilipsREC)
++  add_definitions(-DMED_ITK_HAS_PHILIPSREC)
++endif()
++
+ find_package(ITK REQUIRED COMPONENTS ITKIOImageBase ITKGDCM ITKIOGDCM ITKIOVTK ITKVtkGlue ${ITK_IMAGES_DEPENDENCIES})
+ include(${ITK_USE_FILE})
+ 
+@@ -83,6 +91,14 @@ list_source_files(${TARGET_NAME}
+   readers
+   writers
+   )
++if(NOT MED_ITK_HAS_PHILIPSREC)
++  foreach(_var HEADERS SOURCES TEMPLATES CFILES)
++    list(REMOVE_ITEM ${TARGET_NAME}_${_var}
++      ${CMAKE_CURRENT_SOURCE_DIR}/readers/itkPhilipsRECDataImageReader.h
++      ${CMAKE_CURRENT_SOURCE_DIR}/readers/itkPhilipsRECDataImageReader.cpp
++      )
++  endforeach()
++endif()
+ list_header_directories_to_include(${TARGET_NAME}
+   ${${TARGET_NAME}_HEADERS}
+   )
+Index: medInria-public-5.0.1beta/src/plugins/legacy/itkDataImage/itkDataImagePlugin.cpp
+===================================================================
+--- medInria-public-5.0.1beta.orig/src/plugins/legacy/itkDataImage/itkDataImagePlugin.cpp
++++ medInria-public-5.0.1beta/src/plugins/legacy/itkDataImage/itkDataImagePlugin.cpp
+@@ -58,7 +58,9 @@
+ #include <itkNrrdDataImageReader.h>
+ #include <itkGiplDataImageReader.h>
+ #include <itkVTKDataImageReader.h>
++#ifdef MED_ITK_HAS_PHILIPSREC
+ #include <itkPhilipsRECDataImageReader.h>
++#endif
+ #include <itkGISDataImageReader.h>
+ #include <itkDCMTKDataImageReader.h>
+ 
+@@ -154,7 +156,9 @@ bool itkDataImagePlugin::initialize()
+     if (!itkBMPDataImageReader::registered())        { qWarning() << "Unable to register itkBMPDataImageReader type";        }
+     if (!itkJPEGDataImageReader::registered())       { qWarning() << "Unable to register itkJPEGDataImageReader type";       }
+     if (!itkTIFFDataImageReader::registered())       { qWarning() << "Unable to register itkTIFFDataImageReader type";       }
++#ifdef MED_ITK_HAS_PHILIPSREC
+     if (!itkPhilipsRECDataImageReader::registered()) { qWarning() << "Unable to register itkPhilipsRECDataImageReader type"; }
++#endif
+     if (!itkGISDataImageReader::registered())        { qWarning() << "Unable to register itkGISDataImageReader type"; }
+     if (!itkDCMTKDataImageReader::registered())      { qWarning() << "Unable to register itkDCMTKDataImageReader type"; }
+ 
