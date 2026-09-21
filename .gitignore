@@ -25,3 +25,4 @@ spec_meta.json
 !**/debian/upstream/
 !**/debian/manpages/
 !**/debian/tests/
+**/debian/*.debhelper

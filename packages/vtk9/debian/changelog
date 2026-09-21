@@ -1,3 +1,17 @@
+vtk9 (9.5.2+dfsg4-5ubuntu2.1~noble1) noble; urgency=medium
+
+  * Link the Python wrapping libraries against libpython
+    (-DVTK_PYTHON_OPTIONAL_LINK=OFF). Upstream leaves Python symbols
+    undefined in libvtkWrappingPythonCore so the modules can be imported by
+    any interpreter, but that breaks C++ applications which dlopen VTK
+    libraries: libvtkRenderingMatplotlib pulls in libvtkPythonInterpreter and
+    libvtkWrappingPythonCore, and loading then fails with "undefined symbol:
+    PyExc_ValueError". This blocked 8 of medInria's VTK/mesh plugins
+    (iterativeClosestPoint, medCreateMeshFromMask, medRemeshing, medVtkView,
+    meshManipulation, meshMapping, polygonRoi, vtkDataMesh).
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Sat, 19 Sep 2026 13:40:41 -0700
+
 vtk9 (9.5.2+dfsg4-5ubuntu2) stonking; urgency=medium
 
   * Rebuild against new old ffmpeg 7:8.1-3ubuntu3.
