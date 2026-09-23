@@ -1,0 +1,3 @@
+0001-install-the-install-tree-ACVDConfig.patch
+0002-qualify-std-iostream-in-public-headers.patch
+0003-drop-header-only-DiscreteRemeshing-from-ACVD_LIBRARIES.patch

@@ -1,0 +1,23 @@
+acvd (4.0-1) unstable; urgency=medium
+
+  * Initial Debian packaging, ported from the neurofedora acvd.spec (4.0-5).
+  * Library-only build against system VTK (examples install generically named
+    binaries such as viewer and icp, and nothing downstream needs them).
+  * 0001-install-the-install-tree-ACVDConfig.patch: upstream generates a
+    correct install-tree ACVDConfig.cmake under CMakeFiles/ but install()s the
+    build-tree one, so consumers of find_package(ACVD) got include directories
+    pointing at the builder's source checkout. MITK's Remeshing module failed
+    with "vtkIsotropicDiscreteRemeshing.h: No such file or directory".
+  * 0002-qualify-std-iostream-in-public-headers.patch: the header-only
+    DiscreteRemeshing templates use unqualified cout/cerr/endl without
+    <iostream>. Template bodies are only diagnosed on instantiation, so this
+    surfaces in consumers, not in ACVD's own build (MITK: 35 errors). Qualify
+    with std:: rather than leaking a using-directive into every consumer.
+  * 0003-drop-header-only-DiscreteRemeshing-from-ACVD_LIBRARIES.patch:
+    ACVD_LIBRARIES listed vtkDiscreteRemeshing, which is header-only and has
+    no library, so linking ${ACVD_LIBRARIES} failed with "cannot find
+    -lvtkDiscreteRemeshing".
+  * Force-include an <iostream> prelude for ACVD's own .cxx sources, which
+    have the same problem but are not shipped.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Wed, 23 Sep 2026 10:01:12 -0700

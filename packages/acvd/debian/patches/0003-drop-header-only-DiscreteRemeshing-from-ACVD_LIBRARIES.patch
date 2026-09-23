@@ -1,0 +1,14 @@
+Index: acvd-4.0/CMakeLists.txt
+===================================================================
+--- acvd-4.0.orig/CMakeLists.txt
++++ acvd-4.0/CMakeLists.txt
+@@ -76,7 +76,8 @@ set( ACVD_LIBRARIES vtkSurface )
+ 
+ if(BUILD_DISCRETEREMESHING)
+     add_subdirectory(DiscreteRemeshing)
+-    set( ACVD_LIBRARIES ${ACVD_LIBRARIES} vtkDiscreteRemeshing )
++    # DiscreteRemeshing is header-only: there is no vtkDiscreteRemeshing library,
++    # and listing one breaks every consumer that links ${ACVD_LIBRARIES}.
+ endif(BUILD_DISCRETEREMESHING)
+ 
+ if(BUILD_VOLUMEPROCESSING)

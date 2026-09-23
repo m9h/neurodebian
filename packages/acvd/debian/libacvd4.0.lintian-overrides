@@ -1,0 +1,5 @@
+# The two libraries keep upstream's VTK-style names (libvtkSurface,
+# libvtkVolumeProcessing) and share one SOVERSION; they are only ever consumed
+# together through find_package(ACVD), so they ship as one package named after
+# the project rather than after each soname.
+libacvd4.0: package-name-doesnt-match-sonames

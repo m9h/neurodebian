@@ -1,0 +1,665 @@
+Index: acvd-4.0/Common/vtkUniformClustering.h
+===================================================================
+--- acvd-4.0.orig/Common/vtkUniformClustering.h
++++ acvd-4.0/Common/vtkUniformClustering.h
+@@ -33,6 +33,7 @@
+ #ifndef _VTKUNIFORMCLUSTERING_H_
+ #define _VTKUNIFORMCLUSTERING_H_
+ 
++#include <iostream>
+ #include <random>
+ #include <vector>
+ #include <vtkCommand.h>
+@@ -358,13 +359,13 @@ void vtkUniformClustering<Metric,EdgeTyp
+ 			(*this->ClustersSizes->GetPointer( cluster ) )++;
+ 		else {
+ 			if (cluster != this->NumberOfClusters )
+-				cout << "Warning! : item " << i << " belongs to cluster " << cluster << endl;
++				std::cout << "Warning! : item " << i << " belongs to cluster " << cluster << std::endl;
+ 		}
+ 	}
+ 
+ 	for	(vtkIdType i=0;i!=this->NumberOfClusters;i++)
+ 		if (this->ClustersSizes->GetValue(i)==0)
+-			cout<<"Cluster "<<i<<" is empty!"<<endl;
++			std::cout<<"Cluster "<<i<<" is empty!"<<std::endl;
+ 
+ }
+ 
+@@ -383,7 +384,7 @@ void vtkUniformClustering<Metric,EdgeTyp
+ 		else
+ 		{
+ 			if (Cluster!=this->NumberOfClusters)
+-				cout<<"Warning! : item "<<i<<" belongs to cluster "<<Cluster<<endl;
++				std::cout<<"Warning! : item "<<i<<" belongs to cluster "<<Cluster<<std::endl;
+ 		}
+ 	}
+ 
+@@ -623,8 +624,8 @@ void vtkUniformClustering<Metric,EdgeTyp
+ 	}
+ 
+ 	if ( this->ConsoleOutput && NumberOfProblems )
+-		cout << endl << "WARNING : The number of uncorrectly assigned Items was reduced from "
+-			<< InitialNumberOfProblems << " to " << NumberOfProblems << " Problems" << endl;
++		std::cout << std::endl << "WARNING : The number of uncorrectly assigned Items was reduced from "
++			<< InitialNumberOfProblems << " to " << NumberOfProblems << " Problems" << std::endl;
+ 
+ }
+ 
+@@ -654,7 +655,7 @@ vtkIntArray* vtkUniformClustering<Metric
+ 
+ 	if( this->NumberOfClusters == 0 ) {
+ 
+-		cout<<"Problem!!! must set NumberOfClusters	to more	than zero!"<<endl;
++		std::cout<<"Problem!!! must set NumberOfClusters	to more	than zero!"<<std::endl;
+ 		return 0;
+ 
+ 	}
+@@ -674,11 +675,11 @@ vtkIntArray* vtkUniformClustering<Metric
+ 		this->GlobalEnergyLog.open( FileName, std::ofstream::out | std::ofstream::trunc );
+ 
+ 	this->CreateWindows();
+-	if (this->ConsoleOutput) cout << "Clustering......" << endl;
++	if (this->ConsoleOutput) std::cout << "Clustering......" << std::endl;
+ 
+ 	if ( this->UnconstrainedInitialization ) {
+ 
+-		if ( this->ConsoleOutput ) cout << "Performing unconstrained initialization" << endl;
++		if ( this->ConsoleOutput ) std::cout << "Performing unconstrained initialization" << std::endl;
+ 		this->MetricContext.SetConstrainedClustering( 0 );
+ 
+ 	}
+@@ -691,15 +692,15 @@ vtkIntArray* vtkUniformClustering<Metric
+ 	if ( this->ComputeAndSaveEnergy ) {
+ 
+ 		this->ReComputeStatistics();
+-		GlobalEnergyLog << "Final Energy :" << setprecision(15) << this->ComputeGlobalEnergy() << endl;
++		GlobalEnergyLog << "Final Energy :" << setprecision(15) << this->ComputeGlobalEnergy() << std::endl;
+ 		this->GlobalEnergyLog.close();
+ 
+ 	}
+ 
+ 	if ( this->ConsoleOutput ) {
+ 
+-		cout << "The clustering took :" << Timer->GetElapsedTime() << " seconds." << endl;
+-		cout << "Number of loops:	" << this->NumberOfLoops << endl;
++		std::cout << "The clustering took :" << Timer->GetElapsedTime() << " seconds." << std::endl;
++		std::cout << "Number of loops:	" << this->NumberOfLoops << std::endl;
+ 
+ 	}
+ 
+@@ -747,9 +748,9 @@ void vtkUniformClustering<Metric,EdgeTyp
+ 
+ 		if ( this->ConsoleOutput > 1 ) {
+ 
+-			cout << (char) 13;
+-			if ( this->ConnexityConstraint ==1 ) cout<<"*";
+-			cout << "Loop " << this->NumberOfLoops << ", duration : "
++			std::cout << (char) 13;
++			if ( this->ConnexityConstraint ==1 ) std::cout<<"*";
++			std::cout << "Loop " << this->NumberOfLoops << ", duration : "
+ 			<< (int) Timer->GetElapsedTime() << " s., "
+ 			<< NumberOfModifications << " Modifications            "<< std::flush;
+ 
+@@ -773,13 +774,13 @@ void vtkUniformClustering<Metric,EdgeTyp
+ 
+ 				if ( ( this->UnconstrainedInitialization ) && ( NumberOfConvergences == 0 ) ) {
+ 
+-					cout << endl << "Unconstrained initialization done" << endl;
++					std::cout << std::endl << "Unconstrained initialization done" << std::endl;
+ 					this->MetricContext.SetConstrainedClustering( 1 );
+ 
+ 				} else {
+ 
+ 					if ( NumberOfModifications && this->ConsoleOutput )
+-						cout<<endl<<"Trigerring early convergence for speed increase";
++						std::cout<<std::endl<<"Trigerring early convergence for speed increase";
+ 
+ 				}
+ 
+@@ -790,8 +791,8 @@ void vtkUniformClustering<Metric,EdgeTyp
+ 				this->ReComputeClustersSize();
+ 
+ 				if ( this->ConsoleOutput )
+-					cout << endl << "Convergence: " << NumberOfDisconnectedClusters
+-						<< " disconnected classes	  " << endl;
++					std::cout << std::endl << "Convergence: " << NumberOfDisconnectedClusters
++						<< " disconnected classes	  " << std::endl;
+ 
+ 				if ( ( NumberOfDisconnectedClusters == 0 ) && ( NumberOfModifications == 0 ) )
+ 					break;
+@@ -799,7 +800,7 @@ void vtkUniformClustering<Metric,EdgeTyp
+ 				if ( this->NumberOfLoops >= this->MaxNumberOfLoops ) {
+ 
+ 					if ( this->ConsoleOutput )
+-						cout << "Maximum allowed number of loops reached, exiting minimization" << endl;
++						std::cout << "Maximum allowed number of loops reached, exiting minimization" << std::endl;
+ 
+ 					break;
+ 
+@@ -808,7 +809,7 @@ void vtkUniformClustering<Metric,EdgeTyp
+ 			if( NumberOfConvergences >= MaxNumberOfConvergences ) {
+ 
+ 				if ( this->ConsoleOutput )
+-					cout << "Maximum allowed number of convergences reached, exiting minimization" << endl;
++					std::cout << "Maximum allowed number of convergences reached, exiting minimization" << std::endl;
+ 				break;
+ 
+ 			}
+@@ -1280,15 +1281,15 @@ void vtkUniformClustering<Metric,EdgeTyp
+ 	}
+ 
+ 	FirstItem = 0;
+-	cout << "NumberOfRemainingRegions : " << NumberOfRemainingRegions << endl;
++	std::cout << "NumberOfRemainingRegions : " << NumberOfRemainingRegions << std::endl;
+ 
+ 	while( NumberOfRemainingRegions ) {
+ 
+ 		vtkIdType item;
+ 
+ 		while ( 1 ) {
+-//cout << "NumberOfRemainingRegions : " << NumberOfRemainingRegions << endl;
+-//cout << "item : " << FirstItem << endl;
++//std::cout << "NumberOfRemainingRegions : " << NumberOfRemainingRegions << std::endl;
++//std::cout << "item : " << FirstItem << std::endl;
+ 			item = Items[ FirstItem ];
+ 			FirstItem++;
+ 			vtkIdType clust = Sampling->GetValue( item );
+@@ -1384,7 +1385,7 @@ void vtkUniformClustering<Metric,EdgeTyp
+ 		double Time = Timer->GetUniversalTime();
+ 		GlobalEnergyLog << this->NumberOfLoops << " " << Time - this->StartTime
+ 		<< " " << setprecision( 15 ) << this->ComputeGlobalEnergy()
+-		<< setprecision( 6 ) << endl;
++		<< setprecision( 6 ) << std::endl;
+ 
+ 	}
+ 
+Index: acvd-4.0/DiscreteRemeshing/vtkAnisotropicMetricForClustering.h
+===================================================================
+--- acvd-4.0.orig/DiscreteRemeshing/vtkAnisotropicMetricForClustering.h
++++ acvd-4.0/DiscreteRemeshing/vtkAnisotropicMetricForClustering.h
+@@ -32,6 +32,7 @@
+ #ifndef _VTKANISOTROPICMETRICFORCLUSTERING_H_
+ #define _VTKANISOTROPICMETRICFORCLUSTERING_H_
+ 
++#include <iostream>
+ #include <vtkTriangle.h>
+ #include <vtkMath.h>
+ 
+@@ -182,7 +183,7 @@ public:
+ 
+ 	double ComputeDistanceBetweenItemAndPoint(Item *I,double *P1)
+ 	{
+-		cout<<"Not Implemented!"<<endl;
++		std::cout<<"Not Implemented!"<<std::endl;
+ 
+ 		return (0);
+ 	}
+@@ -296,7 +297,7 @@ public:
+ 	{
+ 				
+ 		vtkIdType i;
+-		cout<<"Gradation= "<<this->Gradation;
++		std::cout<<"Gradation= "<<this->Gradation;
+ 
+ 		int NumberOfElements;
+ 
+@@ -392,13 +393,13 @@ public:
+ 				// debug output...
+ 				if (i/100==0)
+ 				{
+-					cout<<"Item "<<i<<", Area="<<Area<<", Tensor=";
++					std::cout<<"Item "<<i<<", Area="<<Area<<", Tensor=";
+ 					int j;
+ 					for (j=0;j<6;j++)
+ 					{
+-							cout<<Items[i].Tensor[j]<<" ";
++							std::cout<<Items[i].Tensor[j]<<" ";
+ 					}
+-					cout<<endl;
++					std::cout<<std::endl;
+ 						
+ 				}
+ 			}
+Index: acvd-4.0/DiscreteRemeshing/vtkDiscreteRemeshing.h
+===================================================================
+--- acvd-4.0.orig/DiscreteRemeshing/vtkDiscreteRemeshing.h
++++ acvd-4.0/DiscreteRemeshing/vtkDiscreteRemeshing.h
+@@ -31,6 +31,7 @@
+ #ifndef _VTKDISCRETEREMESHING_H_
+ #define _VTKDISCRETEREMESHING_H_
+ 
++#include <iostream>
+ #include <vtkObjectFactory.h>
+ #include <vtkDoubleArray.h>
+ #include <vtkIntArray.h>
+@@ -162,7 +163,7 @@ protected:
+ template < class Metric >
+ int vtkDiscreteRemeshing < Metric >::DetectNonManifoldOutputVertices() {
+ 
+-	cout << "Starting detection of non-manifold vertices" << endl;
++	std::cout << "Starting detection of non-manifold vertices" << std::endl;
+ 
+ 	// initialize items contained in clusters
+ 	std::vector< vtkIdList *> ClusterItems;
+@@ -197,7 +198,7 @@ int vtkDiscreteRemeshing < Metric >::Det
+ 	}
+ 
+ 	if ( NumberOfUncorrectlyAssociatedItems != 0 )
+-		cout << NumberOfUncorrectlyAssociatedItems << " uncorrectly associated items" << endl;
++		std::cout << NumberOfUncorrectlyAssociatedItems << " uncorrectly associated items" << std::endl;
+ 
+ 	int NumberOfTopologyIssues = 0;
+ 	vtkIdList *ClustersWithIssues = vtkIdList::New();
+@@ -206,25 +207,25 @@ int vtkDiscreteRemeshing < Metric >::Det
+ 	for ( int cluster = 0; cluster != this->NumberOfClusters; cluster++ ) {
+ 
+ 		if ( this->Output->IsVertexManifold( cluster ) ) continue;
+-		cout<<"Cluster "<<cluster<<" is non manifold"<<endl;
++		std::cout<<"Cluster "<<cluster<<" is non manifold"<<std::endl;
+ 		vtkIdList *Items = ClusterItems[ cluster ];
+ 		bool problem = true;
+ 
+ 		if ( Items != 0) {
+-			cout << Items->GetNumberOfIds() << " items inside" << endl;
++			std::cout << Items->GetNumberOfIds() << " items inside" << std::endl;
+ 			if ( Items->GetNumberOfIds() == 1 )	{
+ 
+ 				if ( this->Input->IsVertexManifold( Items->GetId( 0 ) ) != 1 ) {
+ 
+ 					problem = false;
+-					cout << "discarding this topology issue as the input mesh also has a topology issue" << endl;
++					std::cout << "discarding this topology issue as the input mesh also has a topology issue" << std::endl;
+ 
+ 				}
+ 
+ 			}
+ 
+ 		} else {
+-			cout << ".... but empty. Skipping" << endl;
++			std::cout << ".... but empty. Skipping" << std::endl;
+ 			continue;
+ 		}
+ 
+@@ -237,7 +238,7 @@ int vtkDiscreteRemeshing < Metric >::Det
+ 			if (CItems!=0)
+ 				Size=CItems->GetNumberOfIds();
+ 
+-			cout<<"Vertex "<<Cluster<<" is non manifold. Cluster size : "<<Size<<endl;*/
++			std::cout<<"Vertex "<<Cluster<<" is non manifold. Cluster size : "<<Size<<std::endl;*/
+ 
+ 			//unfreeze this cluster and its neighbours
+ 			this->IsClusterFreezed->SetValue( cluster, 0 );
+@@ -258,7 +259,7 @@ int vtkDiscreteRemeshing < Metric >::Det
+ 		vtkIdType cluster = ClustersWithIssues->GetId( i );
+ 		vtkIdList *Items = ClusterItems[ cluster ];
+ 		if ( Items == 0 ) {
+-			cout << "Warning : cluster " << cluster << " seems empty!" << endl;
++			std::cout << "Warning : cluster " << cluster << " seems empty!" << std::endl;
+ 			//continue;
+ 		}
+ 		int newSize = this->NumberOfClusters + 1;
+@@ -274,12 +275,12 @@ int vtkDiscreteRemeshing < Metric >::Det
+ 		this->ClustersSizes->Resize( newSize );
+ 		this->ClustersSizes->SetValue( newCluster, 0 );
+ //		bool debug = newCluster == 22496 ? true : false;
+-//		if (debug ) cout<<"Adding cluster "<<newCluster<<" near cluster "<<Cluster<<endl;
++//		if (debug ) std::cout<<"Adding cluster "<<newCluster<<" near cluster "<<Cluster<<std::endl;
+ 		this->NumberOfClusters++;
+ 
+ 		if ( Items->GetNumberOfIds() > 1 ) {
+ 
+-//			if (debug) cout << Items->GetNumberOfIds() << " items in cluster" << endl;
++//			if (debug) std::cout << Items->GetNumberOfIds() << " items in cluster" << std::endl;
+ 			vtkIdType ItemToMove = Items->GetId( 0 );
+ 			this->Clustering->SetValue( ItemToMove,newCluster );
+ 			ClusterItems[ newCluster ] = vtkIdList::New();
+@@ -289,18 +290,18 @@ int vtkDiscreteRemeshing < Metric >::Det
+ 
+ 		}
+ 
+-//		if (debug) cout << "Only one item in cluster" << endl;
++//		if (debug) std::cout << "Only one item in cluster" << std::endl;
+ 		// the cluster has only one item. Pick a neighbour item
+ 		vtkIdType item = Items->GetId( 0 );
+-//			cout<<"Cluster "<<Cluster<<" contains only vertex "<<Item<<" of valence "
+-//			<<this->Input->GetValence(Item)<<endl;
++//			std::cout<<"Cluster "<<Cluster<<" contains only vertex "<<Item<<" of valence "
++//			<<this->Input->GetValence(Item)<<std::endl;
+ 		this->Input->GetVertexNeighbourFaces( item, FList );
+-/*			cout<<"Neighbour faces: "<<endl;
++/*			std::cout<<"Neighbour faces: "<<std::endl;
+ 		for (int j=0;j!=FList->GetNumberOfIds();j++)
+ 		{
+ 			vtkIdType v1,v2,v3;
+ 			this->Input->GetFaceVertices(FList->GetId(j),v1,v2,v3);
+-			cout<<FList->GetId(j)<<" : vertices "<<v1<<" "<<v2<<" "<<v3<<endl;
++			std::cout<<FList->GetId(j)<<" : vertices "<<v1<<" "<<v2<<" "<<v3<<std::endl;
+ 		}*/
+ 		this->GetItemNeighbours( item, IList );
+ 		bool found = false;
+@@ -314,7 +315,7 @@ int vtkDiscreteRemeshing < Metric >::Det
+ 
+ 				this->Clustering->SetValue( Neighbour, newCluster );
+ 				ClusterItems[ NeighbourCluster ]->DeleteId( Neighbour );
+-//					if ( NeighbourCluster == 22496 ) cout<<"Took 1 item from cluster "<<NeighbourCluster<<endl;
++//					if ( NeighbourCluster == 22496 ) std::cout<<"Took 1 item from cluster "<<NeighbourCluster<<std::endl;
+ 				ClusterItems[ newCluster ] = vtkIdList::New();
+ 				ClusterItems[ newCluster ]->InsertNextId( Neighbour );
+ 				found=true;
+@@ -325,8 +326,8 @@ int vtkDiscreteRemeshing < Metric >::Det
+ 
+ 		if (!found) {
+ 
+-				cout<<"Could not find a place to add cluster "<<newCluster
+-				<<" near cluster "<<cluster<<endl;
++				std::cout<<"Could not find a place to add cluster "<<newCluster
++				<<" near cluster "<<cluster<<std::endl;
+ 			for ( int j = 0; j < IList->GetNumberOfIds(); j++ ) {
+ 
+ 				vtkIdType Neighbour = IList->GetId( j );
+@@ -342,8 +343,8 @@ int vtkDiscreteRemeshing < Metric >::Det
+ 					break;
+ 
+ 				} else {
+-//						cout<<"Neighbour : "<<NeighbourCluster<<" has "
+-//							<<ClusterItems[NeighbourCluster]->GetNumberOfIds()<<" items"<<endl;
++//						std::cout<<"Neighbour : "<<NeighbourCluster<<" has "
++//							<<ClusterItems[NeighbourCluster]->GetNumberOfIds()<<" items"<<std::endl;
+ 				}
+ 			}
+ 
+@@ -397,7 +398,7 @@ template < class Metric >
+ 		this->GetOutput()->GetVertexNeighbours(Cluster,NeighbourClusters);
+ 		if (NeighbourClusters->GetNumberOfIds()>0)
+ 		{
+-			cout<<NeighbourClusters->GetNumberOfIds()<<" ";
++			std::cout<<NeighbourClusters->GetNumberOfIds()<<" ";
+ 			for (j=0;j<NeighbourClusters->GetNumberOfIds();j++)
+ 			{
+ 				Neighbour=NeighbourClusters->GetId(j);
+@@ -598,8 +599,8 @@ void vtkDiscreteRemeshing < Metric >::Sa
+ 	{
+ 		if (this->FileLoadSaveOption)
+ 		{
+-			cout << "Do you want to compute the curvature	indicator? (0:No 1:Yes)	";
+-			cin >> Compute;
++			std::cout << "Do you want to compute the curvature	indicator? (0:No 1:Yes)	";
++			std::cin >> Compute;
+ 		}
+ 
+ 		vtkPolyData *PrincipalDirectionsPolyData = 0;
+@@ -709,7 +710,7 @@ void vtkDiscreteRemeshing < Metric >::Sa
+ 		// now we have to interpolate the curvature measure when the input mesh was subdivided
+ 		if (this->NumberOfSubdivisionsBeforeClustering != 0)
+ 		{
+-			cout << "Interpolating...";
++			std::cout << "Interpolating...";
+ 			vtkDoubleArray *CellsIndicators2 =vtkDoubleArray::New ();
+ 			CellsIndicators2->SetNumberOfValues (this->GetNumberOfItems());
+ 
+@@ -755,11 +756,11 @@ void vtkDiscreteRemeshing < Metric >::Sa
+ //			CellsIndicators->Delete();
+ 			CellsIndicators = CellsIndicators2;
+ 
+-			cout << ".... Done" << endl;
++			std::cout << ".... Done" << std::endl;
+ 		}
+ 		double Range[2];
+ 		CellsIndicators->GetRange (Range);
+-		cout<<"Indicators Range : "<<Range[0]<<"  "<<Range[1]<<endl;
++		std::cout<<"Indicators Range : "<<Range[0]<<"  "<<Range[1]<<std::endl;
+ 		double MaxIndicatorColor = 0;
+ 		double MeanIndicator = 0;
+ 
+@@ -861,7 +862,7 @@ void vtkDiscreteRemeshing < Metric >::Ch
+ 	while ( Levels[ NumberOfSubdivisionsBeforeClustering ]->GetNumberOfPoints()
+ 		< this->SubsamplingThreshold * this->NumberOfClusters ) {
+ 
+-		if ( this->ConsoleOutput ) cout << "Subdividing mesh" << endl;
++		if ( this->ConsoleOutput ) std::cout << "Subdividing mesh" << std::endl;
+ 		Levels[ NumberOfSubdivisionsBeforeClustering + 1 ] =
+ 			Levels[ NumberOfSubdivisionsBeforeClustering ]->
+ 			Subdivide( this->VerticesParent1, this->VerticesParent2 );
+@@ -887,14 +888,14 @@ template < class Metric > void vtkDiscre
+ 	this->SamplingPreProcessing ();
+ 
+ 	if ( this->ConsoleOutput )
+-		cout << "Input mesh: " << this->GetInput ()->GetNumberOfPoints()
++		std::cout << "Input mesh: " << this->GetInput ()->GetNumberOfPoints()
+ 			<< " vertices	and	" << this->GetInput ()->GetNumberOfCells()
+-			<< " faces" << endl;
++			<< " faces" << std::endl;
+ 
+ 	if ( this->FileLoadSaveOption ) {
+ 
+-		cout << "Do you want to compute the clustering? (0:NO	1:Yes) ";
+-		cin >> Compute;
++		std::cout << "Do you want to compute the clustering? (0:NO	1:Yes) ";
++		std::cin >> Compute;
+ 
+ 	}
+ 
+@@ -944,7 +945,7 @@ template < class Metric > void vtkDiscre
+ 
+ 		while ( int NumberOfIssues = this->DetectNonManifoldOutputVertices() ) {
+ 
+-			cout << NumberOfIssues << " topology issues, restarting minimization" << endl;
++			std::cout << NumberOfIssues << " topology issues, restarting minimization" << std::endl;
+ 			this->ConnexityConstraint = 0;
+ 			this->MinimizeEnergy();
+ 			this->BuildDelaunayTriangulation();
+Index: acvd-4.0/DiscreteRemeshing/vtkL21MetricForClustering.h
+===================================================================
+--- acvd-4.0.orig/DiscreteRemeshing/vtkL21MetricForClustering.h
++++ acvd-4.0/DiscreteRemeshing/vtkL21MetricForClustering.h
+@@ -33,6 +33,7 @@ Auteur:    Sebastien VALETTE
+ #ifndef _VTKL21METRICFORCLUSTERING_H_
+ #define _VTKL21METRICFORCLUSTERING_H_
+ 
++#include <iostream>
+ #include <vtkTriangle.h>
+ #include <vtkMath.h>
+ #include <vtkIdList.h>
+@@ -154,7 +155,7 @@ public:
+ 
+ 	double ComputeDistanceBetweenItemAndPoint(Item *I,double *P1)
+ 	{
+-		cout<<"should never happen! L21MetricforClustering"<<endl;
++		std::cout<<"should never happen! L21MetricforClustering"<<std::endl;
+ 
+ 		double P2[3];
+ 		P2[0]=I->Normal[0]/I->Weight;
+Index: acvd-4.0/DiscreteRemeshing/vtkLloydClustering.h
+===================================================================
+--- acvd-4.0.orig/DiscreteRemeshing/vtkLloydClustering.h
++++ acvd-4.0/DiscreteRemeshing/vtkLloydClustering.h
+@@ -33,6 +33,7 @@ Auteur:    Sebastien VALETTE
+ #ifndef _VTKTLLOYDCLUSTERING_H_
+ #define _VTKTLLOYDCLUSTERING_H_
+ 
++#include <iostream>
+ #include <vtkPriorityQueue.h>
+ #include "vtkUniformClustering.h"
+ 
+@@ -210,7 +211,7 @@ int	vtkLloydClustering < Metric >::Proce
+ 	Timer->StopTimer();
+ 	if (this->ConsoleOutput)
+ 	{
+-		cout<<endl<<Timer->GetElapsedTime()<<" seconds for priority queue handling "<<endl;
++		std::cout<<std::endl<<Timer->GetElapsedTime()<<" seconds for priority queue handling "<<std::endl;
+ 	}
+ 	this->ReComputeStatistics();
+ 	return (NumberOfModifications);
+Index: acvd-4.0/DiscreteRemeshing/vtkQEMetricForClustering.h
+===================================================================
+--- acvd-4.0.orig/DiscreteRemeshing/vtkQEMetricForClustering.h
++++ acvd-4.0/DiscreteRemeshing/vtkQEMetricForClustering.h
+@@ -37,6 +37,7 @@ Auteur:    Sebastien VALETTE
+ /// the Quadrics Error metrics defined by the paper: "Surface simplification using Quadric Error Metrics",
+ // Garland and Heckbert, Siggraph 97
+ 
++#include <iostream>
+ #include <vtkTriangle.h>
+ #include <vtkMath.h>
+ #include <vtkDataArrayCollection.h>
+@@ -55,7 +56,7 @@ public:
+ 
+ 	void SetConstrainedClustering( int C ) {
+ 
+-		cout << "Setting Metric Constraint to "<< C << endl;
++		std::cout << "Setting Metric Constraint to "<< C << std::endl;
+ 		this->ActiveConstraints = C;
+ 
+ 	}
+Index: acvd-4.0/DiscreteRemeshing/vtkQuadricAnisotropicMetricForClustering.h
+===================================================================
+--- acvd-4.0.orig/DiscreteRemeshing/vtkQuadricAnisotropicMetricForClustering.h
++++ acvd-4.0/DiscreteRemeshing/vtkQuadricAnisotropicMetricForClustering.h
+@@ -32,6 +32,7 @@
+ #ifndef _VTKQUADRICANISOTROPICMETRICFORCLUSTERING_H_
+ #define _VTKQUADRICANISOTROPICMETRICFORCLUSTERING_H_
+ 
++#include <iostream>
+ #include <vtkTriangle.h>
+ #include <vtkMath.h>
+ 
+@@ -197,7 +198,7 @@ public:
+ 
+ 	double ComputeDistanceBetweenItemAndPoint (Item * I, double *P1)
+ 	{
+-		cout<<"Not Implemented!"<<endl;
++		std::cout<<"Not Implemented!"<<std::endl;
+ 
+ 		return (0);
+ 	}
+Index: acvd-4.0/DiscreteRemeshing/vtkThreadedClustering.h
+===================================================================
+--- acvd-4.0.orig/DiscreteRemeshing/vtkThreadedClustering.h
++++ acvd-4.0/DiscreteRemeshing/vtkThreadedClustering.h
+@@ -33,6 +33,7 @@ Auteur:    Sebastien VALETTE
+ #ifndef _VTKTHREADEDCLUSTERING_H_
+ #define _VTKTHREADEDCLUSTERING_H_
+ 
++#include <iostream>
+ #include <vtkMath.h>
+ #include <vtkTimerLog.h>
+ #include <vtkMultiThreader.h>
+@@ -81,9 +82,9 @@ public:
+ 			NumberOfLockingCollisions+=this->threadInfos[ i ].NumberOfLockingCollisions;
+ 
+ 		if (NumberOfLockingCollisions!=0)
+-		cout<<NumberOfLockingCollisions<<" locking collisions detected"<<endl;
++		std::cout<<NumberOfLockingCollisions<<" locking collisions detected"<<std::endl;
+ 			else
+-		cout<<"No locking collision detected"<<endl;
++		std::cout<<"No locking collision detected"<<std::endl;
+ 		return (this->Clustering);
+ 	};
+ 
+@@ -710,22 +711,22 @@ template < class Metric > void vtkThread
+ 				LatestStop = MeasuredTime;
+ 		}
+ 		GlobalDuration = LatestStop - EarliestStart;
+-		cout << "Threads duration:" << GlobalDuration <<" seconds"<<endl;
++		std::cout << "Threads duration:" << GlobalDuration <<" seconds"<<std::endl;
+ 
+-		cout << "Starts    (relative):";
++		std::cout << "Starts    (relative):";
+ 		for (auto &info : this->threadInfos)
+-			cout << (int) (100.0 *(info.StartTime -EarliestStart) /GlobalDuration) << " ";
++			std::cout << (int) (100.0 *(info.StartTime -EarliestStart) /GlobalDuration) << " ";
+ 
+-		cout << endl;
+-		cout << "Duration  (relative):";
++		std::cout << std::endl;
++		std::cout << "Duration  (relative):";
+ 		for (auto &info : this->threadInfos)
+-			cout << (int) (100.0 *(info.StopTime - info.StartTime)/GlobalDuration) << " ";
++			std::cout << (int) (100.0 *(info.StopTime - info.StartTime)/GlobalDuration) << " ";
+ 
+-		cout << endl;
+-		cout << "Stops     (relative):";
++		std::cout << std::endl;
++		std::cout << "Stops     (relative):";
+ 		for (auto &info : this->threadInfos)
+-			cout << (int) (100.0 * (info.StopTime -	EarliestStart) / GlobalDuration) << " ";
+-		cout << endl;
++			std::cout << (int) (100.0 * (info.StopTime -	EarliestStart) / GlobalDuration) << " ";
++		std::cout << std::endl;
+ 
+ 
+ 		// Compute the clustering properties
+@@ -742,18 +743,18 @@ template < class Metric > void vtkThread
+ 		}
+ 		if (1)
+ 		{
+-			cout << "Iterations(relative):";
++			std::cout << "Iterations(relative):";
+ 			for (auto &info : this->threadInfos)
+-				cout << (int) (100.0 * ((double) (info.NumberOfIterations-info.PreviousNumberOfIterations)/((double)InstantNumberOfIeration)))<< " ";
+-			cout << endl;
+-			cout << "Iterations          :";
++				std::cout << (int) (100.0 * ((double) (info.NumberOfIterations-info.PreviousNumberOfIterations)/((double)InstantNumberOfIeration)))<< " ";
++			std::cout << std::endl;
++			std::cout << "Iterations          :";
+ 			for (auto &info : this->threadInfos)
+-				cout << info.NumberOfIterations<<" ";
+-			cout << endl;
+-			cout << "Modifications       :";
++				std::cout << info.NumberOfIterations<<" ";
++			std::cout << std::endl;
++			std::cout << "Modifications       :";
+ 			for (auto &info : this->threadInfos)
+-				cout << info.NumberOfModifications<<" ";
+-			cout << endl;
++				std::cout << info.NumberOfModifications<<" ";
++			std::cout << std::endl;
+ 		}
+ 
+ 		for (auto &info : this->threadInfos)
+@@ -812,13 +813,13 @@ template <class Metric> void vtkThreaded
+ 	{
+ 	case 1:
+ 		if (this->ConsoleOutput)
+-			cout<<"Creating "<<this->PoolSize-1<<" Regions for thread pooling...";
++			std::cout<<"Creating "<<this->PoolSize-1<<" Regions for thread pooling...";
+ 		TempClustering = vtkIntArray::New ();
+ 		TempClustering->SetNumberOfValues (this->GetNumberOfItems ());
+ 		this->ComputeInitialRandomSampling (0, TempClustering,this->PoolSize-1);
+ 		this->FillHolesInClustering (TempClustering);
+ 		if (this->ConsoleOutput)
+-			cout<<"done"<<endl;
++			std::cout<<"done"<<std::endl;
+ 		break;
+ 
+ 	case 2:
+@@ -877,12 +878,12 @@ template <class Metric> void vtkThreaded
+ 		EdgesLayout[i] = C1;
+ 	}
+ 	if (NumberOfProblems != 0)
+-		cout << "Partitionning for multithreading: " << NumberOfProblems <<
+-			" Items with no good association..." << endl;
++		std::cout << "Partitionning for multithreading: " << NumberOfProblems <<
++			" Items with no good association..." << std::endl;
+ 	VList->Delete ();
+ 	this->EdgesProcess = std::vector<int>( EdgesLayout, EdgesLayout+this->GetNumberOfEdges());
+ 	Timer->StopTimer();
+-	cout<<"Multithreading layout computed in :"<<Timer->GetElapsedTime()<<" seconds"<<endl;
++	std::cout<<"Multithreading layout computed in :"<<Timer->GetElapsedTime()<<" seconds"<<std::endl;
+ 	Timer->Delete();
+ 	TempClustering->Delete();
+ }
+@@ -947,9 +948,9 @@ void vtkThreadedClustering<Metric>::Comp
+ 		Index = (int) floor ((P[Direction] - CoordMin) / Step);
+ 		if ((Index < 0) || (Index >= Granularity))
+ 		{
+-			cout << "Item " << i << " out of bounds ! Index=" <<
+-				Index << endl;
+-			cout << "Contact developpers...." << endl;
++			std::cout << "Item " << i << " out of bounds ! Index=" <<
++				Index << std::endl;
++			std::cout << "Contact developpers...." << std::endl;
+ 			Index = 0;
+ 		}
+ 		Weights[Index] += this->MetricContext.GetItemWeight(i);

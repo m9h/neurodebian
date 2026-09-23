@@ -1,0 +1,13 @@
+Index: acvd-4.0/CMakeLists.txt
+===================================================================
+--- acvd-4.0.orig/CMakeLists.txt
++++ acvd-4.0/CMakeLists.txt
+@@ -134,7 +134,7 @@ configure_file( ${ACVD_SOURCE_DIR}/ACVDC
+   @ONLY
+ )
+ install( FILES
+-    "${ACVD_BINARY_DIR}/ACVDConfig.cmake"
++    "${ACVD_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/ACVDConfig.cmake"
+     "${ACVD_BINARY_DIR}/ACVDConfigVersion.cmake"
+   DESTINATION ${INSTALL_CMAKE_DIR} COMPONENT dev
+ )

@@ -1,0 +1,44 @@
+Source: acvd
+Section: science
+Priority: optional
+Maintainer: Morgan Hough <morgan.hough@gmail.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake (>= 3.11),
+ ninja-build,
+ libvtk9-dev (>= 9.5),
+Standards-Version: 4.7.2
+Homepage: https://github.com/valette/ACVD
+Rules-Requires-Root: no
+
+Package: libacvd4.0
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: surface mesh coarsening and resampling on top of VTK - libraries
+ ACVD (Approximated Centroidal Voronoi Diagrams) is a set of VTK-based
+ libraries for fast isotropic and anisotropic mesh coarsening, remeshing and
+ resampling, plus volume-processing helpers. It is the remeshing engine used
+ by MITK's Remeshing module and by ShapeWorks.
+ .
+ This package contains the shared libraries (vtkSurface and
+ vtkVolumeProcessing).
+
+Package: libacvd-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends:
+ libacvd4.0 (= ${binary:Version}),
+ libvtk9-dev,
+ ${misc:Depends},
+Description: surface mesh coarsening and resampling on top of VTK - development
+ ACVD (Approximated Centroidal Voronoi Diagrams) is a set of VTK-based
+ libraries for fast isotropic and anisotropic mesh coarsening, remeshing and
+ resampling, plus volume-processing helpers.
+ .
+ This package contains the headers (including the header-only
+ DiscreteRemeshing templates) and the CMake configuration used via
+ find_package(ACVD).

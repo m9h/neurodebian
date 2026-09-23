@@ -1,0 +1,44 @@
+#!/usr/bin/make -f
+# ACVD 4.0 — library-only build against system VTK, ported from the
+# neurofedora acvd.spec. The examples are deliberately not built: they install
+# generically named binaries (viewer, icp, sampleMesh, ...) and nothing
+# downstream needs them.
+
+include /usr/share/dpkg/architecture.mk
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+# ACVD's .cxx sources use unqualified cout/cerr/endl with neither <iostream>
+# nor `using namespace std`, relying on transitive availability that newer VTK
+# headers no longer provide. Force-include a prelude restoring that. (The
+# public headers have the same problem, which this flag cannot fix for
+# consumers; they are patched in 0002 instead.)
+export DEB_CXXFLAGS_MAINT_APPEND = -include $(CURDIR)/debian/acvd_prelude.h
+
+CMAKEDIR = lib/$(DEB_HOST_MULTIARCH)/cmake/ACVD
+
+%:
+	dh $@ --buildsystem=cmake+ninja
+
+# ACVD uses its own INSTALL_*_DIR variables rather than GNUInstallDirs, so the
+# multiarch layout has to be spelled out.
+override_dh_auto_configure:
+	dh_auto_configure -- \
+	  -DBUILD_SHARED_LIBS:BOOL=ON \
+	  -DBUILD_EXAMPLES:BOOL=OFF \
+	  -DBUILD_DOCUMENTATION:BOOL=OFF \
+	  -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
+	  -DINSTALL_LIB_DIR:PATH=lib/$(DEB_HOST_MULTIARCH) \
+	  -DINSTALL_INCLUDE_DIR:PATH=include \
+	  -DINSTALL_CMAKE_DIR:PATH=$(CMAKEDIR)
+
+override_dh_auto_install:
+	dh_auto_install
+	# Guard against the upstream bug fixed by patch 0001 resurfacing: the
+	# installed config must not carry build-tree paths, and must point at the
+	# installed headers, or every find_package(ACVD) consumer breaks silently.
+	! grep -q '$(CURDIR)' debian/tmp/usr/$(CMAKEDIR)/ACVDConfig.cmake
+	grep -q 'ACVD/DiscreteRemeshing' debian/tmp/usr/$(CMAKEDIR)/ACVDConfig.cmake
+	# Same guard for patch 0002: the shipped template headers must be std::-clean.
+	grep -q 'std::cout' debian/tmp/usr/include/ACVD/Common/vtkUniformClustering.h
+	! grep -rq 'std::std::' debian/tmp/usr/include/ACVD/
+
+override_dh_auto_test:
