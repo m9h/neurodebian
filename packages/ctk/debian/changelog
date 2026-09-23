@@ -1,0 +1,113 @@
+ctk (2026.09.02-1+neuro2) unstable; urgency=medium
+
+  * Fix find_package(CTK) for consumers. CTK_INSTALL_CMAKE_DIR and
+    CTK_INSTALL_INCLUDE_DIR were passed as absolute paths, so CTKConfig.cmake
+    computed include directories as "${PACKAGE_PREFIX_DIR}//usr/include/ctk",
+    and libctk-dev.install re-homed usr/lib/CMake/ctk into
+    usr/lib/<triplet>/cmake/ctk, nesting it one level deeper as
+    .../cmake/ctk/ctk/ where CMake does not look. find_package(CTK REQUIRED)
+    therefore failed outright on a system with libctk-dev installed. Pass both
+    directories relative to the prefix and install the cmake directory where it
+    is generated.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Tue, 22 Sep 2026 21:12:01 -0700
+
+ctk (2026.09.02-1+neuro1) unstable; urgency=medium
+
+  * Enable the CTK plugin framework and widgets
+    (-DCTK_ENABLE_PluginFramework=ON, -DCTK_ENABLE_Widgets=ON). The current
+    build ships only libCTKCore and libCTKDICOMCore, but libCTKPluginFramework
+    is what MITK's BlueBerry application framework and every org.mitk.* plugin
+    are built on, and CTKWidgets is required alongside it. 3D Slicer needs the
+    same components. Upstream Fedora packaging enables these plus VTK, ITK and
+    PythonQt wrapping; only the two needed here are turned on, to avoid new
+    dependencies (PythonQt and QtTesting are not in Debian).
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Tue, 22 Sep 2026 12:53:39 -0700
+
+ctk (2026.09.02-1) unstable; urgency=medium
+
+  [ Andreas Tille ]
+  * New upstream version
+  * Point Homepage and Source to Github
+  * Add watch file and remove get-orig-source script since its unneeded
+  * Bump debhelper from deprecated 9 to 13.
+  * Change priority extra to priority optional.
+  * Drop unnecessary dh arguments: --parallel
+  * Remove fields on binary packages that duplicate source.
+  * + Field Priority from libctk0.1-dbg.
+  * + Field Section from libctk0.1.
+  * Remove redundant Priority: optional from source stanza.
+  * Trim trailing whitespace.
+  * Use versioned copyright format URI.
+  * Set debhelper-compat version in Build-Depends.
+  * Update renamed lintian tag names in lintian overrides.
+  * Add debian/upstream/metadata
+  * Standards-Version: 4.7.4 (routine-update)
+  * Reflow Uploaders field (cme)
+  * Remove trailing whitespace in debian/copyright (routine-update)
+  * Set upstream metadata fields: Bug-Submit, Repository.
+  * debputy lint --auto-fix (routine-update)
+  * Add debian/salsa-ci.yaml
+  * Remove manual libctk0.1-dbg package
+  * Install Apache NOTICE file
+  * d/rules: hardening
+  * Remove unneeded docs file
+
+  [ Fernando Hueso ]
+  * Add myself to Uploaders
+  * Change from Debug build type to Release
+  * Change from Qt5 dependencies to Qt6
+  * Disable some optional dependencies temporarily
+  * Copy-paste DSTC license
+  * add BSL license of original code
+  * multiple name for B3C
+  * add DCMTK license for one file
+  * Formatting fixes
+  * another spelt variant
+  * remove non DFSG compliant optional files
+  * rm no longer needed license from copyright
+  * update patch since removed files
+  * New upstream version (2026.09.02)
+  * fix incorrect upstream injection in previous commit
+  * rm already applied patch
+  * update patch with PR and add description
+
+ -- Fernando Hueso <Fernando.Hueso@uv.es>  Thu, 03 Sep 2026 14:23:56 +0000
+
+ctk (0.1.0+git20131105~b8307961b6-1) experimental; urgency=low
+
+  * new upstream release
+  * bump debian/compat to 9
+  * bumpStandards-Version: 3.9.4
+  * removed obsolete DM-Upload-Allowed field
+
+  [ Mathieu Malaterre ]
+  * Fix spelling in d/control. Closes: #635569
+
+  [ Thorsten Alteholz ]
+  * debian/get-orig-source: put orig.tar.gz in ../tarballs to allow
+    automatic build with svn-buildpackage
+
+ -- Dominique Belhachemi <domibel@debian.org>  Tue, 05 Nov 2013 22:28:14 -0500
+
+ctk (0.1.0-4) experimental; urgency=low
+
+  * Changed maintainer and uploader
+  * build with  -DCTK_APP_ctkCLIPluginExplorer:BOOL=ON
+
+ -- Dominique Belhachemi <domibel@debian.org>  Tue, 26 Jul 2011 20:04:04 -0400
+
+ctk (0.1.0-3) experimental; urgency=low
+
+  * compile log4qt with -fPIC on all archs (Closes: #634780)
+  * build with  -DCTK_LIB_ImageProcessing/ITK/Core:BOOL=ON
+  * build with  -DCTK_LIB_Widgets:BOOL=ON
+
+ -- Dominique Belhachemi <domibel@debian.org>  Fri, 22 Jul 2011 19:48:05 -0400
+
+ctk (0.1.0-2) experimental; urgency=low
+
+  * Initial release (Closes: #601180)
+
+ -- Dominique Belhachemi <domibel@debian.org>  Thu, 27 Jan 2011 19:25:00 -0500

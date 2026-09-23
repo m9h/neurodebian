@@ -1,0 +1,2 @@
+# W: libctk0.1: package-name-doesnt-match-sonames libCTKCore0.1 libCTKDICOMCore0.1 libCTKImageProcessingITKCore0.1 libCTKPluginFramework0.1 libCTKVisualizationVTKCore0.1 libCTKWidgets0.1
+libctk0.1: package-name-doesnt-match-sonames

@@ -1,0 +1,4 @@
+# Qt Designer plugins, built as a side effect of CTK_ENABLE_Widgets. Shipping
+# them would need a separate binary package; MITK and Slicer do not use them.
+usr/lib/designer/libCTKDICOMWidgetsPlugins.so
+usr/lib/designer/libCTKWidgetsPlugins.so

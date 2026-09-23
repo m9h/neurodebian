@@ -1,0 +1,41 @@
+Description: Add missing Qt6svg component when configuring
+Origin: https://github.com/commontk/CTK/pull/1453
+Last-Update: 2026-09-01
+
+From ea7f052c96a11ebf014d35e99766d3e1c0f975d2 Mon Sep 17 00:00:00 2001
+From: ferdymercury <ferdymercury@users.noreply.github.com>
+Date: Tue, 11 Aug 2026 16:54:59 +0200
+Subject: [PATCH] FIX: configure error on Ubuntu26
+
+CMake Error at CMake/ctkMacroBuildLib.cmake:161 (target_link_libraries):
+  Target "CTKDICOMCore" links to:
+
+    Qt6::Svg
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+Call Stack (most recent call first):
+  Libs/DICOM/Core/CMakeLists.txt:207 (ctkMacroBuildLib)
+---
+ CMake/ctkMacroSetupQt.cmake | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/CMake/ctkMacroSetupQt.cmake b/CMake/ctkMacroSetupQt.cmake
+index e4b4ff01f2f0ca00383b8afe227d173e9ce229e8..49b5d16521c141b60c96353023aaf50dbf10dfea 100644
+--- a/CMake/ctkMacroSetupQt.cmake
++++ b/CMake/ctkMacroSetupQt.cmake
+@@ -137,6 +137,10 @@ macro(ctkMacroSetupQt)
+       list(APPEND CTK_QT_COMPONENTS Network)
+     endif()
+ 
++    if(CTK_LIB_DICOM/Core)
++      list(APPEND CTK_QT_COMPONENTS Svg)
++    endif()
++
+     if(CTK_QT_VERSION VERSION_EQUAL "5")
+       find_package(Qt5 COMPONENTS ${CTK_QT_COMPONENTS} REQUIRED)
+       mark_as_superbuild(Qt5_DIR) # Qt 5

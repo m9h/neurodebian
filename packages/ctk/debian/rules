@@ -1,0 +1,79 @@
+#!/usr/bin/make -f
+include /usr/share/dpkg/architecture.mk
+DH_VERBOSE=0
+
+DPKG_EXPORT_BUILDFLAGS = 1
+-include /usr/share/dpkg/buildflags.mk
+
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+
+CMAKE_FLAGS = \
+    -DCMAKE_BUILD_TYPE:STRING=Release \
+    -DCMAKE_VERBOSE_MAKEFILE:BOOL=$(DH_VERBOSE) \
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+    -DCMAKE_SKIP_RPATH:BOOL=ON \
+    -DBUILD_TESTING:BOOL=OFF \
+    -DCTK_SUPERBUILD:BOOL=OFF \
+    -DCTK_ENABLE_DICOM:BOOL=ON \
+    -DCTK_ENABLE_PluginFramework:BOOL=ON \
+    -DCTK_ENABLE_Widgets:BOOL=ON \
+    -DCTK_QT_VERSION=6 \
+    -DCTK_INSTALL_LIB_DIR=lib \
+    -DCTK_INSTALL_INCLUDE_DIR=include/ctk \
+    -DCTK_INSTALL_PLUGIN_DIR=/usr/lib/ctk/plugins \
+    -DCTK_INSTALL_CMAKE_DIR=lib/$(DEB_HOST_MULTIARCH)/cmake/ctk \
+    # Upstream default: "lib/ctk-0.1", "include/ctk-0.1", "lib/ctk-0.1/plugins" and "lib/ctk-0.1/CMake" but versioning seems pointless (https://github.com/commontk/CTK/issues/358#issuecomment-359455314)
+    #-DDCMTK_DIR:PATH=/usr \
+    #-DCTK_APP_ctkCommandLineModuleExplorer:BOOL=ON \
+    #-DCTK_APP_ctkDICOM:BOOL=ON \
+    #-DCTK_APP_ctkPluginBrowser:BOOL=ON \
+    #-DCTK_APP_ctkPluginGenerator:BOOL=ON \
+    #-DCTK_BUILD_QTDESIGNER_PLUGINS:BOOL=ON \
+    #-DCTK_ENABLE_PluginFramework:BOOL=ON \
+    #-DCTK_ENABLE_Python_Wrapping:BOOL=OFF \
+    #-DCTK_ENABLE_Widgets:BOOL=ON \
+    #-DCTK_LIB_CommandLineModules/Backend/FunctionPointer:BOOL=ON \
+    #-DCTK_LIB_CommandLineModules/Backend/LocalProcess:BOOL=ON \
+    #-DCTK_LIB_CommandLineModules/Core:BOOL=ON \
+    #-DCTK_LIB_CommandLineModules/Frontend/QtGui:BOOL=ON \
+    #-DCTK_LIB_CommandLineModules/Frontend/QtWebKit:BOOL=ON \
+    #-DCTK_LIB_Core:BOOL=ON \
+    #-DCTK_LIB_DICOM/Core:BOOL=ON \
+    #-DCTK_LIB_DICOM/Widgets:BOOL=ON \
+    #-DCTK_LIB_ImageProcessing/ITK/Core:BOOL=ON \
+    #-DCTK_LIB_PluginFramework:BOOL=ON \
+    #-DCTK_LIB_Scripting/Python/Core:BOOL=OFF \
+    #-DCTK_LIB_Visualization/VTK/Core:BOOL=ON \
+    #-DCTK_LIB_Visualization/VTK/Widgets:BOOL=ON \
+    #-DCTK_LIB_Widgets:BOOL=ON \
+    #-DCTK_PLUGIN_org.commontk.configadmin:BOOL=ON \
+    #-DCTK_PLUGIN_org.commontk.eventadmin:BOOL=ON \
+    #-DCTK_PLUGIN_org.commontk.log:BOOL=ON \
+    #-DCTK_PLUGIN_org.commontk.metatype:BOOL=ON \
+    #-DCTK_PLUGIN_org.commontk.plugingenerator.core:BOOL=ON \
+    #-DCTK_PLUGIN_org.commontk.plugingenerator.ui:BOOL=ON \
+
+pkg_run = libctk0.1
+pkg_dev = libctk-dev
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- $(CMAKE_FLAGS)
+
+#install/ctk-examples::
+#	dh_installexamples -popenigtlink-examples Examples/
+
+#install/ctk-doc::
+#	doxygen -u $(DEB_BUILDDIR)/doxygen.config
+#	doxygen $(DEB_BUILDDIR)/doxygen.config
+#	dh_install -plibctk-doc       $(DEB_BUILDDIR)/Documents/Doxygen/html         usr/share/doc/ctk-doc
+
+override_dh_install:
+	# Runtime Package
+	dh_install -p$(pkg_run) usr/lib/*.so.*
+	# Development Package
+	dh_install -p$(pkg_dev) usr/include
+	dh_install -p$(pkg_dev) usr/lib/lib*.so
+#	dh_install -plibctk-dev   debian/tmp/usr/lib/ctk-0.1/*.cmake                 usr/lib/ctk-0.1

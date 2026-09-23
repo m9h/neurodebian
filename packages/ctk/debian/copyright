@@ -1,0 +1,368 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Common Toolkit
+Source: https://github.com/commontk/CTK
+
+Files: *
+Copyright:
+  Martin Heinrich
+  Sandia Corporation.
+  Mathieu Malaterre <mathieu.malaterre@gmail.com>
+  Sandia Corporation, Kitware Inc.
+  Junio C Hamano
+  Brigham and Women's Hospital (BWH)
+  CISTIB - Universtitat Pompeu Fabra
+  German Cancer Research Center
+  Isomics Inc.
+  Ken Martin, Will Schroeder, Bill Lorensen
+  Kitware Inc.
+  Mint Medical GmbH
+License: Apache-2.0
+
+Files:
+ Libs/Core/ctkBackTrace.cpp
+Copyright:
+  2010 Artyom Beilis (Tonkikh)
+  German Cancer Research Center
+License: Apache-2.0 or BSL-1.0
+
+Files:
+ Libs/DICOM/Core/Resources/storescp.cfg
+Copyright:
+  2003-2021, OFFIS e.V.
+License: OFFIS-DCMTK
+
+Files: Utilities/CMake/FindDCMTK.cmake
+Copyright:
+ 2004-2009 Kitware, Inc.
+ 2009-2010 Mathieu Malaterre <mathieu.malaterre@gmail.com>
+ 2010 Thomas Sondergaard <ts@medical-insight.com>
+License: BSD-3-Clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ .
+   - Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+ .
+   - Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+ .
+   - Neither the name of OFFIS nor the names of its contributors may be
+     used to endorse or promote products derived from this software
+     without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Files:
+ Applications/ctkEventBusDemo/ctkEventBusDemoMain.cpp
+ Plugins/org.commontk.eventbus/ctkEventBusManager.cpp
+ Plugins/org.commontk.eventbus/ctkEventBusManager.h
+ Plugins/org.commontk.eventbus/ctkEventBus_global.h
+ Plugins/org.commontk.eventbus/ctkEventDefinitions.h
+ Plugins/org.commontk.eventbus/ctkEventDispatcher.cpp
+ Plugins/org.commontk.eventbus/ctkEventDispatcher.h
+ Plugins/org.commontk.eventbus/ctkEventDispatcherLocal.cpp
+ Plugins/org.commontk.eventbus/ctkEventDispatcherLocal.h
+ Plugins/org.commontk.eventbus/ctkEventDispatcherRemote.cpp
+ Plugins/org.commontk.eventbus/ctkEventDispatcherRemote.h
+ Plugins/org.commontk.eventbus/ctkNetworkConnector.cpp
+ Plugins/org.commontk.eventbus/ctkNetworkConnector.h
+ Plugins/org.commontk.eventbus/ctkNetworkConnectorQtSoap.cpp
+ Plugins/org.commontk.eventbus/ctkNetworkConnectorQtSoap.h
+ Plugins/org.commontk.eventbus/ctkNetworkConnectorQXMLRPC.cpp
+ Plugins/org.commontk.eventbus/ctkNetworkConnectorQXMLRPC.h
+ Plugins/org.commontk.eventbus/ctkNetworkConnectorZeroMQ.cpp
+ Plugins/org.commontk.eventbus/ctkNetworkConnectorZeroMQ.h
+ Plugins/org.commontk.eventbus/ctkTopicRegistry.cpp
+ Plugins/org.commontk.eventbus/ctkTopicRegistry.h
+ Plugins/org.commontk.eventbus/manifest_headers.cmake
+ Plugins/org.commontk.eventbus/Testing/Cpp/ctkBusEventTest.cpp
+ Plugins/org.commontk.eventbus/Testing/Cpp/ctkEventBusManagerTest.cpp
+ Plugins/org.commontk.eventbus/Testing/Cpp/ctkEventDispatcherLocalTest.cpp
+ Plugins/org.commontk.eventbus/Testing/Cpp/ctkEventDispatcherRemoteTest.cpp
+ Plugins/org.commontk.eventbus/Testing/Cpp/ctkEventDispatcherTest.cpp
+ Plugins/org.commontk.eventbus/Testing/Cpp/ctkNetworkConnectorQtSoapTest.cpp
+ Plugins/org.commontk.eventbus/Testing/Cpp/ctkNetworkConnectorQXMLRPCTest.cpp
+ Plugins/org.commontk.eventbus/Testing/Cpp/ctkNetworkConnectorTest.cpp
+ Plugins/org.commontk.eventbus/Testing/Cpp/ctkNetworkConnectorZeroMQTest.cpp
+ Plugins/org.commontk.eventbus/Testing/Cpp/ctkTestRegistration.h
+ Plugins/org.commontk.eventbus/Testing/Cpp/ctkTestRegistry.cpp
+ Plugins/org.commontk.eventbus/Testing/Cpp/ctkTestRegistry.h
+ Plugins/org.commontk.eventbus/Testing/Cpp/ctkTestSuite.h
+ Plugins/org.commontk.eventbus/Testing/Cpp/ctkTopicRegistryTest.cpp
+ Plugins/org.commontk.eventbus/Testing/Cpp/main.cpp
+Copyright:
+ 2009-2011 B3C-SCS
+ B3C
+ BioComputing Competence Centre - Super Computing Solutions
+License: Apache-2.0
+
+Files:
+ Plugins/org.commontk.eventbus/ctkBusEvent.cpp
+ Plugins/org.commontk.eventbus/ctkBusEvent.h
+ Plugins/org.commontk.eventbus/ctkEventAdminBus.h
+ Plugins/org.commontk.eventbus/ctkEventBusImpl_p.h
+ Plugins/org.commontk.eventbus/ctkEventBusImpl.cpp
+ Plugins/org.commontk.eventbus/ctkEventBusPlugin_p.h
+ Plugins/org.commontk.eventbus/ctkEventBusPlugin.cpp
+ Plugins/org.commontk.eventbus/ctkEventHandlerWrapper_p.h
+Copyright:
+ German Cancer Research Center
+License: Apache-2.0
+
+Files:
+ Libs/Widgets/ctkCheckableHeaderView.cpp
+ Libs/Widgets/ctkCheckableHeaderView.h
+ Libs/Widgets/ctkCheckableModelHelper.h
+ Libs/Widgets/ctkCheckBoxPixmaps.cpp
+ Libs/Widgets/ctkCheckBoxPixmaps.h
+ Libs/Widgets/ctkConsole.cpp
+ Libs/Widgets/ctkConsole.h
+ Libs/Widgets/ctkSettings.cpp
+ Libs/Widgets/ctkSettings.h
+ Libs/Widgets/ctkTestApplication.cpp
+ Libs/Widgets/ctkTestApplication.h
+ Libs/Widgets/ctkToolTipTrapper.cpp
+ Libs/Widgets/ctkToolTipTrapper.h
+ Libs/Scripting/Python/Widgets/ctkPythonConsole.cpp
+ Libs/Scripting/Python/Widgets/ctkPythonConsole.h
+ Libs/Core/ctkSetName.cpp
+ Libs/Core/ctkSetName.h
+Copyright:
+ 2005-2008 Sandia Corporation
+ Kitware Inc.
+License: Apache-2.0 or ParaView-1.2
+
+Files:
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorRuleFactory.h
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorPatientNumberOfStudiesRule.cpp
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorLastStudyDateRule.h
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorStudyNumberOfSeriesRule.h
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorSeriesImageCountRule.cpp
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorPatientNumberOfStudiesRule.h
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorLastStudyDateRule.cpp
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorStudyNumberOfSeriesRule.cpp
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorSeriesImageCountRule.h
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorRuleFactory.cpp
+Copyright: Pixel Medical 2020-2021
+License: Apache-2.0
+
+Files:
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorDefaultRule.h
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorDefaultRule.cpp
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGenerator.h
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorRadiotherapySeriesDescriptionRule.cpp
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGenerator_p.h
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorAbstractRule.h
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGeneratorRadiotherapySeriesDescriptionRule.h
+ Libs/DICOM/Core/ctkDICOMDisplayedFieldGenerator.cpp
+Copyright:
+ Perklab 2013, 2018
+License: Apache-2.0
+
+Files:
+ Libs/Widgets/ctkPathListButtonsWidget_p.h
+ Libs/Widgets/ctkPathListButtonsWidget.cpp
+ Libs/Widgets/ctkPathListButtonsWidget.h
+ Libs/XNAT/Widgets/ctkXnatLoginDialog.h
+ Libs/XNAT/Widgets/ctkXnatLoginDialog.cpp
+ Libs/XNAT/Core/ctkXnatReconstructionFolder.cpp
+ Libs/XNAT/Core/ctkXnatExperiment.cpp
+ Libs/XNAT/Core/ctkXnatAssessor.h
+ Libs/XNAT/Core/ctkXnatTreeItem_p.h
+ Libs/XNAT/Core/ctkXnatReconstruction.h
+ Libs/XNAT/Core/ctkXnatResource.h
+ Libs/XNAT/Core/ctkXnatDataModel.h
+ Libs/XNAT/Core/ctkXnatObject.cpp
+ Libs/XNAT/Core/ctkXnatResourceFolder.cpp
+ Libs/XNAT/Core/ctkXnatScan.h
+ Libs/XNAT/Core/ctkXnatSubject.h
+ Libs/XNAT/Core/ctkXnatAssessor.cpp
+ Libs/XNAT/Core/ctkXnatScan.cpp
+ Libs/XNAT/Core/ctkXnatSession.h
+ Libs/XNAT/Core/ctkXnatTreeModel.h
+ Libs/XNAT/Core/ctkXnatAPI_p.h
+ Libs/XNAT/Core/ctkXnatScanFolder.cpp
+ Libs/XNAT/Core/ctkXnatResourceFolder.h
+ Libs/XNAT/Core/ctkXnatAssessorFolder.h
+ Libs/XNAT/Core/ctkXnatSettings.h
+ Libs/XNAT/Core/ctkXnatFile.cpp
+ Libs/XNAT/Core/ctkXnatProject.h
+ Libs/XNAT/Core/ctkXnatFile.h
+ Libs/XNAT/Core/ctkXnatExperiment.h
+ Libs/XNAT/Core/ctkXnatSession.cpp
+ Libs/XNAT/Core/ctkXnatReconstruction.cpp
+ Libs/XNAT/Core/ctkXnatScanFolder.h
+ Libs/XNAT/Core/ctkXnatLoginProfile.cpp
+ Libs/XNAT/Core/ctkXnatTreeItem.cpp
+ Libs/XNAT/Core/ctkXnatProject.cpp
+ Libs/XNAT/Core/ctkXnatObject.h
+ Libs/XNAT/Core/ctkXnatSettings.cpp
+ Libs/XNAT/Core/ctkXnatResource.cpp
+ Libs/XNAT/Core/ctkXnatDataModel.cpp
+ Libs/XNAT/Core/ctkXnatAssessorFolder.cpp
+ Libs/XNAT/Core/ctkXnatAPI.cpp
+ Libs/XNAT/Core/ctkXnatSubject.cpp
+ Libs/XNAT/Core/ctkXnatLoginProfile.h
+ Libs/XNAT/Core/ctkXnatReconstructionFolder.h
+ Libs/XNAT/Core/Testing/ctkXnatSessionTest.h
+ Libs/XNAT/Core/Testing/ctkXnatSessionTest.cpp
+ Libs/XNAT/Core/ctkXnatTreeModel.cpp
+ Libs/CommandLineModules/Core/ctkCmdLineModuleDirectoryWatcher.cpp
+ Libs/CommandLineModules/Core/ctkCmdLineModuleDirectoryWatcher.h
+ Libs/CommandLineModules/Core/ctkCmdLineModuleDefaultPathBuilder.cpp
+ Libs/CommandLineModules/Core/ctkCmdLineModulePathBuilder.h
+ Libs/CommandLineModules/Core/ctkCmdLineModuleDefaultPathBuilder.h
+ Libs/CommandLineModules/Core/ctkCmdLineModuleDirectoryWatcher_p.h
+ Libs/CommandLineModules/Core/Testing/Cpp/ctkCmdLineModuleDefaultPathBuilderTest.cpp
+ Libs/CommandLineModules/Frontend/QtGui/ctkCmdLineModuleQtUiLoader.cpp
+ Libs/CommandLineModules/Frontend/QtGui/ctkCmdLineModuleQtUiLoader.h
+ Libs/CommandLineModules/Frontend/QtGui/ctkCmdLineModuleQtComboBox.cpp
+ Libs/CommandLineModules/Frontend/QtGui/ctkCmdLineModuleQtComboBox_p.h
+ Libs/CommandLineModules/Backend/XMLChecker/ctkCmdLineModuleXMLCheckerTask_p.h
+ Libs/CommandLineModules/Backend/XMLChecker/ctkCmdLineModuleBackendXMLChecker.h
+ Libs/CommandLineModules/Backend/XMLChecker/ctkCmdLineModuleXMLCheckerTask.cpp
+ Libs/CommandLineModules/Backend/XMLChecker/ctkCmdLineModuleBackendXMLChecker.cpp
+Copyright: University College London
+License: Apache-2.0
+
+Files: Libs/CommandLineModules/Documentation/xs3p.xsl
+Copyright: Copyright (C) DSTC Pty Ltd (ACN 052 372 577) 2002
+License: DSTC
+ The software contained on this media is the property of the
+ DSTC Pty Ltd.  Use of this software is strictly in accordance
+ with the license agreement in the accompanying LICENSE file.
+ If your distribution of this software does not contain a
+ LICENSE file then you have no rights to use this software
+ in any manner and should contact DSTC at the address below
+ to determine an appropriate licensing arrangement.
+ .
+      DSTC Pty Ltd
+      Level 7, General Purpose South
+      The University of Queensland
+      QLD 4072 Australia
+      Tel: +61 7 3365 4310
+      Fax: +61 7 3365 4311
+      Email: titanium_enquiries@dstc.edu.au
+ .
+ This software is being provided "AS IS" without warranty of
+ any kind.  In no event shall DSTC Pty Ltd be liable for
+ damage of any kind arising out of or in connection with
+ the use or performance of this software.
+
+Files:
+ Libs/DICOM/Widgets/ctkDICOMObjectModel.cpp
+ Libs/DICOM/Widgets/ctkDICOMObjectModel.h
+ Libs/DICOM/Widgets/Testing/Cpp/ctkDICOMObjectModelTest1.cpp
+Copyright: University of Sheffield
+License: Apache-2.0
+
+Files: debian/*
+Copyright: 2010-2011 Dominique Belhachemi <domibel@debian.org>
+License: Apache-2.0
+
+License: Apache-2.0
+ On Debian systems you can find the full text of the Apache License
+ Version 2.0 at /usr/share/common-licenses/Apache-2.0
+
+License: ParaView-1.2
+ Downloaded from http://www.paraview.org/paraview/project/license.html
+ .
+ Sandia National Laboratories, New Mexico PO Box 5800 Albuquerque, NM 87185
+ .
+ Kitware Inc.
+ 28 Corporate Drive
+ Clifton Park, NY 12065
+ USA
+ .
+ Under the terms of Contract DE-AC04-94AL85000, there is a non-exclusive license for use of this work by or on behalf of the U.S. Government.
+ .
+ Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are
+ met:
+ .
+    *  Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+    *  Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer
+       in the documentation and/or other materials provided with the distribution.
+    *  Neither the name of Kitware nor the names of any contributors may be used to endorse or promote products derived from this
+       software without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE
+ LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+ OF SUCH DAMAGE.
+
+License: BSL-1.0
+ Boost Software License - Version 1.0 - August 17th, 2003
+ .
+ Permission is hereby granted, free of charge, to any person or organization
+ obtaining a copy of the software and accompanying documentation covered by
+ this license (the "Software") to use, reproduce, display, distribute,
+ execute, and transmit the Software, and to prepare derivative works of the
+ Software, and to permit third-parties to whom the Software is furnished to
+ do so, all subject to the following:
+ .
+ The copyright notices in the Software and this entire statement, including
+ the above license grant, this restriction and the following disclaimer,
+ must be included in all copies of the Software, in whole or in part, and
+ all derivative works of the Software, unless such copies or derivative
+ works are solely in the form of machine-executable object code generated by
+ a source language processor.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
+ SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
+ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
+ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ DEALINGS IN THE SOFTWARE.
+
+License: OFFIS-DCMTK
+ Copyright (C) 1994-2026, OFFIS e.V.
+ All rights reserved.
+ .
+ This software and supporting documentation were developed by
+ .
+   OFFIS e.V.
+   R&D Division Health
+   Escherweg 2
+   26121 Oldenburg, Germany
+ .
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ .
+ - Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+ .
+ - Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+ .
+ - Neither the name of OFFIS nor the names of its contributors may be
+   used to endorse or promote products derived from this software
+   without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
