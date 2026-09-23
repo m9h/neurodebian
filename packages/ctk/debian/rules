@@ -70,10 +70,46 @@ override_dh_auto_configure:
 #	doxygen $(DEB_BUILDDIR)/doxygen.config
 #	dh_install -plibctk-doc       $(DEB_BUILDDIR)/Documents/Doxygen/html         usr/share/doc/ctk-doc
 
+
+# --- DGraph -------------------------------------------------------------------
+# CTK's plugin machinery (ctkMacroSetupPlugins -> ctkMacroValidateBuildOptions)
+# runs a DGraph binary at configure time and aborts with "Executable doesn't
+# exist!" unless CTK_DGRAPH_EXECUTABLE points at a real file. Upstream only
+# builds DGraph via try_compile() into CTK's own build tree and
+# Utilities/DGraph/CMakeLists.txt has no install() rule, so nothing reaches
+# consumers: MITK's BlueBerry plugins cannot configure against installed CTK.
+# Build the standalone utility (DGraph.cpp + ctkDependencyGraph.cpp, no Qt)
+# and ship it as a build-time helper under libexec, not bin: no user runs
+# it, and "DGraph" is too generic a name for the global bin namespace.
+override_dh_auto_build:
+	dh_auto_build
+	cmake -S Utilities/DGraph -B obj-$(DEB_HOST_MULTIARCH)/DGraph \
+	  -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17
+	cmake --build obj-$(DEB_HOST_MULTIARCH)/DGraph --parallel
+	test -x obj-$(DEB_HOST_MULTIARCH)/DGraph/DGraph
+
+override_dh_auto_install:
+	dh_auto_install
+	install -D -p -m 0755 obj-$(DEB_HOST_MULTIARCH)/DGraph/DGraph \
+	  debian/tmp/usr/libexec/ctk/DGraph
+	# Export the executable to consumers of the installed CTK. Two names are
+	# in play: DGraph_EXECUTABLE is CTK's build-tree variable, and
+	# CTK_DGRAPH_EXECUTABLE is what ctkMacroSetupPlugins actually reads; the
+	# installed config defines neither.
+	printf '%s\n' '' \
+	  '# --- Debian: DGraph for consumers of the INSTALLED CTK ---' \
+	  'if(NOT DGraph_EXECUTABLE)' \
+	  '  find_program(DGraph_EXECUTABLE DGraph PATHS "/usr/libexec/ctk" NO_DEFAULT_PATH)' \
+	  'endif()' \
+	  'set(CTK_DGRAPH_EXECUTABLE "$${DGraph_EXECUTABLE}")' \
+	  >> debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/cmake/ctk/CTKConfig.cmake
+	grep -q 'set(CTK_DGRAPH_EXECUTABLE' debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/cmake/ctk/CTKConfig.cmake
+
 override_dh_install:
 	# Runtime Package
 	dh_install -p$(pkg_run) usr/lib/*.so.*
 	# Development Package
 	dh_install -p$(pkg_dev) usr/include
 	dh_install -p$(pkg_dev) usr/lib/lib*.so
+	dh_install -p$(pkg_dev) usr/libexec/ctk
 #	dh_install -plibctk-dev   debian/tmp/usr/lib/ctk-0.1/*.cmake                 usr/lib/ctk-0.1

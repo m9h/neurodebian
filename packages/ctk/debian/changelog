@@ -1,3 +1,14 @@
+ctk (2026.09.02-1+neuro3) unstable; urgency=medium
+
+  * Ship the DGraph build-time helper as usr/libexec/ctk/DGraph in libctk-dev
+    and export CTK_DGRAPH_EXECUTABLE from the installed CTKConfig.cmake.
+    ctkMacroSetupPlugins runs it at configure time, and upstream only ever
+    builds it into CTK's own build tree with no install rule, so every
+    consumer of the plugin framework (MITK's BlueBerry) failed with
+    "Executable doesn't exist!" against installed CTK.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Wed, 23 Sep 2026 15:23:02 -0700
+
 ctk (2026.09.02-1+neuro2) unstable; urgency=medium
 
   * Fix find_package(CTK) for consumers. CTK_INSTALL_CMAKE_DIR and
