@@ -104,6 +104,22 @@ override_dh_auto_install:
 	  'set(CTK_DGRAPH_EXECUTABLE "$${DGraph_EXECUTABLE}")' \
 	  >> debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/cmake/ctk/CTKConfig.cmake
 	grep -q 'set(CTK_DGRAPH_EXECUTABLE' debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/cmake/ctk/CTKConfig.cmake
+	# CTK's install rules glob only *.cmake, but the installed macros reference
+	# these templates via ${CTK_CMAKE_DIR}: the plugin machinery needs
+	# MANIFEST.MF.in and the two .qrc.in files (else configure_file() fails per
+	# plugin and no plugin target is created), the rest serve other consumers.
+	# Found by grepping every ${CTK_CMAKE_DIR}/<file> reference in the installed
+	# cmake and diffing against what is shipped.
+	for f in MANIFEST.MF.in plugin_manifest.qrc.in plugin_resources_cached.qrc.in \
+	         WindowsApplicationUseUtf8.manifest ctkMacroWrapPythonQtModuleInit.cpp.in \
+	         ctkWrapPythonQt.py ctkCheckoutRepo.cmake.in CTKPluginUseFile.cmake.in; do \
+	  install -p -m 0644 CMake/$$f debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/cmake/ctk/; \
+	done
+	# ctkFunctionGeneratePluginUseFile looks for CTKPluginUseFile.cmake.in at
+	# ${CTK_CMAKE_DIR}/../CMake/, a source-tree layout; point it at the cmake dir.
+	sed -i 's|$${CTK_CMAKE_DIR}/../CMake/CTKPluginUseFile.cmake.in|$${CTK_CMAKE_DIR}/CTKPluginUseFile.cmake.in|' \
+	  debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/cmake/ctk/ctkFunctionGeneratePluginUseFile.cmake
+	grep -q 'CTK_CMAKE_DIR}/CTKPluginUseFile.cmake.in' debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/cmake/ctk/ctkFunctionGeneratePluginUseFile.cmake
 
 override_dh_install:
 	# Runtime Package

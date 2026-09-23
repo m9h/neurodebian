@@ -1,3 +1,16 @@
+ctk (2026.09.02-1+neuro4) unstable; urgency=medium
+
+  * Ship the CMake templates the installed macros reference from
+    ${CTK_CMAKE_DIR} (MANIFEST.MF.in, plugin_manifest.qrc.in,
+    plugin_resources_cached.qrc.in, CTKPluginUseFile.cmake.in and the
+    PythonQt/checkout helpers). The install rules glob only *.cmake, so
+    building any CTK plugin against installed CTK failed with "File
+    .../MANIFEST.MF.in does not exist" and no plugin target was created.
+    Point ctkFunctionGeneratePluginUseFile at the installed template rather
+    than the source-tree ../CMake/ path.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Wed, 23 Sep 2026 15:38:18 -0700
+
 ctk (2026.09.02-1+neuro3) unstable; urgency=medium
 
   * Ship the DGraph build-time helper as usr/libexec/ctk/DGraph in libctk-dev
