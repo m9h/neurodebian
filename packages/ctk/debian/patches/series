@@ -1,1 +1,2 @@
 qt6svg_1453.patch
+ctkMacroBuildPlugin-moc-srcs-and-resources.patch

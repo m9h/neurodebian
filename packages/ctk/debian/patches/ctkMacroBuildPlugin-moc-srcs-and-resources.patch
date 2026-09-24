@@ -1,0 +1,25 @@
+Index: ctk-2026.09.02/CMake/ctkMacroBuildPlugin.cmake
+===================================================================
+--- ctk-2026.09.02.orig/CMake/ctkMacroBuildPlugin.cmake
++++ ctk-2026.09.02/CMake/ctkMacroBuildPlugin.cmake
+@@ -160,8 +160,10 @@ macro(ctkMacroBuildPlugin)
+   set(dynamicHeaders
+     "${dynamicHeaders};${CMAKE_CURRENT_BINARY_DIR}/${MY_EXPORT_HEADER_PREFIX}Export.h")
+ 
+-  # Make sure variable are cleared
+-  set(MY_RESOURCES)
++  # cmake_parse_arguments has already assigned MY_RESOURCES from the caller's
++  # RESOURCES argument (empty when omitted); clearing it here discarded every
++  # .qrc a consumer passed in, leaving plugins with only the generated manifest
++  # resource and none of their own icons or stylesheets.
+ 
+   # Add the generated manifest qrc file
+   set(manifest_qrc_filepath )
+@@ -249,6 +251,7 @@ macro(ctkMacroBuildPlugin)
+ 
+   add_library(${lib_name} ${MY_LIBRARY_TYPE}
+     ${MY_SRCS}
++    ${MY_MOC_SRCS}
+     ${MY_RESOURCES}
+     ${_plugin_qm_files}
+     )
