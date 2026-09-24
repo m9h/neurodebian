@@ -120,6 +120,18 @@ override_dh_auto_install:
 	sed -i 's|$${CTK_CMAKE_DIR}/../CMake/CTKPluginUseFile.cmake.in|$${CTK_CMAKE_DIR}/CTKPluginUseFile.cmake.in|' \
 	  debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/cmake/ctk/ctkFunctionGeneratePluginUseFile.cmake
 	grep -q 'CTK_CMAKE_DIR}/CTKPluginUseFile.cmake.in' debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/cmake/ctk/ctkFunctionGeneratePluginUseFile.cmake
+	# The PluginFramework service/ headers (ctkEventAdmin, ctkApplicationHandle,
+	# ctkLogStream, ...) are installed flattened like every other header, but
+	# consumers include them by SOURCE-relative path because CTK's own build
+	# tree puts each service/* directory on the include path -- and so does
+	# the installed ctkPlugin.h itself (<service/log/ctkLogStream.h>). It
+	# surfaces as a moc error first ("Undefined interface" on Q_INTERFACES),
+	# since moc silently skips an include it cannot find. Ship the subtree
+	# with its structure intact alongside the flattened copies.
+	cp -a Libs/PluginFramework/service debian/tmp/usr/include/ctk/
+	find debian/tmp/usr/include/ctk/service -type f ! -name '*.h' -delete
+	test -f debian/tmp/usr/include/ctk/service/application/ctkApplicationHandle.h
+	test -f debian/tmp/usr/include/ctk/service/log/ctkLogStream.h
 
 override_dh_install:
 	# Runtime Package
