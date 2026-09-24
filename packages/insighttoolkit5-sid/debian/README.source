@@ -1,0 +1,25 @@
+Building insighttoolkit5 5.4.7-1+neuro1 (Debian sid)
+
+This is Debian's insighttoolkit5 5.4.7-1 packaging plus two fixes:
+
+1. debian/rules already enables seven ITK remote modules with -DModule_*=ON,
+   but also sets -DITK_FORBID_DOWNLOADS=ON and the tree carries only the
+   Modules/Remote/*.remote.cmake stubs, so ITK silently skips every one of
+   them and the installed package has none. The sources must be present in
+   the tree before building. Vendor them into Modules/Remote/<Name>/ (the
+   same set, at the ITK-5.4-compatible revisions, as the noble packaging in
+   packages/insighttoolkit5):
+     GenericLabelInterpolator AdaptiveDenoising
+     MorphologicalContourInterpolation GrowCut SimpleITKFilters
+     LabelErodeDilate MGHIO IOScanco
+   The clean long-term form is one orig-<module>.tar.xz component tarball
+   per module (3.0 (quilt) format supports this), which is what should go to
+   the Debian maintainer along with the report that the flags are inert.
+
+2. BUILD_TESTING now follows DEB_BUILD_OPTIONS=nocheck instead of being
+   forced on: with the remote sources present, the test target of
+   MorphologicalContourInterpolation needs the RLEImage remote module,
+   which nothing else does.
+
+Build in the sid container with:
+  DEB_BUILD_OPTIONS="parallel=4 nocheck" dpkg-buildpackage -us -uc -b

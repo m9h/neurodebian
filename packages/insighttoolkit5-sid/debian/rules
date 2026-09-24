@@ -1,0 +1,167 @@
+#!/usr/bin/make -f
+
+VER_MAJOR = 5
+VER_MINOR = 4
+VER_REVISION = 7
+VERSION = $(VER_MAJOR).$(VER_MINOR).$(VER_REVISION)
+SOVERSION = $(VER_MAJOR).$(VER_MINOR)
+
+#ITK is not properly using system provided headers
+export DEB_CPPFLAGS_MAINT_APPEND = -I/usr/include/nifti -g1
+
+ENABLE_FFTW=ON
+ENABLE_UNSIGNED_LONG_LONG=ON
+
+ifeq ($(DEB_HOST_ARCH),i386)
+  ENABLE_FFTW=OFF
+#(unsigned long) == (unsigned int) on 32 bit, since itk 4.10 or g++-5.4
+  ENABLE_UNSIGNED_LONG_LONG=OFF
+  DEB_CMAKEFLAGS_MAINT_APPEND = -DITK_COMPUTER_MEMORY_SIZE=2
+  # Tests are permanently failing, try force rounding to normal double
+  # accuracy
+  export DEB_CXXFLAGS_MAINT_APPEND=-ffloat-store
+endif
+
+CMAKE_FLAGS = \
+	-DBUILD_EXAMPLES:BOOL=ON \
+	-DBUILD_SHARED_LIBS:BOOL=ON \
+	-DBUILD_TESTING:BOOL=$(if $(filter nocheck,$(DEB_BUILD_OPTIONS)),OFF,ON) \
+	-DExternalData_OBJECT_STORES:PATH=$(CURDIR)/data/.ExternalData/ \
+	-DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=ON \
+	-DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
+	-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
+	-DUSE_FFTWF=$(ENABLE_FFTW) \
+	-DITK_FORBID_DOWNLOADS:BOOL=ON \
+	-DITK_BUILD_DEFAULT_MODULES:BOOL=ON \
+	-DITK_USE_FFTWD:BOOL=$(ENABLE_FFTW) \
+	-DITK_USE_FFTWF:BOOL=$(ENABLE_FFTW) \
+	-DITK_USE_SYSTEM_DCMTK:BOOL=ON \
+	-DITK_USE_SYSTEM_DOUBLECONVERSION:BOOL=OFF \
+	-DITK_USE_SYSTEM_EXPAT:BOOL=ON \
+	-DITK_USE_SYSTEM_FFTW:BOOL=$(ENABLE_FFTW) \
+	-DITK_USE_SYSTEM_GDCM:BOOL=ON \
+	-DITK_USE_SYSTEM_GOOGLETEST:BOOL=ON \
+	-DGTEST_SRC=/usr/src/googletest/googletest \
+	-DITK_USE_SYSTEM_MINC:BOOL=ON \
+	-DITK_USE_SYSTEM_HDF5:BOOL=ON \
+	-DHDF5_ROOT=/usr/lib/$(DEB_HOST_MULTIARCH)/hdf5/serial \
+	-DITK_USE_SYSTEM_JPEG:BOOL=ON \
+	-DITK_USE_SYSTEM_PNG:BOOL=ON \
+	-DITK_USE_SYSTEM_TIFF:BOOL=OFF \
+	-DITK_USE_SYSTEM_VXL:BOOL=OFF \
+	-DITK_USE_SYSTEM_ZLIB:BOOL=ON \
+	-DITK_USE_KWSTYLE:BOOL=OFF \
+	-DModule_AdaptiveDenoising:BOOL=ON \
+	-DModule_BridgeNumPy:BOOL=OFF \
+	-DModule_GenericLabelInterpolator:BOOL=ON \
+	-DModule_GrowCut:BOOL=ON \
+	-DModule_ITKDCMTK:BOOL=ON \
+	-DModule_IOScanco:BOOL=ON \
+	-DModule_LabelErodeDilate:BOOL=ON \
+	-DModule_ITKIODCMTK:BOOL=ON \
+	-DModule_ITKIOMINC:BOOL=ON \
+	-DModule_ITKIOPhilipsREC:BOOL=OFF \
+	-DModule_ITKLevelSetsv4Visualization:BOOL=OFF \
+	-DModule_ITKVideoBridgeOpenCV:BOOL=OFF \
+	-DModule_ITKVideoBridgeVXL:BOOL=OFF \
+	-DModule_ITKVtkGlue:BOOL=ON \
+	-DModule_ITKReview:BOOL=ON \
+	-DModule_MGHIO:BOOL=ON \
+	-DModule_MorphologicalContourInterpolation:BOOL=ON \
+	-DModule_SimpleITKFilters:BOOL=ON \
+	-DVCL_INCLUDE_CXX_0X:BOOL=ON \
+	-DITK_USE_SYSTEM_SWIG:BOOL=ON \
+	-DITK_USE_SYSTEM_CASTXML:BOOL=ON \
+	-DITK_WRAP_IMAGE_DIMS="2;3" \
+	-DITK_WRAP_unsigned_long_long:BOOL=$(ENABLE_UNSIGNED_LONG_LONG) \
+	-DITK_WRAP_double:BOOL=ON \
+	-DITK_WRAP_vector_double:BOOL=ON \
+	-DITK_WRAP_covariant_vector_double:BOOL=ON \
+	-DITK_WRAP_complex_double:BOOL=ON \
+	-DITK_COMPUTER_MEMORY_SIZE:STRING="2" \
+	$(DEB_CMAKEFLAGS_MAINT_APPEND)
+
+pkg_lib = libinsighttoolkit$(SOVERSION)
+pkg_dev = libinsighttoolkit$(VER_MAJOR)-dev
+pkg_examples = insighttoolkit$(VER_MAJOR)-examples
+
+
+%:
+	dh $@ --builddir=BUILD
+
+override_dh_auto_configure-indep:
+
+override_dh_auto_configure-arch: pre-build
+	dh_auto_configure -- $(CMAKE_FLAGS)
+
+override_dh_auto_build-indep:
+
+pre-build:
+	echo "Available disk space (~50GB of space is needed for the build):"
+	df -h .
+
+override_dh_auto_test-indep:
+
+override_dh_auto_test:
+	LD_LIBRARY_PATH=`pwd`/BUILD/lib:`pwd`/BUILD/Testing/Temporary ARGS="--label-exclude REQUIRES_DISPLAY" dh_auto_test || \
+    ( echo "Test log begin =========:"  \
+    && cat `pwd`/BUILD/Testing/Temporary/LastTest.log \
+    && echo "Test log end =========:" \
+    && exit 1 )
+
+override_dh_lintian:
+	echo "#ITK embeds various patched libraries" > debian/$(pkg_lib).lintian-overrides
+	echo "$(pkg_lib): embedded-library" > debian/$(pkg_lib).lintian-overrides
+	echo "$(pkg_lib): package-name-doesnt-match-sonames" >> debian/$(pkg_lib).lintian-overrides
+	echo "$(pkg_lib): shared-library-lacks-prerequisites" >> debian/$(pkg_lib).lintian-overrides
+	echo "${pkg_dev}: no-manual-page [usr/bin/itkTestDriver]" > debian/$(pkg_dev).lintian-overrides
+	dh_lintian
+
+override_dh_install-indep:
+
+override_dh_install-arch:
+	# pkg_lib
+	dh_install -p$(pkg_lib) --autodest -XJava -XPython -XTcl debian/tmp/usr/lib/*/lib*.so.*
+	cp CMake/InsightValgrind.supp Insight$(SOVERSION)Valgrind.supp
+#	cp Modules/ThirdParty/VNL/src/vxl/config/valgrind.supp Insight$(SOVERSION)VxlValgrind.supp
+	dh_install -p$(pkg_lib) Insight$(SOVERSION)*.supp usr/lib/valgrind
+	#
+	# pkg_dev
+	dh_installman -p$(pkg_dev) debian/insighttoolkit.3
+	dh_install -p$(pkg_dev) --autodest -XJava -XPython -XTcl debian/tmp/usr/lib/*/lib*.so
+	dh_install -p$(pkg_dev) --autodest debian/tmp/usr/include/ITK-$(SOVERSION)/*
+	# The itkTestDriver seems to be required due to references in /usr/lib/cmake files; c.f. Bug #700723
+	dh_install -p$(pkg_dev) --autodest debian/tmp/usr/bin/itkTestDriver
+
+	dh_install -p$(pkg_dev) --autodest debian/tmp/usr/lib/*/cmake
+	# remove build directory to save space
+	rm -rf BUILD debian/tmp
+
+override_dh_installexamples:
+	# pkg_examples
+	dh_installexamples -p$(pkg_examples) Examples/*
+ifneq (,$(filter $(pkg_examples), $(shell dh_listpackages)))
+	find debian/$(pkg_examples)/usr/share/doc/$(pkg_examples)/examples \
+	    -type f -print0 | xargs -0 chmod 644
+endif
+
+override_dh_clean:
+	# Modules/ThirdParty/pygccxml/src/pygccxml leaves build artifacts around
+	find  Modules/ThirdParty/pygccxml/src -name __pycache__ -execdir rm -r '{}' +
+	dh_clean
+
+
+# The Debian source tarball is created by combining the upstream source and data tarballs
+# This was done manually:
+#
+# 1. Download manually:
+#    a. wget https://github.com/InsightSoftwareConsortium/ITK/releases/download/v5.4.7/InsightToolkit-5.4.7.tar.gz
+#    b. wget https://github.com/InsightSoftwareConsortium/ITK/releases/download/v5.4.7/InsightData-5.4.7.tar.gz
+#
+# 2. Extract & create new merged source tarball (in tarballs):
+#    tar xzf InsightToolkit-5.4.7.tar.gz
+#    tar xzf InsightData-5.4.7.tar.gz
+#    tar --xz -cf insighttoolkit5_5.4.7.orig.tar.xz InsightToolkit-5.4.7
+#
+# 3. Import into GIT
+#    gbp import-orig --pristine-tar ../tarballs/insighttoolkit5_5.4.7.orig.tar.xz
