@@ -1,0 +1,23 @@
+Index: mitk-2026.06/Modules/DICOM/src/mitkDICOMTimeUtil.cpp
+===================================================================
+--- mitk-2026.06.orig/Modules/DICOM/src/mitkDICOMTimeUtil.cpp
++++ mitk-2026.06/Modules/DICOM/src/mitkDICOMTimeUtil.cpp
+@@ -42,11 +42,18 @@ namespace mitk
+     // in that case leave the value as-is, which keeps the common
+     // single-timezone path bit-identical to before (two offset-less
+     // stamps still difference correctly).
++// OFTime::hasTimeZone() exists only in DCMTK git snapshots newer than the
++// 3.7.0 release (the superbuild's pinned DCMTK has it; distro 3.7.0 does not).
++// Without it, fall back to upstream's documented behaviour of leaving the
++// value as-is, which keeps the common single-timezone path bit-identical.
++#if (defined(DCMTK_VERSION_NUMBER) && DCMTK_VERSION_NUMBER > 370) || \
++    (defined(PACKAGE_VERSION_NUMBER) && PACKAGE_VERSION_NUMBER > 370)
+     if (time.getTime().hasTimeZone())
+     {
+       const double tzHours = time.getTime().getTimeZone();
+       tp -= milliseconds{std::llround(tzHours * 3600.0 * 1000.0)};
+     }
++#endif
+ 
+     return tp;
+   }

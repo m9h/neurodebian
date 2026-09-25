@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=MITK Workbench
+GenericName=Medical Image Viewer
+Comment=Interactive medical image processing and visualization
+Exec=MitkWorkbench %F
+Icon=org.mitk.MitkWorkbench
+Terminal=false
+Categories=Science;MedicalSoftware;Graphics;Viewer;
+MimeType=application/dicom;image/x-nifti;

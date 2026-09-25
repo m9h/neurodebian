@@ -1,0 +1,39 @@
+Index: mitk-2026.06/CMake/mitkFunctionCreateBlueBerryApplication.cmake
+===================================================================
+--- mitk-2026.06.orig/CMake/mitkFunctionCreateBlueBerryApplication.cmake
++++ mitk-2026.06/CMake/mitkFunctionCreateBlueBerryApplication.cmake
+@@ -89,7 +89,7 @@ else()
+   qt_add_executable(${_APP_NAME} MANUAL_FINALIZATION MACOSX_BUNDLE WIN32 ${_APP_SOURCES} ${WINDOWS_ICON_RESOURCE_FILE})
+ endif()
+ 
+-set_target_properties(${_APP_NAME} PROPERTIES MITK_DEPLOY_QT TRUE)
++set_target_properties(${_APP_NAME} PROPERTIES MITK_DEPLOY_QT FALSE)
+ set_property(GLOBAL APPEND PROPERTY MITK_EXECUTABLE_TARGETS ${_APP_NAME})
+ if(_APP_NO_INSTALL)
+   set_target_properties(${_APP_NAME} PROPERTIES NO_INSTALL TRUE)
+Index: mitk-2026.06/CMakeLists.txt
+===================================================================
+--- mitk-2026.06.orig/CMakeLists.txt
++++ mitk-2026.06/CMakeLists.txt
+@@ -1592,3 +1592,21 @@ feature_summary(
+   DESCRIPTION "------- FEATURE SUMMARY FOR ${PROJECT_NAME} -------"
+   WHAT ALL
+ )
++
++# ---- Distro packaging: install module libraries + headers ----
++# Upstream only installs the Workbench bundle (MITK_INSTALL_TARGETS with
++# GLOB_PLUGINS); module libraries and headers have no install rules of their
++# own. No install(EXPORT): mitk_create_module uses raw paths in
++# target_include_directories, which CMake rejects in an export set.
++get_property(_mitk_install_targets GLOBAL PROPERTY MITK_MODULE_TARGETS)
++if(_mitk_install_targets)
++  install(TARGETS ${_mitk_install_targets}
++          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++  foreach(_t ${_mitk_install_targets})
++    get_target_property(_src ${_t} SOURCE_DIR)
++    if(_src AND EXISTS ${_src}/include)
++      install(DIRECTORY ${_src}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mitk)
++    endif()
++  endforeach()
++endif()

@@ -1,0 +1,8 @@
+# Deliberately unstripped, see debian/rules: stripping destroys the resource
+# archives CppMicroServices appends after the ELF data of every plugin.
+mitk-workbench: unstripped-binary-or-object
+mitk-workbench: shared-library-lacks-version
+# The plugins are loaded by path by the CTK plugin framework, never dlopened
+# from the loader path, and link siblings via $ORIGIN.
+mitk-workbench: custom-library-search-path
+mitk-workbench: binary-or-shlib-defines-rpath

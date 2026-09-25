@@ -1,0 +1,73 @@
+Verify CTK component dependencies instead of assuming them
+
+MITK modules can declare a dependency on specific COMPONENTS of a package
+using the "Package|Component" syntax, e.g. Modules/XNAT:
+
+    MITK_CREATE_MODULE(
+      DEPENDS MitkCore MitkQtWidgets
+      PACKAGE_DEPENDS
+        PUBLIC CTK|CTKXNATCore
+        PRIVATE Qt6|UiTools+Xml+Widgets
+    )
+
+mitkFunctionCheckModuleDependencies parses those component lists but never
+checks them: the only test applied is whether MITK_USE_<Package> is enabled.
+A module is therefore enabled whenever the *package* was found, even if the
+specific component it needs was never built.
+
+MITK_CTK_Config.cmake then does
+
+    list(APPEND ALL_INCLUDE_DIRECTORIES ${${_ctk_component}_INCLUDE_DIRS})
+    list(APPEND ALL_LIBRARIES ${_ctk_component})
+
+with an undefined ${_ctk_component}_INCLUDE_DIRS, so the module configures
+cleanly with an empty include path and the failure is deferred all the way to
+compile time, as a pile of "no such file or directory" on the component's
+headers.
+
+Concretely: a CTK built without CTK_LIB_XNAT/Core (the upstream default is OFF,
+and it cannot currently be turned on for Qt6 because Libs/XNAT/Core/ctkXnatAPI.cpp
+still uses QScriptEngine/QScriptValue from the removed Qt5 QtScript module)
+still enables MitkXNAT, which then fails on the 20 ctkXnat*.h headers that do
+not exist.
+
+Verify the component targets during the dependency check so the module is
+disabled the same way any other unmet dependency is.
+
+The test is restricted to CTK deliberately. CTK exports every component under
+its own name (CTKCore, CTKXNATCore, ...), so "is there a target with this name"
+is exact. Other packages do not follow that convention -- Qt6's components are
+Widgets/Xml/UiTools while its targets are Qt6::Widgets etc. -- and applying the
+same test there disables essentially every module, MitkCore included.
+
+Verified against MITK 2026.06 with a CTK lacking XNAT: MitkXNAT moves from the
+enabled to the disabled feature list, is no longer generated as a build target,
+and nothing else changes (CTK plugins 29 -> 29, enabled features 145 -> 144,
+ninja edges 7352 -> 7318, i.e. only XNAT's own).
+
+--- a/CMake/mitkFunctionCheckModuleDependencies.cmake
++++ b/CMake/mitkFunctionCheckModuleDependencies.cmake
+@@ -50,6 +50,23 @@
+     foreach(_package ${package_names})
+       if((DEFINED MITK_USE_${_package}) AND NOT (${MITK_USE_${_package}}))
+         list(APPEND missing_deps ${_package})
++      elseif(_package STREQUAL "CTK")
++        # A module may require specific COMPONENTS of a package (the
++        # "CTK|CTKXNATCore" syntax). MITK parses those but never verifies them,
++        # so the module is enabled whenever the *package* is found even if the
++        # component was never built -- MITK_CTK_Config.cmake then appends an
++        # empty ${component}_INCLUDE_DIRS and the failure is deferred to compile
++        # time. CTK exports each component under its own name, so a plain TARGET
++        # test is exact here. Restricted to CTK on purpose: other packages (Qt6)
++        # use component names that are not bare target names (Widgets ->
++        # Qt6::Widgets), where this test would wrongly disable everything.
++        foreach(_vis PUBLIC PRIVATE INTERFACE)
++          foreach(_component ${${_vis}_${_package}_REQUIRED_COMPONENTS})
++            if(NOT TARGET ${_component})
++              list(APPEND missing_deps "${_package}|${_component}")
++            endif()
++          endforeach()
++        endforeach()
+       endif()
+     endforeach()
+   endif()

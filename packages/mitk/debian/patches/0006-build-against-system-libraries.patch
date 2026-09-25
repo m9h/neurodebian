@@ -1,0 +1,94 @@
+Index: mitk-2026.06/CMakeLists.txt
+===================================================================
+--- mitk-2026.06.orig/CMakeLists.txt
++++ mitk-2026.06/CMakeLists.txt
+@@ -986,7 +986,10 @@ set(Boost_ADDITIONAL_VERSIONS 1.91 1.91.
+ set(_dcmtk_dir_orig ${DCMTK_DIR})
+ 
+ # This property is populated at the top half of this file
++find_package(ZLIB REQUIRED MODULE)
++set(ZLIB_FOUND TRUE)
+ get_property(MITK_EXTERNAL_PROJECTS GLOBAL PROPERTY MITK_EXTERNAL_PROJECTS)
++list(REMOVE_ITEM MITK_EXTERNAL_PROJECTS ZLIB)
+ foreach(ep ${MITK_EXTERNAL_PROJECTS})
+   get_property(_package GLOBAL PROPERTY MITK_${ep}_PACKAGE)
+   get_property(_components GLOBAL PROPERTY MITK_${ep}_COMPONENTS)
+Index: mitk-2026.06/Modules/Core/CMakeLists.txt
+===================================================================
+--- mitk-2026.06.orig/Modules/Core/CMakeLists.txt
++++ mitk-2026.06/Modules/Core/CMakeLists.txt
+@@ -80,3 +80,10 @@ if(BUILD_TESTING)
+   add_subdirectory(TestingHelper)
+   add_subdirectory(test)
+ endif()
++
++# Debian: ITK_IO_FACTORY_REGISTER_MANAGER auto-registers every IO factory the
++# system ITK enables -- ITKIODCMTK plus the MGHIO and IOScanco remote modules --
++# none of which MitkCore's PACKAGE_DEPENDS lists (its parser prefixes "ITK" onto
++# component names, so the remote modules cannot be named there). Link them
++# directly, or mitkCoreActivator.cpp's factory table has undefined references.
++target_link_libraries(MitkCore PRIVATE MGHIO IOScanco ITKIODCMTK)
+Index: mitk-2026.06/Modules/DataTypesExt/CMakeLists.txt
+===================================================================
+--- mitk-2026.06.orig/Modules/DataTypesExt/CMakeLists.txt
++++ mitk-2026.06/Modules/DataTypesExt/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ mitk_create_module(
+   DEPENDS MitkCore
+-  TARGET_DEPENDS PRIVATE LZ4::lz4_shared
++  TARGET_DEPENDS PRIVATE LZ4::LZ4
+ )
+ 
+ add_subdirectory(test)
+Index: mitk-2026.06/Modules/Gizmo/src/mitkGizmoInteractor.cpp
+===================================================================
+--- mitk-2026.06.orig/Modules/Gizmo/src/mitkGizmoInteractor.cpp
++++ mitk-2026.06/Modules/Gizmo/src/mitkGizmoInteractor.cpp
+@@ -34,7 +34,7 @@ found in the LICENSE file.
+ #include <vtkPolyData.h>
+ #include <vtkRenderWindowInteractor.h>
+ #include <vtkVector.h>
+-#include <vtkVectorOperators.h>
++#include <vtkVector.h>
+ 
+ mitk::GizmoInteractor::GizmoInteractor()
+ {
+Index: mitk-2026.06/Modules/Gizmo/src/mitkGizmoMapper2D.cpp
+===================================================================
+--- mitk-2026.06.orig/Modules/Gizmo/src/mitkGizmoMapper2D.cpp
++++ mitk-2026.06/Modules/Gizmo/src/mitkGizmoMapper2D.cpp
+@@ -31,7 +31,7 @@ found in the LICENSE file.
+ #include <vtkMath.h>
+ #include <vtkPointData.h>
+ #include <vtkSphereSource.h>
+-#include <vtkVectorOperators.h>
++#include <vtkVector.h>
+ 
+ mitk::GizmoMapper2D::LocalStorage::LocalStorage()
+ {
+Index: mitk-2026.06/Modules/PET/CMakeLists.txt
+===================================================================
+--- mitk-2026.06.orig/Modules/PET/CMakeLists.txt
++++ mitk-2026.06/Modules/PET/CMakeLists.txt
+@@ -8,5 +8,7 @@ MITK_CREATE_MODULE(PET
+ )
+ 
+ add_subdirectory(cmdapps)
+-add_subdirectory(test)
++if(BUILD_TESTING)
++  add_subdirectory(test)
++endif()
+ 
+Index: mitk-2026.06/Wrapping/Python/mitk/CMakeLists.txt
+===================================================================
+--- mitk-2026.06.orig/Wrapping/Python/mitk/CMakeLists.txt
++++ mitk-2026.06/Wrapping/Python/mitk/CMakeLists.txt
+@@ -42,7 +42,7 @@ set_target_properties(mitk_python_bindin
+   OUTPUT_NAME "mitk"
+ )
+ 
+-set(mitk_PACKAGE_DIR "${Python3_SITEARCH}/mitk")
++set(mitk_PACKAGE_DIR "${MITK_BINARY_DIR}/python/mitk")
+ file(MAKE_DIRECTORY "${mitk_PACKAGE_DIR}")
+ 
+ # Build-tree __init__.py for the mitk package, configured from the shared

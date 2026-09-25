@@ -1,0 +1,26 @@
+mitk (2026.06-1) unstable; urgency=medium
+
+  * Initial Debian packaging, ported from the neurofedora mitk.spec
+    (2026.06-36) and built against system libraries (MITK_USE_SUPERBUILD=OFF):
+    ITK 5.4, VTK 9.6, CTK with the plugin framework, ACVD, Qt 6, DCMTK,
+    Boost, Poco and the rest of the Debian archive.
+  * Ships mitk (module libraries), mitk-workbench (the BlueBerry Workbench
+    and its plugins), mitk-dev (headers) and python3-mitk (pybind11
+    bindings).
+  * Patches 0001-0005 are carried over from the Fedora packaging (CTK
+    component verification, test-driver target guard, missing <algorithm>,
+    a GCC 16 ICE workaround, ITK's portable Eigen include spelling).
+  * 0006: build against system libraries - stage the Python package in the
+    build tree instead of the live site-packages, find ZLIB in module mode,
+    VTK's LZ4::LZ4 target name, VTK 9.6's removal of vtkVectorOperators.h,
+    guard Modules/PET's test dir behind BUILD_TESTING (it FetchContent-clones
+    a dataset at configure time), and link ITKIODCMTK into MitkCore since
+    Debian's ITK enables that IO factory.
+  * 0007: distro install layout - do not run Qt's deploy tool (it exists to
+    build a relocatable bundle and fails on system Qt), and install module
+    libraries and headers, which upstream has no install rules for.
+  * Deliberately unstripped: CppMicroServices appends resource archives to
+    the module libraries and strip silently destroys them. Debug info is
+    dropped at compile time instead.
+
+ -- Morgan Hough <morgan.hough@gmail.com>  Wed, 23 Sep 2026 14:43:15 -0700

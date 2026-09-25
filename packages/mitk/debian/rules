@@ -1,0 +1,139 @@
+#!/usr/bin/make -f
+# MITK 2026.06 built against system libraries (MITK_USE_SUPERBUILD=OFF),
+# ported from the neurofedora mitk.spec (2026.06-36). Read the comments: most
+# of the unusual choices below are hard-won.
+
+include /usr/share/dpkg/architecture.mk
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+# DO NOT STRIP. CppMicroServices embeds each module's resources (interaction
+# state machines, config XML, icons) by APPENDING a zip archive after the ELF
+# data as a post-build step. strip rewrites the file from its section headers
+# and silently discards everything trailing, so every libMitk*.so would lose
+# its resource archive. The symptom is not a build error but a broken
+# application: "Resource not valid. State machine pattern not found:
+# DisplayInteraction.xml" and a Workbench whose image viewer never
+# initialises. So: no dh_strip, no dwz, no -dbgsym -- and since nothing can
+# consume DWARF that way, drop -g rather than ship 300+ MB of debug info.
+export DEB_CFLAGS_MAINT_STRIP = -g
+export DEB_CXXFLAGS_MAINT_STRIP = -g
+export DEB_CFLAGS_MAINT_APPEND = -std=gnu17
+export DEB_CXXFLAGS_MAINT_APPEND = -include cstdint \
+  -Wno-error=template-id-cdtor -Wno-error=unused-but-set-variable \
+  -Wno-error=array-bounds -Wno-error=free-nonheap-object \
+  -Wno-error=deprecated-declarations
+
+MITKDIR = usr/lib/$(DEB_HOST_MULTIARCH)/mitk
+export PYBUILD_NAME = mitk
+
+%:
+	dh $@ --buildsystem=cmake+ninja --with python3
+
+override_dh_auto_configure:
+	# Find modules for system libraries that ship no CMake config on Debian
+	# (ANN, Qwt for Qt6, lz4, CppUnit). MITK's own CMake/ dir is already on
+	# CMAKE_MODULE_PATH.
+	cp debian/cmake/Find*.cmake CMake/
+	dh_auto_configure -- \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DCMAKE_CXX_STANDARD=17 \
+	  -DCMAKE_CXX_STANDARD_REQUIRED=ON \
+	  -DBUILD_SHARED_LIBS=ON \
+	  -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON \
+	  -DBUILD_TESTING=OFF \
+	  -DMITK_BUILD_EXAMPLES=OFF \
+	  -DMITK_USE_SUPERBUILD=OFF \
+	  -DMITK_BUILD_CONFIGURATION=Default \
+	  -DMITK_CUSTOM_REVISION_DESC:STRING=v2026.06 \
+	  -DMITK_DATA_DIR=/usr/share/mitk-data \
+	  -DMITK_USE_Qt6=ON \
+	  -DMITK_USE_SYSTEM_Boost=ON \
+	  -DMITK_USE_BLUEBERRY=ON \
+	  -DMITK_USE_CTK=ON \
+	  -DMITK_USE_DCMQI=OFF \
+	  -DMITK_USE_MatchPoint=OFF \
+	  -DMITK_USE_ACVD=ON \
+	  -DMITK_USE_Python3=ON \
+	  -DMITK_USE_pybind11=ON \
+	  -DPython3_EXECUTABLE=/usr/bin/python3 \
+	  -DPython3_ROOT_DIR=/usr \
+	  -DMITK_USE_SWIG=OFF \
+	  -DMITK_USE_CppUnit=OFF \
+	  -DMITK_USE_OpenMP=ON \
+	  -DMITK_USE_DCMTK=ON \
+	  -DMITK_USE_httplib=ON
+
+# ITK/VTK-template-heavy: cap parallelism to keep memory in check.
+override_dh_auto_build:
+	dh_auto_build -- -j4
+
+override_dh_auto_test:
+
+override_dh_strip:
+override_dh_dwz:
+
+override_dh_auto_install:
+	dh_auto_install
+	# mitkInstallRules.cmake drops a Qt6 runtime bundle beside the binaries:
+	# per-category plugin SUBdirectories (platforms/, sqldrivers/, ...),
+	# translations/, resources/ and QtWebEngineProcess. They duplicate the
+	# system Qt. CAREFUL: usr/bin/plugins is ALSO where MITK's own BlueBerry
+	# plugins land, as flat liborg_*.so files, so remove only the subdirs.
+	if [ -d debian/tmp/usr/bin/plugins ]; then \
+	  find debian/tmp/usr/bin/plugins -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} + ; \
+	fi
+	rm -rf debian/tmp/usr/bin/translations debian/tmp/usr/bin/resources
+	rm -f debian/tmp/usr/bin/QtWebEngineProcess
+	# RunInstalledApp.sh: a relocatable-bundle launcher installed to the
+	# prefix root, only there to set LD_LIBRARY_PATH for a tarball.
+	rm -f debian/tmp/usr/*.sh
+	# Every module is installed twice: as a RUNTIME artifact next to the
+	# Workbench (with the CppMicroServices autoload subdirs beside it) and
+	# flattened into the libdir by patch 0007. All RUNPATHs are $ORIGIN-relative
+	# to the first copy, and autoload modules are resolved relative to the
+	# loading library's directory, so the bindir set is the functional one.
+	# Drop the libdir duplicates: two copies of every SONAME on the default
+	# loader path is a hazard, not just lint.
+	rm -f debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libMitk*.so
+	# Now relocate that whole self-relative tree out of /usr/bin into a
+	# private multiarch directory. $ORIGIN resolution and autoload lookups
+	# survive the move because everything stays in the same relative layout.
+	mkdir -p debian/tmp/$(MITKDIR)
+	for e in debian/tmp/usr/bin/*; do mv "$$e" debian/tmp/$(MITKDIR)/; done
+	# BlueBerry plugins link SIBLING plugins in their own directory, but
+	# upstream gives them RUNPATH=$ORIGIN/.. only (where the core libs live).
+	# Without a launcher setting LD_LIBRARY_PATH, 27 of 29 plugins fail to
+	# load and CTK aborts the application ("No application id has been
+	# found"). Prepending $ORIGIN fixes all of them.
+	for p in debian/tmp/$(MITKDIR)/plugins/liborg_*.so; do \
+	  patchelf --set-rpath '$$ORIGIN:$$ORIGIN/..' "$$p"; \
+	done
+	patchelf --print-rpath debian/tmp/$(MITKDIR)/plugins/liborg_blueberry_core_runtime.so | grep -q '^\$$ORIGIN:\$$ORIGIN/\.\.$$'
+	# Guard the resource-stripping hazard described at the top of this file.
+	test -e debian/tmp/$(MITKDIR)/libMitkCore.so
+	# Python bindings. In a non-wheel build upstream only installs the pybind11
+	# package via mitkInstallRules.cmake, which copies the build tree's staged
+	# python/ dir to <prefix>/python (patch 0006 redirected mitk_PACKAGE_DIR
+	# into that staging dir). Relocate it to Debian's dist-packages. Unlike
+	# Fedora, do NOT strip the extension's RUNPATH: the libMitk*.so it links
+	# live in the private directory above, not on the default loader path.
+	if [ -d debian/tmp/usr/python/mitk ]; then \
+	  mkdir -p debian/tmp/usr/lib/python3/dist-packages; \
+	  mv debian/tmp/usr/python/mitk debian/tmp/usr/lib/python3/dist-packages/; \
+	  rm -rf debian/tmp/usr/python; \
+	  for so in debian/tmp/usr/lib/python3/dist-packages/mitk/*.so; do \
+	    patchelf --set-rpath '/$(MITKDIR)' "$$so"; \
+	  done; \
+	fi
+	# Desktop integration for the Workbench.
+	install -D -m 0644 debian/org.mitk.MitkWorkbench.desktop \
+	  debian/tmp/usr/share/applications/org.mitk.MitkWorkbench.desktop
+	# Ship the icon only at its native size (an icon in a mismatched hicolor size
+	# directory is a lintian warning and a scaled lookup for the desktop).
+	icon=$$(find Applications/Workbench -name 'icon.png' | head -1); \
+	sz=$$(file "$$icon" | sed -E 's/.* ([0-9]+) x ([0-9]+).*/\1/'); \
+	install -D -m 0644 "$$icon" debian/tmp/usr/share/icons/hicolor/$${sz}x$${sz}/apps/org.mitk.MitkWorkbench.png
+
+# The module libraries live in a private directory; tell dpkg-shlibdeps
+# where to resolve them.
+override_dh_shlibdeps:
+	dh_shlibdeps -l$(CURDIR)/debian/tmp/$(MITKDIR):$(CURDIR)/debian/tmp/$(MITKDIR)/plugins

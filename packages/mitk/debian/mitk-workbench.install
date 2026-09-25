@@ -1,0 +1,5 @@
+usr/lib/*/mitk/MitkWorkbench
+usr/lib/*/mitk/plugins/
+usr/lib/*/mitk/*.provisioning
+usr/share/applications
+usr/share/icons

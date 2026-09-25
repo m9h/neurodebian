@@ -1,0 +1,8 @@
+0001-verify-ctk-components.patch
+0002-guard-testdriver-target.patch
+0003-environment-include-algorithm.patch
+0004-transferfunction-gcc16-ice.patch
+0005-system-eigen-includes.patch
+0006-build-against-system-libraries.patch
+0007-distro-install-no-qt-deploy-install-modules.patch
+0008-dcmtk-guard-OFTime-hasTimeZone.patch

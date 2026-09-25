@@ -1,0 +1,43 @@
+Do not touch the test driver target when it was not created
+
+MITK_CREATE_MODULE_TESTS() accepts PACKAGE_DEPENDS and passes them to
+mitk_create_executable(), which correctly declines to create the test driver
+when a package dependency is unmet -- the same way MITK_CREATE_MODULE() declines
+to build a module. The macro then unconditionally does
+
+    set_property(TARGET ${EXECUTABLE_TARGET} PROPERTY FOLDER ...)
+
+on a target that does not exist, turning a dependency that should simply be
+skipped into a hard configure failure for the whole project:
+
+    CMake Error at CMake/mitkMacroCreateModuleTests.cmake:45 (set_property):
+      set_property could not find TARGET MitkMultilabelTestDriver.
+      Perhaps it has not yet been created.
+    Call Stack (most recent call first):
+      Modules/Multilabel/Testing/CMakeLists.txt:1 (MITK_CREATE_MODULE_TESTS)
+
+Modules/Multilabel/Testing declares PACKAGE_DEPENDS DCMQI, so any build without
+DCMQI cannot configure with BUILD_TESTING=ON at all -- it does not merely lose
+the Multilabel tests. A distribution build against system libraries is exactly
+that case.
+
+Guard the remainder of the macro on the target actually existing, so an unmet
+test dependency skips that module's tests and leaves the rest of the suite
+configurable.
+
+--- a/CMake/mitkMacroCreateModuleTests.cmake
++++ b/CMake/mitkMacroCreateModuleTests.cmake
+@@ -42,6 +42,13 @@
+                            NO_BATCH_FILE
+                            NO_INSTALL
+                            ${_no_init})
++    # mitk_create_executable() declines to create the driver when a
++    # PACKAGE_DEPENDS entry is unmet. That is a legitimate skip, not an error,
++    # so do not configure tests against a target that does not exist.
++    if(NOT TARGET ${EXECUTABLE_TARGET})
++      message(STATUS "${TESTDRIVER} not created (unmet test dependency); skipping its tests")
++      return()
++    endif()
+     set_property(TARGET ${EXECUTABLE_TARGET} PROPERTY FOLDER "${MITK_ROOT_FOLDER}/Modules/Tests")
+ 
+     #

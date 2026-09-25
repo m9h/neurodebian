@@ -1,0 +1,120 @@
+--- a/Modules/Classification/CLCore/include/mitkAbstractClassifier.h
++++ b/Modules/Classification/CLCore/include/mitkAbstractClassifier.h
+@@ -20,7 +20,8 @@
+ #include <mitkBaseData.h>
+ 
+ // Eigen
+-#include <itkeigen/Eigen/Dense>
++#include <itk_eigen.h>
++#include ITK_EIGEN(Dense)
+ 
+ // STD Includes
+ 
+--- a/Modules/Classification/CLCore/include/mitkAbstractGlobalImageFeature.h
++++ b/Modules/Classification/CLCore/include/mitkAbstractGlobalImageFeature.h
+@@ -26,7 +26,8 @@
+ // STD Includes
+ 
+ // Eigen
+-#include <itkeigen/Eigen/Dense>
++#include <itk_eigen.h>
++#include ITK_EIGEN(Dense)
+ 
+ // MITK includes
+ #include <mitkConfigurationHolder.h>
+--- a/Modules/Classification/CLUtilities/include/mitkCLUtil.h
++++ b/Modules/Classification/CLUtilities/include/mitkCLUtil.h
+@@ -13,7 +13,8 @@
+ #ifndef mitkCLUtil_h
+ #define mitkCLUtil_h
+ 
+-#include <itkeigen/Eigen/Dense>
++#include <itk_eigen.h>
++#include ITK_EIGEN(Dense)
+ #include <MitkCLUtilitiesExports.h>
+ #include <itkImageRegionIterator.h>
+ 
+--- a/Modules/Classification/CLUtilities/include/mitkGIFCooccurenceMatrix2.h
++++ b/Modules/Classification/CLUtilities/include/mitkGIFCooccurenceMatrix2.h
+@@ -17,7 +17,8 @@
+ #include <mitkBaseData.h>
+ #include <MitkCLUtilitiesExports.h>
+ 
+-#include <itkeigen/Eigen/src/Core/Array.h>
++#include <itk_eigen.h>
++#include ITK_EIGEN(Core)
+ 
+ namespace mitk
+ {
+--- a/Modules/Classification/CLUtilities/include/mitkGIFGreyLevelDistanceZone.h
++++ b/Modules/Classification/CLUtilities/include/mitkGIFGreyLevelDistanceZone.h
+@@ -17,7 +17,8 @@
+ #include <mitkBaseData.h>
+ #include <MitkCLUtilitiesExports.h>
+ 
+-#include <itkeigen/Eigen/src/Core/Array.h>
++#include <itk_eigen.h>
++#include ITK_EIGEN(Core)
+ 
+ namespace mitk
+ {
+--- a/Modules/Classification/CLUtilities/include/mitkGIFGreyLevelSizeZone.h
++++ b/Modules/Classification/CLUtilities/include/mitkGIFGreyLevelSizeZone.h
+@@ -17,7 +17,8 @@
+ #include <mitkBaseData.h>
+ #include <MitkCLUtilitiesExports.h>
+ 
+-#include <itkeigen/Eigen/src/Core/Array.h>
++#include <itk_eigen.h>
++#include ITK_EIGEN(Core)
+ 
+ namespace mitk
+ {
+--- a/Modules/Classification/CLUtilities/include/mitkGIFNeighbouringGreyLevelDependenceFeatures.h
++++ b/Modules/Classification/CLUtilities/include/mitkGIFNeighbouringGreyLevelDependenceFeatures.h
+@@ -17,7 +17,8 @@
+ #include <mitkBaseData.h>
+ #include <MitkCLUtilitiesExports.h>
+ 
+-#include <itkeigen/Eigen/src/Core/Array.h>
++#include <itk_eigen.h>
++#include ITK_EIGEN(Core)
+ 
+ namespace mitk
+ {
+--- a/Modules/Classification/CLUtilities/src/GlobalImageFeatures/mitkGIFVolumetricDensityStatistics.cpp
++++ b/Modules/Classification/CLUtilities/src/GlobalImageFeatures/mitkGIFVolumetricDensityStatistics.cpp
+@@ -40,7 +40,8 @@
+ #include <vnl/vnl_math.h>
+ 
+ // Eigen
+-#include <itkeigen/Eigen/Dense>
++#include <itk_eigen.h>
++#include ITK_EIGEN(Dense)
+ 
+ struct GIFVolumetricDensityStatisticsParameters
+ {
+--- a/Modules/Classification/CLUtilities/src/mitkCLUtil.cpp
++++ b/Modules/Classification/CLUtilities/src/mitkCLUtil.cpp
+@@ -19,7 +19,8 @@
+ 
+ 
+ 
+-#include <itkeigen/Eigen/Dense>
++#include <itk_eigen.h>
++#include ITK_EIGEN(Dense)
+ #include <itkImage.h>
+ 
+ // itk includes
+--- a/Modules/SurfaceInterpolation/include/mitkCreateDistanceImageFromSurfaceFilter.h
++++ b/Modules/SurfaceInterpolation/include/mitkCreateDistanceImageFromSurfaceFilter.h
+@@ -23,7 +23,8 @@
+ 
+ #include <itkImageBase.h>
+ 
+-#include <itkeigen/Eigen/Dense>
++#include <itk_eigen.h>
++#include ITK_EIGEN(Dense)
+ 
+ namespace mitk
+ {

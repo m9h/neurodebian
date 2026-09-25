@@ -1,0 +1,10 @@
+# MITK's module libraries are application-private: no SOVERSION upstream, all
+# RUNPATHs are $ORIGIN-relative, and CppMicroServices resolves autoload
+# modules relative to the loading library's directory. They therefore live
+# together in a private multiarch directory rather than the public libdir.
+mitk: shared-library-lacks-version
+mitk: package-name-doesnt-match-sonames
+# Deliberately unstripped: see debian/rules. Stripping destroys the resource
+# archives CppMicroServices appends after the ELF data.
+mitk: unstripped-binary-or-object
+mitk: unstripped-static-library

@@ -1,0 +1,10 @@
+--- a/Modules/Core/src/mitkEnvironment.cpp	2026-09-13 08:53:51.003532741 -0700
++++ b/Modules/Core/src/mitkEnvironment.cpp	2026-09-13 08:53:51.004137010 -0700
+@@ -12,6 +12,7 @@
+ 
+ #include <mitkEnvironment.h>
+ 
++#include <algorithm>
+ #include <cstdlib>
+ #include <vector>
+ 
